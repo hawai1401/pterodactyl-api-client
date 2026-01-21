@@ -1,17 +1,5 @@
-import type { BaseArgs, role } from "./index.js";
-
-export class PterodactyleAPIError<T> extends Error {
-  constructor(
-    readonly status: number,
-    readonly message: string,
-    readonly path: string,
-    readonly body?: T | null,
-  ) {
-    super(message);
-  }
-}
-
-export type method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+import type { BaseArgs, method } from "../types.js";
+import { PterodactyleAPIError } from "./APIError.js";
 
 export default class HttpClient {
   constructor(

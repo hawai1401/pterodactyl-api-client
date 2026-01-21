@@ -1,17 +1,35 @@
 {
   "name": "pterodactyle-api-client",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/index.ts",
+  "description": "SDK TypeScript non officiel et entièrement typé pour l’API Pterodactyl.\nCouvre l’ensemble des endpoints client et application avec une architecture modulaire, orientée classes, conçue pour Node.js et les environnements TypeScript stricts.",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "hawai1401",
-  "license": "ISC",
+  "keywords": [
+    "pterodactyl",
+    "pterodactyl-api",
+    "pterodactyl-sdk",
+    "pterodactyl-panel",
+    "pterodactyl-client",
+    "pterodactyl-application",
+    "panel",
+    "api",
+    "rest",
+    "sdk",
+    "typescript",
+    "nodejs",
+    "backend",
+    "automation",
+    "typed-api"
+  ],
+  "repository": {
+    "url": "https://github.com/hawai1401/pterodactyle-api-client"
+  },
+  "author": "hawai1401 <hawai1401@ik.me> (https://hawai1401.fr)",
+  "license": "MIT",
   "devDependencies": {
-    "@types/node": "^25.0.9",
-    "dotenv": "^17.2.3"
+    "@types/node": "^25.0.9"
   }
 }
