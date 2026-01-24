@@ -4,7 +4,7 @@ import ConsoleClient from "./console/console.client.js";
 import ImageClient from "./image/image.client.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
-import type { EditServerArgs, ServerList } from "./serveur.types.js";
+import type { EditServerArgs, ServerList } from "./server.types.js";
 import StartupClient from "./startup/startup.client.js";
 import { z } from "zod";
 

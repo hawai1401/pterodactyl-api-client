@@ -4,7 +4,7 @@ import type {
   WebSocketCredentialsOptions,
   WebSocketMessage,
 } from "./websocket.console.types.js";
-import type { Signal } from "../../serveur.types.js";
+import type { Signal } from "../../server.types.js";
 import WebSocket from "ws";
 
 export default class WebsocketClient {

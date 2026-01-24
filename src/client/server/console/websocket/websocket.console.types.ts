@@ -1,4 +1,4 @@
-import type { State } from "../../serveur.types.js";
+import type { State } from "../../server.types.js";
 
 export interface WebSocketCredentials {
   data: {

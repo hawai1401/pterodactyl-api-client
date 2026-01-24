@@ -1,5 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type { EggVariable } from "../serveur.types.js";
+import type { EggVariable } from "../server.types.js";
 import type { EditEggVariable, EggVariableList } from "./startup.types.js";
 
 export default class StartupClient {

@@ -1,5 +1,5 @@
 import type { BaseArgs, List } from "../../../types.js";
-import type { EggVariable } from "../serveur.types.js";
+import type { EggVariable } from "../server.types.js";
 
 export interface EggVariableList extends List {
   data: EggVariable[];

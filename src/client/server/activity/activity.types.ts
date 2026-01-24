@@ -4,7 +4,7 @@ import type {
   Pagination,
   Tuple,
 } from "../../../types.js";
-import type { ServerPermissions, Signal } from "../serveur.types.js";
+import type { ServerPermissions, Signal } from "../server.types.js";
 
 export type ServerFileEvent =
   | "server:file.read"
@@ -126,10 +126,10 @@ export interface TaskPayload<
   payload: T extends "power" ? Signal : string;
 }
 
-export type Allocation = `${IP}:${number}`;
+export type AllocationType = `${IP}:${number}`;
 
 export interface AllocationInterface {
-  allocation: Allocation;
+  allocation: AllocationType;
 }
 
 export interface FileSingle {
