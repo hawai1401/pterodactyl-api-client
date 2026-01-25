@@ -9,6 +9,7 @@ export { default as PowerClient } from "./power/power.client.js";
 export { default as RessourceClient } from "./ressource/ressource.client.js";
 export { default as ScheduleClient } from "./schedule/schedule.client.js";
 export { default as StartupClient } from "./startup/startup.client.js";
+export { default as SubuserClient } from "./subuser/subuser.client.js";
 
 export * from "./server.types.js";
 export * from "./activity/activity.types.js";
@@ -21,3 +22,4 @@ export * from "./power/power.types.js";
 export * from "./ressource/ressource.types.js";
 export * from "./schedule/schedule.types.js";
 export * from "./startup/startup.types.js";
+export * from "./subuser/subuser.types.js";

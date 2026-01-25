@@ -2,7 +2,12 @@ import type HttpClient from "../../class/HttpClient.js";
 import ActivityClient from "./activity/activity.client.js";
 import ConsoleClient from "./console/console.client.js";
 import ImageClient from "./image/image.client.js";
-import { AllocationClient, DatabaseClient, ScheduleClient } from "./index.js";
+import {
+  AllocationClient,
+  DatabaseClient,
+  ScheduleClient,
+  SubuserClient,
+} from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
 import type { EditServerArgs, ServerList } from "./server.types.js";
@@ -19,6 +24,7 @@ export default class Servers {
   public power: PowerClient;
   public schedule: ScheduleClient;
   public startup: StartupClient;
+  public subser: SubuserClient;
 
   constructor(
     private httpClient: HttpClient,
@@ -33,6 +39,7 @@ export default class Servers {
     this.power = new PowerClient(httpClient);
     this.schedule = new ScheduleClient(httpClient);
     this.startup = new StartupClient(httpClient);
+    this.subser = new SubuserClient(httpClient);
   }
 
   list({
