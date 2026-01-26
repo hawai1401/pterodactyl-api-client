@@ -10,7 +10,12 @@ import {
 } from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
-import type { EditServerArgs, ServerList } from "./server.types.js";
+import type {
+  EditServerArgs,
+  UserServerAttributes,
+  UserServerList,
+  UserServer,
+} from "./server.types.js";
 import StartupClient from "./startup/startup.client.js";
 import { z } from "zod";
 
@@ -48,15 +53,18 @@ export default class Servers {
   }: {
     page?: number | undefined;
     per_page?: number | undefined;
-  }): Promise<ServerList> {
-    return this.httpClient.request<ServerList>(
+  }) {
+    return this.httpClient.request<UserServerList<UserServerAttributes>>(
       "GET",
       `/client?page=${page ?? 1}&per_page=${per_page ?? 50}`,
     );
   }
 
   info(id: string) {
-    return this.httpClient.request<ServerList>("GET", `/client/servers/${id}`);
+    return this.httpClient.request<UserServer<UserServerAttributes>>(
+      "GET",
+      `/client/servers/${id}`,
+    );
   }
 
   edit(id: string, args: EditServerArgs) {

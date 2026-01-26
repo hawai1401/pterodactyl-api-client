@@ -1,9 +1,9 @@
+import ApplicationAPI from "./application/application.client.js";
 import { ClientAPI } from "./client/index.js";
-import type { role } from "./types.js";
 export default class PterodactylAPIClient {
     readonly panelUrl: URL;
-    readonly role: role;
     user: ClientAPI;
+    admin?: ApplicationAPI;
     constructor({ apiKey, panelUrl }: {
         apiKey: string;
         panelUrl: string;

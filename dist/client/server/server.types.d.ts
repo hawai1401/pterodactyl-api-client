@@ -32,63 +32,68 @@ export interface EggVariable {
         rules: string;
     };
 }
-export interface Server {
-    object: "server";
-    attributes: {
-        server_owner: boolean;
-        identifier: string;
-        internal_id: number;
-        uuid: string;
-        name: string;
-        is_node_under_maintenance: boolean;
-        description: string;
-        status: null;
-        is_suspended: boolean;
-        is_installing: boolean;
-        is_transferring: boolean;
-        node: string;
-        sftp_details: {
-            ip: string;
-            port: number;
+export interface UserServerAttributes {
+    server_owner: boolean;
+    identifier: string;
+    internal_id: number;
+    uuid: string;
+    name: string;
+    is_node_under_maintenance: boolean;
+    description: string;
+    status: null;
+    is_suspended: boolean;
+    is_installing: boolean;
+    is_transferring: boolean;
+    node: string;
+    sftp_details: {
+        ip: string;
+        port: number;
+    };
+    invocation: string;
+    docker_image: string;
+    egg_features: string[];
+    feature_limits: {
+        databases: number;
+        allocations: number;
+        backups: number;
+    };
+    user_permissions: ServerPermissions[];
+    limits: {
+        memory: number;
+        swap: number;
+        disk: number;
+        io: number;
+        cpu: number;
+        threads: null | string;
+        oom_disabled: boolean;
+    };
+    relationships: {
+        allocations: {
+            object: "list";
+            data: Allocation[];
         };
-        invocation: string;
-        docker_image: string;
-        egg_features: string[];
-        feature_limits: {
-            databases: number;
-            allocations: number;
-            backups: number;
-        };
-        user_permissions: ServerPermissions[];
-        limits: {
-            memory: number;
-            swap: number;
-            disk: number;
-            io: number;
-            cpu: number;
-            threads: null | string;
-            oom_disabled: boolean;
-        };
-        relationships: {
-            allocations: {
-                object: "list";
-                data: Allocation[];
-            };
-            variables: {
-                object: "list";
-                data: EggVariable[];
-            };
+        variables: {
+            object: "list";
+            data: EggVariable[];
         };
     };
 }
-export interface ServerInfo extends Server {
+export interface UserServerAttributesWithDate<T extends string | Date> extends UserServerAttributes {
+    updated_at: T;
+    created_at: T;
+}
+export interface UserServer<T extends UserServerAttributes | UserServerAttributesWithDate<string>> {
+    object: "server";
+    attributes: T;
+}
+export interface ServerInfo extends UserServer<UserServerAttributes> {
     meta: {
         is_server_owner: boolean;
         user_permissions: ServerPermissions[];
     };
 }
-export interface ServerList extends ListwithPagination {
-    data: Server[];
+export interface UserServerList<T extends UserServerAttributes | UserServerAttributesWithDate<string>> extends ListwithPagination {
+    data: UserServer<T>[];
 }
 export type State = "running" | "starting" | "stopping" | "offline";
 export type Signal = "start" | "stop" | "restart" | "kill";
