@@ -1,3 +1,4 @@
+import LocationClient from "./location/location.client.js";
 import ServerClient from "./server/server.client.js";
 import UserClient from "./user/user.client.js";
 export default class ApplicationAPI {
@@ -5,6 +6,7 @@ export default class ApplicationAPI {
     readonly panelUrl: URL;
     user: UserClient;
     server: ServerClient;
+    location: LocationClient;
     constructor({ apiKey, panelUrl }: {
         apiKey: string;
         panelUrl: URL;

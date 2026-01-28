@@ -1,4 +1,5 @@
 import HttpClient from "../class/HttpClient.js";
+import LocationClient from "./location/location.client.js";
 import ServerClient from "./server/server.client.js";
 import UserClient from "./user/user.client.js";
 
@@ -7,11 +8,13 @@ export default class ApplicationAPI {
   readonly panelUrl: URL;
   public user: UserClient;
   public server: ServerClient;
+  public location: LocationClient;
 
   constructor({ apiKey, panelUrl }: { apiKey: string; panelUrl: URL }) {
     this.panelUrl = panelUrl;
     this.httpClient = new HttpClient(panelUrl, apiKey);
     this.user = new UserClient(this.httpClient);
     this.server = new ServerClient(this.httpClient);
+    this.location = new LocationClient(this.httpClient);
   }
 }
