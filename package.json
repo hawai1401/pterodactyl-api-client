@@ -40,10 +40,15 @@
       "import": "./dist/application/user/index.js",
       "require": "./dist/application/user/index.cjs"
     },
-    "./application/server": {
-      "types": "./dist/application/server/index.d.ts",
-      "import": "./dist/application/server/index.js",
-      "require": "./dist/application/server/index.cjs"
+    "./application/location": {
+      "types": "./dist/application/location/index.d.ts",
+      "import": "./dist/application/location/index.js",
+      "req,uire": "./dist/application/location/index.cjs"
+    },
+    "./application/node": {
+      "types": "./dist/application/node/index.d.ts",
+      "import": "./dist/application/node/index.js",
+      "require": "./dist/application/node/index.cjs"
     }
   },
   "scripts": {
