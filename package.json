@@ -1,6 +1,6 @@
 {
   "name": "pterodactyl-api-client",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "SDK TypeScript non officiel et entièrement typé pour l’API Pterodactyl.\nCouvre l’ensemble des endpoints client et application avec une architecture modulaire, orientée classes, conçue pour Node.js et les environnements TypeScript stricts.",
   "main": "dist/index.js",
   "type": "module",
