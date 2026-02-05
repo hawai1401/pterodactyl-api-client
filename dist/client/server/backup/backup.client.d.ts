@@ -1,5 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateBackupArgs, RestoreBackupArgs } from "./backup.types.js";
+import type { CreateBackupArgs, DownloadBackupUrl, RestoreBackupArgs } from "./backup.types.js";
 export default class BackupClient {
     private httpClient;
     constructor(httpClient: HttpClient);
@@ -38,7 +38,7 @@ export default class BackupClient {
         };
         object: "backup";
     }>;
-    create(id: string, { ignored, is_locked, name }: CreateBackupArgs): Promise<{
+    create(id: string, options: CreateBackupArgs): Promise<{
         attributes: {
             created_at: Date;
             completed_at: Date | null;
@@ -52,8 +52,8 @@ export default class BackupClient {
         };
         object: "backup";
     }>;
-    download(id: string, backup: string): Promise<void>;
+    download(id: string, backup: string): Promise<DownloadBackupUrl>;
     delete(id: string, backup: string): Promise<void>;
-    restore(id: string, backup: string, { truncate }?: RestoreBackupArgs): Promise<void>;
+    restore(id: string, backup: string, options?: RestoreBackupArgs): Promise<void>;
 }
 //# sourceMappingURL=backup.client.d.ts.map

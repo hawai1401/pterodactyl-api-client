@@ -1,26 +1,23 @@
-import z from "zod";
+import { allocationId, assignAllocationSchema, editAllocationSchema, userServerId, } from "../server.schemas.js";
 export default class AllocationClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
     list(id) {
-        return this.httpClient.request("GET", `/client/servers/${id}/network/allocations`);
+        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/network/allocations`);
     }
-    assign(id, { ip, port }) {
-        return this.httpClient.request("POST", `/client/servers/${id}/network/allocations`, { ip, port });
+    assign(id, options) {
+        const parsedValues = assignAllocationSchema.parse(options);
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations`, { ip: parsedValues.ip, port: parsedValues.port });
     }
     setPrimary(id, allocation) {
-        return this.httpClient.request("POST", `/client/servers/${id}/network/allocations/${allocation}/primary`);
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}/primary`);
     }
-    edit(id, allocation, args = {}) {
-        const schema = z.object({
-            notes: z.string().min(1).max(255).optional(),
-        });
-        const { notes } = schema.parse(args);
-        return this.httpClient.request("POST", `/client/servers/${id}/network/allocations/${allocation}`, { notes });
+    edit(id, allocation, options = {}) {
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}`, editAllocationSchema.parse(options));
     }
     delete(id, allocation) {
-        return this.httpClient.request("DELETE", `/client/servers/${id}/network/allocations/${allocation}`);
+        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/network/allocations/${allocationId.parse(allocation)}`);
     }
 }

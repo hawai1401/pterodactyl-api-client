@@ -2,6 +2,13 @@ import type HttpClient from "../../../../class/HttpClient.js";
 import type { TaskAction } from "../../server.types.js";
 import type { ScheduleTask } from "../schedule.types.js";
 import type { CreateScheduleTaskArgs } from "./task.types.js";
+import {
+  createTaskSchema,
+  userServerId,
+  userServerScheduleId,
+  userServerScheduleTaskId,
+} from "../../server.schemas.js";
+import type z from "zod";
 
 export default class TaskClient {
   constructor(private httpClient: HttpClient) {}
@@ -9,22 +16,16 @@ export default class TaskClient {
   async create<T extends TaskAction>(
     id: string,
     schedule: number,
-    {
-      action,
-      continue_on_failure,
-      payload,
-      time_offset,
-    }: CreateScheduleTaskArgs<T>,
+    options: CreateScheduleTaskArgs<T>,
   ) {
     const res = await this.httpClient.request<
       ScheduleTask<string>,
-      CreateScheduleTaskArgs
-    >("POST", `/client/servers/${id}/schedules/${schedule}/tasks`, {
-      action,
-      continue_on_failure,
-      payload,
-      time_offset,
-    });
+      z.infer<typeof createTaskSchema>
+    >(
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks`,
+      createTaskSchema.parse(options),
+    );
     return {
       ...res,
       attributes: {
@@ -39,22 +40,16 @@ export default class TaskClient {
     id: string,
     schedule: number,
     task: number,
-    {
-      action,
-      continue_on_failure,
-      payload,
-      time_offset,
-    }: CreateScheduleTaskArgs<T>,
+    options: CreateScheduleTaskArgs<T>,
   ) {
     const res = await this.httpClient.request<
       ScheduleTask<string>,
-      CreateScheduleTaskArgs
-    >("POST", `/client/servers/${id}/schedules/${schedule}/tasks/${task}`, {
-      action,
-      continue_on_failure,
-      payload,
-      time_offset,
-    });
+      z.infer<typeof createTaskSchema>
+    >(
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks/${userServerScheduleTaskId.parse(task)}`,
+      createTaskSchema.parse(options),
+    );
     return {
       ...res,
       attributes: {
@@ -68,7 +63,7 @@ export default class TaskClient {
   delete(id: string, schedule: number, task: number) {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${id}/schedules/${schedule}/tasks/${task}`,
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks/${userServerScheduleTaskId.parse(task)}`,
     );
   }
 }

@@ -1,4 +1,3 @@
-import z from "zod";
 import type HttpClient from "../../../class/HttpClient.js";
 import type {
   CreateDatabaseArgs,
@@ -6,6 +5,11 @@ import type {
   DatabaseWithPassword,
 } from "./database.types.js";
 import PasswordClient from "./password/password.client.js";
+import {
+  createDatabaseSchema,
+  userServerDatabaseId,
+  userServerId,
+} from "../server.schemas.js";
 
 export default class DatabaseClient {
   public password: PasswordClient;
@@ -17,20 +21,19 @@ export default class DatabaseClient {
   list(id: string) {
     return this.httpClient.request<DatabaseList>(
       "GET",
-      `/client/servers/${id}/databases`,
+      `/client/servers/${userServerId.parse(id)}/databases`,
     );
   }
 
-  async create(id: string, args: CreateDatabaseArgs) {
-    const schema = z.object({
-      database: z.string().min(1).max(48),
-      remote: z.string(),
-    });
-    const { database, remote } = schema.parse(args);
+  async create(id: string, options: CreateDatabaseArgs) {
     const res = await this.httpClient.request<
       DatabaseWithPassword,
       CreateDatabaseArgs
-    >("POST", `/client/servers/${id}/databases`, { database, remote });
+    >(
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/databases`,
+      createDatabaseSchema.parse(options),
+    );
     return {
       ...res,
       password: res.attributes.relationships.password.attributes.password,
@@ -40,7 +43,7 @@ export default class DatabaseClient {
   delete(id: string, database: string) {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${id}/databases/${database}`,
+      `/client/servers/${userServerId.parse(id)}/databases/${userServerDatabaseId.parse(database)}`,
     );
   }
 }

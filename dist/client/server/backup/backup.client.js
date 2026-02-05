@@ -1,10 +1,11 @@
+import { createBackupSchema, restoreBackupSchema, userServerBackupId, userServerId, } from "../server.schemas.js";
 export default class BackupClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
     async list(id) {
-        const res = await this.httpClient.request("GET", `/client/servers/${id}/backups`);
+        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/backups`);
         return {
             ...res,
             data: res.data.map((backup) => ({
@@ -20,7 +21,7 @@ export default class BackupClient {
         };
     }
     async info(id, backup) {
-        const res = await this.httpClient.request("GET", `/client/servers/${id}/backups/${backup}`);
+        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}`);
         return {
             ...res,
             attributes: {
@@ -32,8 +33,8 @@ export default class BackupClient {
             },
         };
     }
-    async create(id, { ignored, is_locked, name }) {
-        const res = await this.httpClient.request("POST", `/client/servers/${id}/backups`, { ignored, is_locked, name });
+    async create(id, options) {
+        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/backups`, createBackupSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -46,12 +47,12 @@ export default class BackupClient {
         };
     }
     download(id, backup) {
-        return this.httpClient.request("GET", `/client/servers/${id}/backups/${backup}/download`);
+        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}/download`);
     }
     delete(id, backup) {
-        return this.httpClient.request("DELETE", `/client/servers/${id}/backups/${backup}`);
+        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}`);
     }
-    restore(id, backup, { truncate } = {}) {
-        return this.httpClient.request("POST", `/client/servers/${id}/backups/${backup}/restore`, { truncate });
+    restore(id, backup, options = {}) {
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/backups/${userServerBackupId.parse(backup)}/restore`, restoreBackupSchema.parse(options));
     }
 }

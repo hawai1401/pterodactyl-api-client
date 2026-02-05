@@ -1,5 +1,6 @@
 import type HttpClient from "../../../class/HttpClient.js";
 import type { PowerArgs } from "./power.types.js";
+import { userServerId } from "../server.schemas.js";
 
 export default class PowerClient {
   constructor(private httpClient: HttpClient) {}
@@ -7,7 +8,7 @@ export default class PowerClient {
   start(id: string) {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${id}/power`,
+      `/client/servers/${userServerId.parse(id)}/power`,
       {
         signal: "start",
       },
@@ -17,7 +18,7 @@ export default class PowerClient {
   stop(id: string) {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${id}/power`,
+      `/client/servers/${userServerId.parse(id)}/power`,
       {
         signal: "stop",
       },
@@ -27,7 +28,7 @@ export default class PowerClient {
   restart(id: string) {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${id}/power`,
+      `/client/servers/${userServerId.parse(id)}/power`,
       {
         signal: "restart",
       },
@@ -37,7 +38,7 @@ export default class PowerClient {
   kill(id: string) {
     return this.httpClient.request<void, PowerArgs>(
       "POST",
-      `/client/servers/${id}/power`,
+      `/client/servers/${userServerId.parse(id)}/power`,
       {
         signal: "kill",
       },

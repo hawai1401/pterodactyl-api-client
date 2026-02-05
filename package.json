@@ -52,7 +52,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && node script/postbuild.js",
+    "build": "eslint && tsc && node script/postbuild.js",
     "lint": "eslint --fix"
   },
   "keywords": [

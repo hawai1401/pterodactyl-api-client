@@ -1,11 +1,16 @@
 import type HttpClient from "../../../class/HttpClient.js";
 import type {
   CreateScheduleArgs,
-  EditScheduleArgs,
   Schedule,
   ScheduleList,
 } from "./schedule.types.js";
+import {
+  createScheduleSchema,
+  userServerId,
+  userServerScheduleId,
+} from "../server.schemas.js";
 import TaskClient from "./task/task.client.js";
+import type z from "zod";
 
 export default class ScheduleClient {
   public task: TaskClient;
@@ -17,7 +22,7 @@ export default class ScheduleClient {
   async list(id: string) {
     const res = await this.httpClient.request<ScheduleList>(
       "GET",
-      `/client/servers/${id}/schedules`,
+      `/client/servers/${userServerId.parse(id)}/schedules`,
     );
     return {
       ...res,
@@ -54,7 +59,7 @@ export default class ScheduleClient {
   async info(id: string, schedule: number) {
     const res = await this.httpClient.request<Schedule<string>>(
       "GET",
-      `/client/servers/${id}/schedules/${schedule}`,
+      `/client/servers/${userServerId.parse(id)}/schedules/${schedule}`,
     );
     return {
       ...res,
@@ -82,32 +87,15 @@ export default class ScheduleClient {
     };
   }
 
-  async create(
-    id: string,
-    {
-      name,
-      minute,
-      hour,
-      day_of_month,
-      month,
-      day_of_week,
-      is_active,
-      only_when_online,
-    }: CreateScheduleArgs,
-  ) {
+  async create(id: string, options: CreateScheduleArgs) {
     const res = await this.httpClient.request<
       Schedule<string>,
-      CreateScheduleArgs
-    >("POST", `/client/servers/${id}/schedules`, {
-      name,
-      minute,
-      hour,
-      day_of_month,
-      month,
-      day_of_week,
-      is_active,
-      only_when_online,
-    });
+      z.infer<typeof createScheduleSchema>
+    >(
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/schedules`,
+      createScheduleSchema.parse(options),
+    );
     return {
       ...res,
       attributes: {
@@ -134,47 +122,25 @@ export default class ScheduleClient {
     };
   }
 
-  edit(
-    id: string,
-    schedule: number,
-    {
-      name,
-      minute,
-      hour,
-      day_of_month,
-      month,
-      day_of_week,
-      is_active,
-      only_when_online,
-    }: EditScheduleArgs,
-  ) {
-    return this.httpClient.request<void, EditScheduleArgs>(
+  edit(id: string, schedule: number, options: CreateScheduleArgs) {
+    return this.httpClient.request<void, z.infer<typeof createScheduleSchema>>(
       "POST",
-      `/client/servers/${id}/schedules/${schedule}`,
-      {
-        name,
-        minute,
-        hour,
-        day_of_month,
-        month,
-        day_of_week,
-        is_active,
-        only_when_online,
-      },
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}`,
+      createScheduleSchema.parse(options),
     );
   }
 
   delete(id: string, schedule: number) {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${id}/schedules/${schedule}`,
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}`,
     );
   }
 
   execute(id: string, schedule: number) {
     return this.httpClient.request<void>(
       "POST",
-      `/client/servers/${id}/schedules/${schedule}/execute`,
+      `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}/execute`,
     );
   }
 }

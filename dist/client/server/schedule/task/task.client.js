@@ -1,15 +1,11 @@
+import { createTaskSchema, userServerId, userServerScheduleId, userServerScheduleTaskId, } from "../../server.schemas.js";
 export default class TaskClient {
     httpClient;
     constructor(httpClient) {
         this.httpClient = httpClient;
     }
-    async create(id, schedule, { action, continue_on_failure, payload, time_offset, }) {
-        const res = await this.httpClient.request("POST", `/client/servers/${id}/schedules/${schedule}/tasks`, {
-            action,
-            continue_on_failure,
-            payload,
-            time_offset,
-        });
+    async create(id, schedule, options) {
+        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks`, createTaskSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -19,13 +15,8 @@ export default class TaskClient {
             },
         };
     }
-    async edit(id, schedule, task, { action, continue_on_failure, payload, time_offset, }) {
-        const res = await this.httpClient.request("POST", `/client/servers/${id}/schedules/${schedule}/tasks/${task}`, {
-            action,
-            continue_on_failure,
-            payload,
-            time_offset,
-        });
+    async edit(id, schedule, task, options) {
+        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks/${userServerScheduleTaskId.parse(task)}`, createTaskSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -36,6 +27,6 @@ export default class TaskClient {
         };
     }
     delete(id, schedule, task) {
-        return this.httpClient.request("DELETE", `/client/servers/${id}/schedules/${schedule}/tasks/${task}`);
+        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(id)}/tasks/${userServerScheduleTaskId.parse(task)}`);
     }
 }

@@ -1,5 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateScheduleArgs, EditScheduleArgs } from "./schedule.types.js";
+import type { CreateScheduleArgs } from "./schedule.types.js";
 import TaskClient from "./task/task.client.js";
 export default class ScheduleClient {
     private httpClient;
@@ -76,7 +76,7 @@ export default class ScheduleClient {
         };
         object: "server_schedule";
     }>;
-    create(id: string, { name, minute, hour, day_of_month, month, day_of_week, is_active, only_when_online, }: CreateScheduleArgs): Promise<{
+    create(id: string, options: CreateScheduleArgs): Promise<{
         attributes: {
             last_run_at: Date | null;
             next_run_at: Date;
@@ -104,7 +104,7 @@ export default class ScheduleClient {
         };
         object: "server_schedule";
     }>;
-    edit(id: string, schedule: number, { name, minute, hour, day_of_month, month, day_of_week, is_active, only_when_online, }: EditScheduleArgs): Promise<void>;
+    edit(id: string, schedule: number, options: CreateScheduleArgs): Promise<void>;
     delete(id: string, schedule: number): Promise<void>;
     execute(id: string, schedule: number): Promise<void>;
 }

@@ -30,7 +30,7 @@ export default class SubuserClient {
         };
         object: "server_subuser";
     }>;
-    create(id: string, { email, permissions }: CreateSubuserArgs): Promise<{
+    create(id: string, options: CreateSubuserArgs): Promise<{
         attributes: {
             created_at: Date;
             uuid: string;
@@ -42,7 +42,7 @@ export default class SubuserClient {
         };
         object: "server_subuser";
     }>;
-    edit(id: string, subuser: string, { permissions }: EditSubuserArgs): Promise<{
+    edit(id: string, subuser: string, options: EditSubuserArgs): Promise<{
         attributes: {
             created_at: Date;
             uuid: string;

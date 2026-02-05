@@ -5,6 +5,6 @@ export default class StartupClient {
     private httpClient;
     constructor(httpClient: HttpClient);
     info(id: string): Promise<EggVariableList>;
-    edit(id: string, { key, value }: EditEggVariable): Promise<EggVariable>;
+    edit(id: string, options: EditEggVariable): Promise<EggVariable>;
 }
 //# sourceMappingURL=startup.client.d.ts.map

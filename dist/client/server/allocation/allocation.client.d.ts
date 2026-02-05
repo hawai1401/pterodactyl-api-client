@@ -5,9 +5,9 @@ export default class AllocationClient {
     private httpClient;
     constructor(httpClient: HttpClient);
     list(id: string): Promise<AllocationList>;
-    assign(id: string, { ip, port }: AssignAllocationArgs): Promise<Allocation>;
+    assign(id: string, options: AssignAllocationArgs): Promise<Allocation>;
     setPrimary(id: string, allocation: number): Promise<Allocation>;
-    edit(id: string, allocation: number, args?: EditAllocationArgs): Promise<Allocation>;
+    edit(id: string, allocation: number, options?: EditAllocationArgs): Promise<Allocation>;
     delete(id: string, allocation: number): Promise<void>;
 }
 //# sourceMappingURL=allocation.client.d.ts.map

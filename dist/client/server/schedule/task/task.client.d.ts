@@ -4,7 +4,7 @@ import type { CreateScheduleTaskArgs } from "./task.types.js";
 export default class TaskClient {
     private httpClient;
     constructor(httpClient: HttpClient);
-    create<T extends TaskAction>(id: string, schedule: number, { action, continue_on_failure, payload, time_offset, }: CreateScheduleTaskArgs<T>): Promise<{
+    create<T extends TaskAction>(id: string, schedule: number, options: CreateScheduleTaskArgs<T>): Promise<{
         attributes: {
             created_at: Date;
             updated_at: Date;
@@ -18,7 +18,7 @@ export default class TaskClient {
         };
         object: "schedule_task";
     }>;
-    edit<T extends TaskAction>(id: string, schedule: number, task: number, { action, continue_on_failure, payload, time_offset, }: CreateScheduleTaskArgs<T>): Promise<{
+    edit<T extends TaskAction>(id: string, schedule: number, task: number, options: CreateScheduleTaskArgs<T>): Promise<{
         attributes: {
             created_at: Date;
             updated_at: Date;

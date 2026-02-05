@@ -6,6 +6,10 @@ import type {
 } from "./websocket.console.types.js";
 import type { Signal } from "../../server.types.js";
 import WebSocket from "ws";
+import {
+  userServerId,
+  userServerWebsocketSchema,
+} from "../../server.schemas.js";
 
 export default class WebsocketClient {
   constructor(
@@ -16,19 +20,14 @@ export default class WebsocketClient {
   credentials(id: string) {
     return this.httpClient.request<WebSocketCredentials>(
       "GET",
-      `/client/servers/${id}/websocket`,
+      `/client/servers/${userServerId.parse(id)}/websocket`,
     );
   }
 
-  async connect(
-    id: string,
-    {
-      onConsoleOutput,
-      onStats,
-      onStatusChange,
-    }: WebSocketCredentialsOptions = {},
-  ) {
-    const credentials = await this.credentials(id);
+  async connect(id: string, options: WebSocketCredentialsOptions = {}) {
+    const { onConsoleOutput, onStats, onStatusChange } =
+      userServerWebsocketSchema.parse(options);
+    const credentials = await this.credentials(userServerId.parse(id));
 
     return new Promise<{
       sendCommand(command: string): void;
@@ -48,14 +47,14 @@ export default class WebsocketClient {
           }),
         );
 
-        socket.addEventListener("message", (event) => {
+        socket.addEventListener("message", async (event) => {
           const data = JSON.parse(event.data.toString()) as WebSocketMessage;
           if (data.event === "stats" && onStats)
-            onStats(JSON.parse(data.args[0]));
+            await onStats(JSON.parse(data.args[0]));
           if (data.event === "status" && onStatusChange)
-            onStatusChange(data.args[0]);
+            await onStatusChange(data.args[0]);
           if (data.event === "console output" && onConsoleOutput)
-            onConsoleOutput(data.args[0]);
+            await onConsoleOutput(data.args[0]);
         });
 
         setTimeout(() => {

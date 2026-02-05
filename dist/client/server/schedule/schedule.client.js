@@ -1,3 +1,4 @@
+import { createScheduleSchema, userServerId, userServerScheduleId, } from "../server.schemas.js";
 import TaskClient from "./task/task.client.js";
 export default class ScheduleClient {
     httpClient;
@@ -7,7 +8,7 @@ export default class ScheduleClient {
         this.task = new TaskClient(httpClient);
     }
     async list(id) {
-        const res = await this.httpClient.request("GET", `/client/servers/${id}/schedules`);
+        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/schedules`);
         return {
             ...res,
             data: res.data.map((schedule) => ({
@@ -38,7 +39,7 @@ export default class ScheduleClient {
         };
     }
     async info(id, schedule) {
-        const res = await this.httpClient.request("GET", `/client/servers/${id}/schedules/${schedule}`);
+        const res = await this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/schedules/${schedule}`);
         return {
             ...res,
             attributes: {
@@ -64,17 +65,8 @@ export default class ScheduleClient {
             },
         };
     }
-    async create(id, { name, minute, hour, day_of_month, month, day_of_week, is_active, only_when_online, }) {
-        const res = await this.httpClient.request("POST", `/client/servers/${id}/schedules`, {
-            name,
-            minute,
-            hour,
-            day_of_month,
-            month,
-            day_of_week,
-            is_active,
-            only_when_online,
-        });
+    async create(id, options) {
+        const res = await this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/schedules`, createScheduleSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -100,22 +92,13 @@ export default class ScheduleClient {
             },
         };
     }
-    edit(id, schedule, { name, minute, hour, day_of_month, month, day_of_week, is_active, only_when_online, }) {
-        return this.httpClient.request("POST", `/client/servers/${id}/schedules/${schedule}`, {
-            name,
-            minute,
-            hour,
-            day_of_month,
-            month,
-            day_of_week,
-            is_active,
-            only_when_online,
-        });
+    edit(id, schedule, options) {
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}`, createScheduleSchema.parse(options));
     }
     delete(id, schedule) {
-        return this.httpClient.request("DELETE", `/client/servers/${id}/schedules/${schedule}`);
+        return this.httpClient.request("DELETE", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}`);
     }
     execute(id, schedule) {
-        return this.httpClient.request("POST", `/client/servers/${id}/schedules/${schedule}/execute`);
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/schedules/${userServerScheduleId.parse(schedule)}/execute`);
     }
 }

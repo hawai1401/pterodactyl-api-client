@@ -21,12 +21,12 @@ export default class Servers {
     startup: StartupClient;
     subser: SubuserClient;
     constructor(httpClient: HttpClient, panelUrl: URL);
-    list({ page, per_page, }: {
+    list(options: {
         page?: number | undefined;
         per_page?: number | undefined;
     }): Promise<UserServerList<UserServerAttributes>>;
     info(id: string): Promise<UserServer<UserServerAttributes>>;
-    edit(id: string, args: EditServerArgs): Promise<void>;
+    edit(id: string, options: EditServerArgs): Promise<void>;
     reinstall(id: string): Promise<void>;
 }
 //# sourceMappingURL=server.client.d.ts.map

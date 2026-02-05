@@ -49,5 +49,5 @@ export type WebSocketMessage =
     }
   | {
       event: "status" | "console output";
-      args: [string];
+      args: [State];
     };

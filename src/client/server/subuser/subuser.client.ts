@@ -5,6 +5,12 @@ import type {
   Subuser,
   SubuserList,
 } from "./subuser.types.js";
+import {
+  createSubuserSchema,
+  editSubuserSchema,
+  userServerId,
+  userServerSubuserId,
+} from "../server.schemas.js";
 
 export default class SubuserClient {
   constructor(private httpClient: HttpClient) {}
@@ -12,7 +18,7 @@ export default class SubuserClient {
   async list(id: string) {
     const res = await this.httpClient.request<SubuserList>(
       "GET",
-      `/client/servers/${id}/users`,
+      `/client/servers/${userServerId.parse(id)}/users`,
     );
     return {
       ...res,
@@ -29,7 +35,7 @@ export default class SubuserClient {
   async info(id: string, subuser: string) {
     const res = await this.httpClient.request<Subuser<string>>(
       "GET",
-      `/client/servers/${id}/users/${subuser}`,
+      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
     );
     return {
       ...res,
@@ -40,11 +46,15 @@ export default class SubuserClient {
     };
   }
 
-  async create(id: string, { email, permissions }: CreateSubuserArgs) {
+  async create(id: string, options: CreateSubuserArgs) {
     const res = await this.httpClient.request<
       Subuser<string>,
       CreateSubuserArgs
-    >("POST", `/client/servers/${id}/users`, { email, permissions });
+    >(
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/users`,
+      createSubuserSchema.parse(options),
+    );
     return {
       ...res,
       attributes: {
@@ -54,11 +64,11 @@ export default class SubuserClient {
     };
   }
 
-  async edit(id: string, subuser: string, { permissions }: EditSubuserArgs) {
+  async edit(id: string, subuser: string, options: EditSubuserArgs) {
     const res = await this.httpClient.request<Subuser<string>, EditSubuserArgs>(
       "POST",
-      `/client/servers/${id}/users/${subuser}`,
-      { permissions },
+      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
+      editSubuserSchema.parse(options),
     );
     return {
       ...res,
@@ -72,7 +82,7 @@ export default class SubuserClient {
   delete(id: string, subuser: string) {
     return this.httpClient.request<void>(
       "DELETE",
-      `/client/servers/${id}/users/${subuser}`,
+      `/client/servers/${userServerId.parse(id)}/users/${userServerSubuserId.parse(subuser)}`,
     );
   }
 }

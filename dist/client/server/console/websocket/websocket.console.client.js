@@ -1,5 +1,6 @@
 import HttpClient from "../../../../class/HttpClient.js";
 import WebSocket from "ws";
+import { userServerId, userServerWebsocketSchema, } from "../../server.schemas.js";
 export default class WebsocketClient {
     httpClient;
     panelUrl;
@@ -8,10 +9,11 @@ export default class WebsocketClient {
         this.panelUrl = panelUrl;
     }
     credentials(id) {
-        return this.httpClient.request("GET", `/client/servers/${id}/websocket`);
+        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}/websocket`);
     }
-    async connect(id, { onConsoleOutput, onStats, onStatusChange, } = {}) {
-        const credentials = await this.credentials(id);
+    async connect(id, options = {}) {
+        const { onConsoleOutput, onStats, onStatusChange } = userServerWebsocketSchema.parse(options);
+        const credentials = await this.credentials(userServerId.parse(id));
         return new Promise((resolve, reject) => {
             const socket = new WebSocket(credentials.data.socket, {
                 headers: {
@@ -23,14 +25,14 @@ export default class WebsocketClient {
                     event: "auth",
                     args: [credentials.data.token],
                 }));
-                socket.addEventListener("message", (event) => {
+                socket.addEventListener("message", async (event) => {
                     const data = JSON.parse(event.data.toString());
                     if (data.event === "stats" && onStats)
-                        onStats(JSON.parse(data.args[0]));
+                        await onStats(JSON.parse(data.args[0]));
                     if (data.event === "status" && onStatusChange)
-                        onStatusChange(data.args[0]);
+                        await onStatusChange(data.args[0]);
                     if (data.event === "console output" && onConsoleOutput)
-                        onConsoleOutput(data.args[0]);
+                        await onConsoleOutput(data.args[0]);
                 });
                 setTimeout(() => {
                     resolve({

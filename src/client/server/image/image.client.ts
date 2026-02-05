@@ -1,14 +1,15 @@
 import type HttpClient from "../../../class/HttpClient.js";
 import type { EditImageArgs } from "./image.types.js";
+import { editImageSchema, userServerId } from "../server.schemas.js";
 
 export default class ImageClient {
   constructor(private httpClient: HttpClient) {}
 
-  edit(id: string, { docker_image }: EditImageArgs) {
+  edit(id: string, options: EditImageArgs) {
     return this.httpClient.request<void, EditImageArgs>(
       "PUT",
-      `/client/servers/${id}/settings/docker-image`,
-      { docker_image },
+      `/client/servers/${userServerId.parse(id)}/settings/docker-image`,
+      editImageSchema.parse(options),
     );
   }
 }

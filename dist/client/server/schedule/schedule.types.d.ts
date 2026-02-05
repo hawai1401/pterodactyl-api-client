@@ -55,14 +55,4 @@ export interface CreateScheduleArgs extends BaseArgs {
     is_active?: boolean | undefined;
     only_when_online?: boolean | undefined;
 }
-export interface EditScheduleArgs extends BaseArgs {
-    name?: string | undefined;
-    minute?: CronString | undefined;
-    hour?: CronString | undefined;
-    day_of_month?: CronString | undefined;
-    month?: CronString | undefined;
-    day_of_week?: CronString | undefined;
-    is_active?: boolean | undefined;
-    only_when_online?: boolean | undefined;
-}
 //# sourceMappingURL=schedule.types.d.ts.map

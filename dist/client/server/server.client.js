@@ -4,8 +4,8 @@ import ImageClient from "./image/image.client.js";
 import { AllocationClient, DatabaseClient, ScheduleClient, SubuserClient, } from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
+import { renameServerSchema, serverListSchema, userServerId, } from "./server.schemas.js";
 import StartupClient from "./startup/startup.client.js";
-import { z } from "zod";
 export default class Servers {
     httpClient;
     panelUrl;
@@ -33,21 +33,17 @@ export default class Servers {
         this.startup = new StartupClient(httpClient);
         this.subser = new SubuserClient(httpClient);
     }
-    list({ page, per_page, }) {
-        return this.httpClient.request("GET", `/client?page=${page ?? 1}&per_page=${per_page ?? 50}`);
+    list(options) {
+        const parsedValues = serverListSchema.parse(options);
+        return this.httpClient.request("GET", `/client?page=${parsedValues?.page ?? 1}&per_page=${parsedValues?.per_page ?? 50}`);
     }
     info(id) {
-        return this.httpClient.request("GET", `/client/servers/${id}`);
+        return this.httpClient.request("GET", `/client/servers/${userServerId.parse(id)}`);
     }
-    edit(id, args) {
-        const schema = z.object({
-            name: z.string().min(1).max(255),
-            description: z.string().max(500).optional(),
-        });
-        const { name, description } = schema.parse(args);
-        return this.httpClient.request("POST", `/client/servers/${id}/settings/rename`, { name, description });
+    edit(id, options) {
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/settings/rename`, renameServerSchema.parse(options));
     }
     reinstall(id) {
-        return this.httpClient.request("POST", `/client/servers/${id}/settings/reinstall`);
+        return this.httpClient.request("POST", `/client/servers/${userServerId.parse(id)}/settings/reinstall`);
     }
 }

@@ -1,4 +1,5 @@
 import type HttpClient from "../../../class/HttpClient.js";
+import { userServerCommandSchema, userServerId } from "../server.schemas.js";
 import type { SendConsoleCommandArgs } from "./console.types.js";
 import WebsocketClient from "./websocket/websocket.console.client.js";
 
@@ -12,11 +13,11 @@ export default class ConsoleClient {
     this.websocket = new WebsocketClient(httpClient, panelUrl);
   }
 
-  send(id: string, { command }: SendConsoleCommandArgs) {
+  send(id: string, options: SendConsoleCommandArgs) {
     return this.httpClient.request<void, SendConsoleCommandArgs>(
-      "PUT",
-      `/client/servers/${id}/settings/docker-image`,
-      { command },
+      "POST",
+      `/client/servers/${userServerId.parse(id)}/command`,
+      userServerCommandSchema.parse(options),
     );
   }
 }

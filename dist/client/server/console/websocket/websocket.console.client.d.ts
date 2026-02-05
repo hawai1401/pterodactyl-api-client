@@ -6,7 +6,7 @@ export default class WebsocketClient {
     readonly panelUrl: URL;
     constructor(httpClient: HttpClient, panelUrl: URL);
     credentials(id: string): Promise<WebSocketCredentials>;
-    connect(id: string, { onConsoleOutput, onStats, onStatusChange, }?: WebSocketCredentialsOptions): Promise<{
+    connect(id: string, options?: WebSocketCredentialsOptions): Promise<{
         sendCommand(command: string): void;
         sendSignal(state: Signal): void;
     }>;

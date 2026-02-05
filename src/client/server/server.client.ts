@@ -10,6 +10,11 @@ import {
 } from "./index.js";
 import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
+import {
+  renameServerSchema,
+  serverListSchema,
+  userServerId,
+} from "./server.schemas.js";
 import type {
   EditServerArgs,
   UserServerAttributes,
@@ -17,7 +22,6 @@ import type {
   UserServer,
 } from "./server.types.js";
 import StartupClient from "./startup/startup.client.js";
-import { z } from "zod";
 
 export default class Servers {
   public activity: ActivityClient;
@@ -47,45 +51,33 @@ export default class Servers {
     this.subser = new SubuserClient(httpClient);
   }
 
-  list({
-    page,
-    per_page,
-  }: {
-    page?: number | undefined;
-    per_page?: number | undefined;
-  }) {
+  list(options: { page?: number | undefined; per_page?: number | undefined }) {
+    const parsedValues = serverListSchema.parse(options);
     return this.httpClient.request<UserServerList<UserServerAttributes>>(
       "GET",
-      `/client?page=${page ?? 1}&per_page=${per_page ?? 50}`,
+      `/client?page=${parsedValues?.page ?? 1}&per_page=${parsedValues?.per_page ?? 50}`,
     );
   }
 
   info(id: string) {
     return this.httpClient.request<UserServer<UserServerAttributes>>(
       "GET",
-      `/client/servers/${id}`,
+      `/client/servers/${userServerId.parse(id)}`,
     );
   }
 
-  edit(id: string, args: EditServerArgs) {
-    const schema = z.object({
-      name: z.string().min(1).max(255),
-      description: z.string().max(500).optional(),
-    });
-
-    const { name, description } = schema.parse(args);
-
+  edit(id: string, options: EditServerArgs) {
     return this.httpClient.request<void, EditServerArgs>(
       "POST",
-      `/client/servers/${id}/settings/rename`,
-      { name, description },
+      `/client/servers/${userServerId.parse(id)}/settings/rename`,
+      renameServerSchema.parse(options),
     );
   }
 
   reinstall(id: string) {
     return this.httpClient.request<void>(
       "POST",
-      `/client/servers/${id}/settings/reinstall`,
+      `/client/servers/${userServerId.parse(id)}/settings/reinstall`,
     );
   }
 }

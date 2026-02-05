@@ -20,5 +20,6 @@ export interface ListwithPagination extends List {
     };
 }
 export type EnvironmentVariable = Uppercase<string>;
+export type Sort = "ascending" | "descending";
 export {};
 //# sourceMappingURL=types.d.ts.map

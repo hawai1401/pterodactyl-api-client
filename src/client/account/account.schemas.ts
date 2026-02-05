@@ -1,4 +1,5 @@
 import z from "zod";
+import { paginationSchema } from "../../schemas.js";
 
 export const passwordSchema = z.object({
   password: z.string().min(8),
@@ -8,9 +9,7 @@ export const a2fSchema = passwordSchema.extend({
   code: z.coerce.string<string>().length(6),
 });
 
-export const accountActivityPaginationSchema = z.object({
-  page: z.coerce.number<number>().optional(),
-  per_page: z.coerce.number<number>().optional(),
+export const accountActivityPaginationSchema = paginationSchema.extend({
   event: z
     .literal([
       "user:api-key.create",
@@ -38,7 +37,7 @@ export const deleteApiKeySchema = z.object({
 });
 
 export const editEmailSchema = passwordSchema.extend({
-  email: z.email(),
+  email: z.email().min(1).max(191),
 });
 
 export const editPasswordSchema = passwordSchema.extend({

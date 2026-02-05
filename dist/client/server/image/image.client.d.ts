@@ -3,6 +3,6 @@ import type { EditImageArgs } from "./image.types.js";
 export default class ImageClient {
     private httpClient;
     constructor(httpClient: HttpClient);
-    edit(id: string, { docker_image }: EditImageArgs): Promise<void>;
+    edit(id: string, options: EditImageArgs): Promise<void>;
 }
 //# sourceMappingURL=image.client.d.ts.map

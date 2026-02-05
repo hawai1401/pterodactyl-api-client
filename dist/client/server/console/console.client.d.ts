@@ -6,6 +6,6 @@ export default class ConsoleClient {
     readonly panelUrl: URL;
     websocket: WebsocketClient;
     constructor(httpClient: HttpClient, panelUrl: URL);
-    send(id: string, { command }: SendConsoleCommandArgs): Promise<void>;
+    send(id: string, options: SendConsoleCommandArgs): Promise<void>;
 }
 //# sourceMappingURL=console.client.d.ts.map

@@ -6,7 +6,7 @@ export default class DatabaseClient {
     password: PasswordClient;
     constructor(httpClient: HttpClient);
     list(id: string): Promise<DatabaseList>;
-    create(id: string, args: CreateDatabaseArgs): Promise<{
+    create(id: string, options: CreateDatabaseArgs): Promise<{
         password: string;
         object: "server_database";
         attributes: import("./database.types.js").DatabaseAttributesWithPassword;

@@ -39,6 +39,6 @@ export type WebSocketMessage = {
     args: [ServerStatsString];
 } | {
     event: "status" | "console output";
-    args: [string];
+    args: [State];
 };
 //# sourceMappingURL=websocket.console.types.d.ts.map
