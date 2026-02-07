@@ -1,5 +1,5 @@
 import z from "zod";
-export declare const locationId: z.ZodNumber;
+export declare const locationId: z.ZodInt;
 export declare const createLocationSchema: z.ZodObject<{
     short: z.ZodString;
     long: z.ZodString;

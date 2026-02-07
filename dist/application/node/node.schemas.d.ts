@@ -1,9 +1,9 @@
 import z from "zod";
-export declare const nodeId: z.ZodNumber;
+export declare const nodeId: z.ZodInt;
 export declare const createNodeSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodOptional<z.ZodString>;
-    location_id: z.ZodNumber;
+    location_id: z.ZodInt;
     fqdn: z.ZodString;
     scheme: z.ZodEnum<{
         https: "https";
@@ -12,13 +12,13 @@ export declare const createNodeSchema: z.ZodObject<{
     behind_proxy: z.ZodOptional<z.ZodBoolean>;
     public: z.ZodOptional<z.ZodBoolean>;
     daemon_base: z.ZodOptional<z.ZodString>;
-    daemon_sftp: z.ZodNumber;
-    daemon_listen: z.ZodNumber;
-    memory: z.ZodNumber;
-    memory_overallocate: z.ZodNumber;
-    disk: z.ZodNumber;
-    disk_overallocate: z.ZodNumber;
-    upload_size: z.ZodOptional<z.ZodNumber>;
+    daemon_sftp: z.ZodInt;
+    daemon_listen: z.ZodInt;
+    memory: z.ZodInt;
+    memory_overallocate: z.ZodInt;
+    disk: z.ZodInt;
+    disk_overallocate: z.ZodInt;
+    upload_size: z.ZodOptional<z.ZodInt>;
     maintenance_mode: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>;
 //# sourceMappingURL=node.schemas.d.ts.map

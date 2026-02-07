@@ -1,5 +1,5 @@
 import z from "zod";
-export declare const userId: z.ZodNumber;
+export declare const userId: z.ZodInt;
 export declare const externalUserId: z.ZodString;
 export declare const createUserSchema: z.ZodObject<{
     email: z.ZodEmail;

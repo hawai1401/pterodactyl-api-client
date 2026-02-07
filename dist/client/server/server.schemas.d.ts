@@ -2,10 +2,10 @@ import z from "zod";
 export declare const userServerId: z.ZodUnion<readonly [z.ZodString, z.ZodUUID]>;
 export declare const userServerSubuserId: z.ZodUUID;
 export declare const userServerDatabaseId: z.ZodString;
-export declare const userServerPort: z.ZodNumber;
+export declare const userServerPort: z.ZodInt;
 export declare const userServerBackupId: z.ZodUUID;
-export declare const userServerScheduleId: z.ZodNumber;
-export declare const userServerScheduleTaskId: z.ZodNumber;
+export declare const userServerScheduleId: z.ZodInt;
+export declare const userServerScheduleTaskId: z.ZodInt;
 export declare const allocationId: z.z.ZodCoercedNumber<number>;
 export declare const state: z.ZodLiteral<"running" | "starting" | "stopping" | "offline">;
 export declare const cronString: z.ZodString;
@@ -19,7 +19,7 @@ export declare const userServerActivityPaginationSchema: z.ZodObject<{
 }, z.z.core.$strip>;
 export declare const assignAllocationSchema: z.ZodObject<{
     ip: z.ZodIPv4;
-    port: z.ZodNumber;
+    port: z.ZodInt;
 }, z.z.core.$strip>;
 export declare const editAllocationSchema: z.ZodObject<{
     notes: z.ZodOptional<z.ZodString>;
@@ -30,16 +30,16 @@ export declare const userServerCommandSchema: z.ZodObject<{
 export declare const userServerWebsocketSchema: z.ZodObject<{
     onConsoleOutput: z.ZodOptional<z.ZodFunction<z.ZodTuple<readonly [z.ZodString], null>, z.ZodUnion<readonly [z.ZodPromise<z.ZodVoid>, z.ZodVoid]>>>;
     onStats: z.ZodOptional<z.ZodFunction<z.ZodTuple<readonly [z.ZodObject<{
-        cpu_absolute: z.ZodNumber;
-        disk_bytes: z.ZodNumber;
-        memory_bytes: z.ZodNumber;
-        memory_limit_bytes: z.ZodNumber;
+        cpu_absolute: z.ZodInt;
+        disk_bytes: z.ZodInt;
+        memory_bytes: z.ZodInt;
+        memory_limit_bytes: z.ZodInt;
         network: z.ZodObject<{
-            rx_bytes: z.ZodNumber;
-            tx_bytes: z.ZodNumber;
+            rx_bytes: z.ZodInt;
+            tx_bytes: z.ZodInt;
         }, z.z.core.$strip>;
         state: z.ZodLiteral<"running" | "starting" | "stopping" | "offline">;
-        uptime: z.ZodNumber;
+        uptime: z.ZodInt;
     }, z.z.core.$strip>], null>, z.ZodUnion<readonly [z.ZodPromise<z.ZodVoid>, z.ZodVoid]>>>;
     onStatusChange: z.ZodOptional<z.ZodFunction<z.ZodTuple<readonly [z.ZodLiteral<"running" | "starting" | "stopping" | "offline">], null>, z.ZodUnion<readonly [z.ZodPromise<z.ZodVoid>, z.ZodVoid]>>>;
 }, z.z.core.$strip>;
@@ -61,17 +61,17 @@ export declare const createScheduleSchema: z.ZodObject<{
 export declare const createTaskSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
     action: z.ZodLiteral<"command">;
     payload: z.ZodString;
-    time_offset: z.ZodNumber;
+    time_offset: z.ZodInt;
     continue_on_failure: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>, z.ZodObject<{
     action: z.ZodLiteral<"power">;
     payload: z.ZodLiteral<"start" | "stop" | "restart" | "kill">;
-    time_offset: z.ZodNumber;
+    time_offset: z.ZodInt;
     continue_on_failure: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>, z.ZodObject<{
     action: z.ZodLiteral<"backup">;
     payload: z.ZodOptional<z.ZodString>;
-    time_offset: z.ZodNumber;
+    time_offset: z.ZodInt;
     continue_on_failure: z.ZodOptional<z.ZodBoolean>;
 }, z.z.core.$strip>], "action">;
 export declare const serverPermissionSchema: z.ZodEnum<{

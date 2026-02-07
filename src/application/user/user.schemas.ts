@@ -1,7 +1,7 @@
 import z from "zod";
 
-export const userId = z.number()
-export const externalUserId = z.string().min(1).max(191)
+export const userId = z.int().positive();
+export const externalUserId = z.string().min(1).max(191);
 
 export const createUserSchema = z.object({
   email: z.email().min(1).max(191),

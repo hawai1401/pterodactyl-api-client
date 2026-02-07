@@ -4,10 +4,10 @@ import { paginationSchema } from "../../schemas.js";
 export const userServerId = z.union([z.string().length(8), z.uuidv4()]);
 export const userServerSubuserId = z.uuidv4();
 export const userServerDatabaseId = z.string().length(8);
-export const userServerPort = z.number().min(1024).max(65535);
+export const userServerPort = z.int().positive().min(1024).max(65535);
 export const userServerBackupId = z.uuidv4();
-export const userServerScheduleId = z.number();
-export const userServerScheduleTaskId = z.number();
+export const userServerScheduleId = z.int().positive();
+export const userServerScheduleTaskId = z.int().positive();
 export const allocationId = z.coerce.number<number>();
 export const state = z.literal(["running", "starting", "stopping", "offline"]);
 export const cronString = z.string().regex(/^(?:\*|\d+|\*\/\d+)$/);
@@ -81,13 +81,16 @@ export const userServerWebsocketSchema = z.object({
     .function({
       input: [
         z.object({
-          cpu_absolute: z.number(),
-          disk_bytes: z.number(),
-          memory_bytes: z.number(),
-          memory_limit_bytes: z.number(),
-          network: z.object({ rx_bytes: z.number(), tx_bytes: z.number() }),
+          cpu_absolute: z.int().positive(),
+          disk_bytes: z.int().positive(),
+          memory_bytes: z.int().positive(),
+          memory_limit_bytes: z.int().positive(),
+          network: z.object({
+            rx_bytes: z.int().positive(),
+            tx_bytes: z.int().positive(),
+          }),
           state: state,
-          uptime: z.number(),
+          uptime: z.int().positive(),
         }),
       ],
       output: z.union([z.promise(z.void()), z.void()]),
@@ -122,19 +125,19 @@ export const createTaskSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("command"),
     payload: z.string(),
-    time_offset: z.number().min(0).max(900),
+    time_offset: z.int().positive().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
   z.object({
     action: z.literal("power"),
     payload: z.literal(["start", "stop", "restart", "kill"]),
-    time_offset: z.number().min(0).max(900),
+    time_offset: z.int().positive().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
   z.object({
     action: z.literal("backup"),
     payload: z.string().optional(),
-    time_offset: z.number().min(0).max(900),
+    time_offset: z.int().positive().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
 ]);
