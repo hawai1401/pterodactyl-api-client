@@ -1,31 +1,20 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type {
-  ApplicationAllocationList,
-  ApplicationAllocationListWithDate,
-  CreateApplicationAllocationArgs,
-} from "./allocation.types.js";
+import { allocationId } from "../node.schemas.js";
 
 export default class AllocationClient {
-  constructor(private httpClient: HttpClient) {}
-
-  list(id: number) {
-    return this.httpClient.request<ApplicationAllocationListWithDate>(
-      "GET",
-      `/application/nodes/${id}/allocations`,
-    );
+  readonly id: number;
+  constructor(
+    private httpClient: HttpClient,
+    readonly node: number,
+    id: number,
+  ) {
+    this.id = allocationId.parse(id);
   }
 
-  create(id: number, options: CreateApplicationAllocationArgs) {
-    return this.httpClient.request<
-      ApplicationAllocationList,
-      CreateApplicationAllocationArgs
-    >("POST", `/application/nodes/${id}/allocations`, options);
-  }
-
-  delete(id: number, allocation: number) {
+  delete() {
     return this.httpClient.request<void>(
       "DELETE",
-      `/application/nodes/${id}/allocations/${allocation}`,
+      `/application/nodes/${this.node}/allocations/${this.id}`,
     );
   }
 }

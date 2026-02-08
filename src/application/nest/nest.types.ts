@@ -12,7 +12,3 @@ export interface Nest<T extends string | Date> {
     updated_at: T;
   };
 }
-
-export interface NestList extends ListwithPagination {
-  data: Nest<string>[];
-}

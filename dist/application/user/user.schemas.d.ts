@@ -1,14 +1,8 @@
 import z from "zod";
 export declare const userId: z.ZodInt;
 export declare const externalUserId: z.ZodString;
-export declare const createUserSchema: z.ZodObject<{
-    email: z.ZodEmail;
-    username: z.ZodString;
-    first_name: z.ZodString;
-    last_name: z.ZodString;
-    password: z.ZodOptional<z.ZodString>;
-    language: z.ZodOptional<z.ZodString>;
-    root_admin: z.ZodOptional<z.ZodBoolean>;
+export declare const userIdSchema: z.ZodObject<{
+    id: z.ZodOptional<z.ZodInt>;
     external_id: z.ZodOptional<z.ZodString>;
 }, z.z.core.$strip>;
 //# sourceMappingURL=user.schemas.d.ts.map

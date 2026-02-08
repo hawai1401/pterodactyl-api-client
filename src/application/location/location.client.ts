@@ -1,42 +1,22 @@
 import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
-import {
-  createLocationSchema,
-  editLocationSchema,
-  locationId,
-} from "./location.schemas.js";
-import type {
-  CreateLocationArgs,
-  EditLocationArgs,
-  Location,
-  LocationList,
-} from "./location.types.js";
+import { editLocationSchema, locationId } from "./location.schemas.js";
+import type { EditLocationArgs, Location } from "./location.types.js";
 
 export default class LocationClient {
-  constructor(private httpClient: HttpClient) {}
+  readonly id: number;
 
-  async list() {
-    const res = await this.httpClient.request<LocationList>(
-      "GET",
-      "/application/locations",
-    );
-    return {
-      ...res,
-      data: res.data.map((location) => ({
-        ...location,
-        attributes: {
-          ...location.attributes,
-          created_at: new Date(location.attributes.created_at),
-          updated_at: new Date(location.attributes.updated_at),
-        },
-      })),
-    };
+  constructor(
+    private httpClient: HttpClient,
+    id: number,
+  ) {
+    this.id = locationId.parse(id);
   }
 
-  async info(id: number) {
+  async info() {
     const res = await this.httpClient.request<Location<string>>(
       "GET",
-      `/application/locations/${locationId.parse(id)}`,
+      `/application/locations/${this.id}`,
     );
     return {
       ...res,
@@ -48,28 +28,13 @@ export default class LocationClient {
     };
   }
 
-  async create(options: CreateLocationArgs) {
-    const res = await this.httpClient.request<
-      Location<string>,
-      z.infer<typeof createLocationSchema>
-    >("POST", `/application/locations`, createLocationSchema.parse(options));
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
-  }
-
-  async edit(id: number, options: EditLocationArgs) {
+  async edit(options: EditLocationArgs) {
     const res = await this.httpClient.request<
       Location<string>,
       z.infer<typeof editLocationSchema>
     >(
       "PATCH",
-      `/application/locations/${locationId.parse(id)}`,
+      `/application/locations/${this.id}`,
       editLocationSchema.parse(options),
     );
     return {
@@ -82,10 +47,10 @@ export default class LocationClient {
     };
   }
 
-  delete(id: number) {
+  delete() {
     return this.httpClient.request<void>(
       "DELETE",
-      `/application/locations/${locationId.parse(id)}`,
+      `/application/locations/${this.id}`,
     );
   }
 }

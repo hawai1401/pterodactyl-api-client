@@ -1,26 +1,14 @@
 import z from "zod";
-import { createLocationSchema, editLocationSchema, locationId, } from "./location.schemas.js";
+import { editLocationSchema, locationId } from "./location.schemas.js";
 export default class LocationClient {
     httpClient;
-    constructor(httpClient) {
+    id;
+    constructor(httpClient, id) {
         this.httpClient = httpClient;
+        this.id = locationId.parse(id);
     }
-    async list() {
-        const res = await this.httpClient.request("GET", "/application/locations");
-        return {
-            ...res,
-            data: res.data.map((location) => ({
-                ...location,
-                attributes: {
-                    ...location.attributes,
-                    created_at: new Date(location.attributes.created_at),
-                    updated_at: new Date(location.attributes.updated_at),
-                },
-            })),
-        };
-    }
-    async info(id) {
-        const res = await this.httpClient.request("GET", `/application/locations/${locationId.parse(id)}`);
+    async info() {
+        const res = await this.httpClient.request("GET", `/application/locations/${this.id}`);
         return {
             ...res,
             attributes: {
@@ -30,8 +18,8 @@ export default class LocationClient {
             },
         };
     }
-    async create(options) {
-        const res = await this.httpClient.request("POST", `/application/locations`, createLocationSchema.parse(options));
+    async edit(options) {
+        const res = await this.httpClient.request("PATCH", `/application/locations/${this.id}`, editLocationSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -41,18 +29,7 @@ export default class LocationClient {
             },
         };
     }
-    async edit(id, options) {
-        const res = await this.httpClient.request("PATCH", `/application/locations/${locationId.parse(id)}`, editLocationSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
-    }
-    delete(id) {
-        return this.httpClient.request("DELETE", `/application/locations/${locationId.parse(id)}`);
+    delete() {
+        return this.httpClient.request("DELETE", `/application/locations/${this.id}`);
     }
 }

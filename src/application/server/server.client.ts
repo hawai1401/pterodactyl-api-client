@@ -6,90 +6,46 @@ import type {
 } from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
 import {
-  applicationServerExternalId,
-  applicationServerId,
-  createApplicationDatabaseSchema,
-  createServerSchema,
+  applicationServerIdSchema,
   editApplicationServerConfigurationSchema,
   editApplicationServerDetailsSchema,
   editApplicationServerStartupSchema,
 } from "./server.schemas.js";
 import type {
-  ApplicationServerList,
-  CreateServerArgs,
+  ApplicationServerId,
   EditApplicationServerArgs,
-  EditApplicationServerConfigurationArgs,
-  EditApplicationServerDetailsArgs,
-  EditApplicationServerStartupArgs,
 } from "./server.types.js";
+import DatabasesClient from "./databases/databases.client.js";
 
 export default class ServerClient {
-  public database: DatabaseClient;
+  public databases: DatabasesClient;
 
-  constructor(private httpClient: HttpClient) {
-    this.database = new DatabaseClient(httpClient);
+  readonly id: number | undefined;
+  readonly external_id: string | undefined;
+
+  constructor(
+    private httpClient: HttpClient,
+    args: ApplicationServerId,
+  ) {
+    this.databases = new DatabasesClient(httpClient);
+    const { id, external_id } = applicationServerIdSchema.parse(args);
+
+    this.id = id;
+    this.external_id = external_id;
   }
 
-  async list() {
-    const res = await this.httpClient.request<ApplicationServerList>(
-      "GET",
-      "/application/servers",
-    );
-    return {
-      ...res,
-      data: res.data.map((server) => ({
-        ...server,
-        created_at: new Date(server.created_at),
-        updated_at: new Date(server.updated_at),
-      })),
-    };
+  database(database: number) {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
+    return new DatabaseClient(this.httpClient, this.id, database);
   }
 
-  async info({
-    id,
-    external_id,
-  }: {
-    id?: number | undefined;
-    external_id?: number | undefined;
-  }) {
-    if (id) {
-      const res = await this.httpClient.request<
-        UserServer<UserServerAttributesWithDate<string>>
-      >("GET", `/application/servers/${applicationServerId.parse(id)}`);
-      return {
-        ...res,
-        attributes: {
-          ...res.attributes,
-          created_at: new Date(res.attributes.created_at),
-          updated_at: new Date(res.attributes.updated_at),
-        },
-      };
-    } else if (external_id) {
-      const res = await this.httpClient.request<
-        UserServer<UserServerAttributesWithDate<string>>
-      >(
-        "GET",
-        `/application/servers/external/${applicationServerExternalId.parse(external_id)}`,
-      );
-      return {
-        ...res,
-        attributes: {
-          ...res.attributes,
-          created_at: new Date(res.attributes.created_at),
-          updated_at: new Date(res.attributes.updated_at),
-        },
-      };
-    } else
-      throw new Error(
-        "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
-      );
-  }
-
-  async create(options: CreateServerArgs) {
+  async info() {
     const res = await this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>,
-      z.infer<typeof createServerSchema>
-    >("POST", `/application/servers`, createServerSchema.parse(options));
+      UserServer<UserServerAttributesWithDate<string>>
+    >(
+      "GET",
+      `/application/servers/${this.id ?? `external/${this.external_id}`}`,
+    );
     return {
       ...res,
       attributes: {
@@ -100,11 +56,9 @@ export default class ServerClient {
     };
   }
 
-  async edit(
-    server: number,
-    { details, configuration, startup }: EditApplicationServerArgs,
-  ) {
-    const basePath = `/application/servers/${applicationServerId.parse(server)}`;
+  async edit({ details, configuration, startup }: EditApplicationServerArgs) {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
+    const basePath = `/application/servers/${this.id}`;
     const requests: Promise<
       UserServer<UserServerAttributesWithDate<string>>
     >[] = [];
@@ -157,36 +111,31 @@ export default class ServerClient {
     };
   }
 
-  suspend(id: number) {
+  suspend() {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${applicationServerId.parse(id)}/suspend`);
+    >("POST", `/application/servers/${this.id}/suspend`);
   }
 
-  unsuspend(id: number) {
+  unsuspend() {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >(
-      "POST",
-      `/application/servers/${applicationServerId.parse(id)}/unsuspend`,
-    );
+    >("POST", `/application/servers/${this.id}/unsuspend`);
   }
 
-  reinstall(id: number) {
+  reinstall() {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >(
-      "POST",
-      `/application/servers/${applicationServerId.parse(id)}/reinstall`,
-    );
+    >("POST", `/application/servers/${this.id}/reinstall`);
   }
 
-  delete(id: number, force?: boolean | undefined) {
+  delete(force?: boolean | undefined) {
+    if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<
       UserServer<UserServerAttributesWithDate<string>>
-    >(
-      "DELETE",
-      `/application/servers/${applicationServerId.parse(id)}${force ? "?force=true" : ""}`,
-    );
+    >("DELETE", `/application/servers/${this.id}${force ? "?force=true" : ""}`);
   }
 }

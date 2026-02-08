@@ -1,43 +1,15 @@
 import z from "zod";
-import { descriptionSchema, idSchema, nameSchema } from "../../schemas.js";
+import { idSchema, nameSchema } from "../../schemas.js";
 export const applicationServerId = idSchema;
 export const applicationServerExternalId = nameSchema;
 export const applicationServerDatabaseId = idSchema;
-export const createServerSchema = z.object({
+export const applicationServerIdSchema = z
+    .object({
+    id: applicationServerId.optional(),
     external_id: applicationServerExternalId.optional(),
-    name: nameSchema,
-    description: descriptionSchema,
-    user: idSchema,
-    egg: idSchema,
-    docker_image: z
-        .string()
-        .max(191)
-        .regex(/^~?[\w\.\/\-:@ ]*$/),
-    startup: z.string(),
-    environment: z.record(z.string().uppercase(), z.string()),
-    skip_scripts: z.boolean().optional(),
-    oom_disabled: z.boolean().optional(),
-    limits: z.object({
-        memory: z.int().positive().min(0),
-        swap: z.int().min(-1),
-        disk: z.int().positive().min(0),
-        io: z.int().positive().min(10).max(1000),
-        threads: z
-            .string()
-            .regex(/^[0-9-,]+$/)
-            .optional(),
-        cpu: z.int().positive().min(0),
-    }),
-    feature_limits: z.object({
-        databases: z.int().positive().min(0),
-        backups: z.int().positive().min(0),
-        allocations: z.int().positive().min(0).optional(),
-    }),
-    allocation: z.object({
-        default: z.int().positive(),
-        additional: z.array(z.int().positive()).optional(),
-    }),
-    start_on_completion: z.boolean().optional(),
+})
+    .refine((data) => data.id || data.external_id, {
+    message: "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
 });
 export const editApplicationServerDetailsSchema = z.object({
     name: z.string().min(1).max(191),

@@ -2,13 +2,11 @@ import z from "zod";
 import { idSchema, nameSchema } from "../../schemas.js";
 export const userId = idSchema;
 export const externalUserId = nameSchema;
-export const createUserSchema = z.object({
-    email: z.email().min(1).max(191),
-    username: z.string().min(1).max(191),
-    first_name: z.string().min(1).max(191),
-    last_name: z.string().min(1).max(191),
-    password: z.string().min(8).optional(),
-    language: z.string().optional(),
-    root_admin: z.boolean().optional(),
-    external_id: z.string().min(1).max(191).optional(),
+export const userIdSchema = z
+    .object({
+    id: userId.optional(),
+    external_id: externalUserId.optional(),
+})
+    .refine((data) => data.id || data.external_id, {
+    message: "Vous devez spécifier au moins un des 2 paramètres de recherche d'un utilisateur !",
 });

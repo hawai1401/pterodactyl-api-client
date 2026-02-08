@@ -1,10 +1,9 @@
 import type HttpClient from "../../../class/HttpClient.js";
-import type { ApplicationAllocationList, ApplicationAllocationListWithDate, CreateApplicationAllocationArgs } from "./allocation.types.js";
 export default class AllocationClient {
     private httpClient;
-    constructor(httpClient: HttpClient);
-    list(id: number): Promise<ApplicationAllocationListWithDate>;
-    create(id: number, options: CreateApplicationAllocationArgs): Promise<ApplicationAllocationList>;
-    delete(id: number, allocation: number): Promise<void>;
+    readonly node: number;
+    readonly id: number;
+    constructor(httpClient: HttpClient, node: number, id: number);
+    delete(): Promise<void>;
 }
 //# sourceMappingURL=allocation.client.d.ts.map

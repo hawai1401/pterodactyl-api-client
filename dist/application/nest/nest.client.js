@@ -1,25 +1,13 @@
 import { nestId } from "./nest.schemas.js";
 export default class NestClient {
     httpClient;
-    constructor(httpClient) {
+    id;
+    constructor(httpClient, id) {
         this.httpClient = httpClient;
+        this.id = nestId.parse(id);
     }
-    async list() {
-        const res = await this.httpClient.request("GET", "/application/nests");
-        return {
-            ...res,
-            data: res.data.map((nest) => ({
-                ...nest,
-                attributes: {
-                    ...nest.attributes,
-                    created_at: new Date(nest.attributes.created_at),
-                    updated_at: new Date(nest.attributes.updated_at),
-                },
-            })),
-        };
-    }
-    async info(id) {
-        const res = await this.httpClient.request("GET", `/application/nests/${nestId.parse(id)}`);
+    async info() {
+        const res = await this.httpClient.request("GET", `/application/nests/${this.id}`);
         return {
             ...res,
             attributes: {

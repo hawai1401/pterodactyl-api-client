@@ -1,15 +1,14 @@
+import { allocationId } from "../node.schemas.js";
 export default class AllocationClient {
     httpClient;
-    constructor(httpClient) {
+    node;
+    id;
+    constructor(httpClient, node, id) {
         this.httpClient = httpClient;
+        this.node = node;
+        this.id = allocationId.parse(id);
     }
-    list(id) {
-        return this.httpClient.request("GET", `/application/nodes/${id}/allocations`);
-    }
-    create(id, options) {
-        return this.httpClient.request("POST", `/application/nodes/${id}/allocations`, options);
-    }
-    delete(id, allocation) {
-        return this.httpClient.request("DELETE", `/application/nodes/${id}/allocations/${allocation}`);
+    delete() {
+        return this.httpClient.request("DELETE", `/application/nodes/${this.node}/allocations/${this.id}`);
     }
 }

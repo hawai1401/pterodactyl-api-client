@@ -1,29 +1,22 @@
 import z from "zod";
+import { nodeId } from "./node.schemas.js";
+import { createNodeSchema } from "../nodes/nodes.schemas.js";
+import AllocationsClient from "./allocations/allocations.client.js";
 import AllocationClient from "./allocation/allocation.client.js";
-import { createNodeSchema, nodeId } from "./node.schemas.js";
 export default class NodeClient {
     httpClient;
-    allocation;
-    constructor(httpClient) {
+    allocations;
+    id;
+    constructor(httpClient, id) {
         this.httpClient = httpClient;
-        this.allocation = new AllocationClient(httpClient);
+        this.id = nodeId.parse(id);
+        this.allocations = new AllocationsClient(httpClient, this.id);
     }
-    async list() {
-        const res = await this.httpClient.request("GET", "/application/nodes");
-        return {
-            ...res,
-            date: res.data.map((node) => ({
-                ...node,
-                attributes: {
-                    ...node.attributes,
-                    created_at: new Date(node.attributes.created_at),
-                    updated_at: new Date(node.attributes.updated_at),
-                },
-            })),
-        };
+    allocation(id) {
+        return new AllocationClient(this.httpClient, this.id, id);
     }
-    async info(id) {
-        const res = await this.httpClient.request("GET", `/application/nodes/${nodeId.parse(id)}`);
+    async info() {
+        const res = await this.httpClient.request("GET", `/application/nodes/${this.id}`);
         return {
             ...res,
             attributes: {
@@ -33,8 +26,8 @@ export default class NodeClient {
             },
         };
     }
-    async create(options) {
-        const res = await this.httpClient.request("POST", "/application/nodes", createNodeSchema.parse(options));
+    async edit(options) {
+        const res = await this.httpClient.request("PATCH", `/application/nodes/${this.id}`, createNodeSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -44,21 +37,10 @@ export default class NodeClient {
             },
         };
     }
-    async edit(id, options) {
-        const res = await this.httpClient.request("PATCH", `/application/nodes/${nodeId.parse(id)}`, createNodeSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    configuration() {
+        return this.httpClient.request("GET", `/application/nodes/${this.id}/configuration`);
     }
-    configuration(id) {
-        return this.httpClient.request("GET", `/application/nodes/${nodeId.parse(id)}/configuration`);
-    }
-    delete(id) {
-        return this.httpClient.request("DELETE", `/application/nodes/${nodeId.parse(id)}`);
+    delete() {
+        return this.httpClient.request("DELETE", `/application/nodes/${this.id}`);
     }
 }

@@ -1,22 +1,15 @@
-import { nestEggId, nestId } from "../nest.schemas.js";
+import { nestEggId } from "../nest.schemas.js";
 export default class EggClient {
     httpClient;
-    constructor(httpClient) {
+    nest;
+    egg;
+    constructor(httpClient, nest, egg) {
         this.httpClient = httpClient;
+        this.nest = nest;
+        this.egg = nestEggId.parse(egg);
     }
-    async list(id) {
-        const res = await this.httpClient.request("GET", `/application/nests/${nestId.parse(id)}/eggs`);
-        return {
-            ...res,
-            data: res.data.map((egg) => ({
-                ...egg.attributes,
-                created_at: new Date(egg.attributes.created_at),
-                updated_at: new Date(egg.attributes.updated_at),
-            })),
-        };
-    }
-    async info(id, egg) {
-        const res = await this.httpClient.request("GET", `/application/nests/${nestId.parse(id)}/eggs/${nestEggId.parse(egg)}`);
+    async info() {
+        const res = await this.httpClient.request("GET", `/application/nests/${this.nest}/eggs/${this.egg}`);
         return {
             ...res,
             attributes: {

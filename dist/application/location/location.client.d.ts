@@ -1,25 +1,10 @@
 import type HttpClient from "../../class/HttpClient.js";
-import type { CreateLocationArgs, EditLocationArgs } from "./location.types.js";
+import type { EditLocationArgs } from "./location.types.js";
 export default class LocationClient {
     private httpClient;
-    constructor(httpClient: HttpClient);
-    list(): Promise<{
-        data: {
-            attributes: {
-                created_at: Date;
-                updated_at: Date;
-                id: number;
-                short: string;
-                long: string;
-            };
-            object: "location";
-        }[];
-        meta: {
-            pagination: import("../../types.js").Pagination;
-        };
-        object: "list";
-    }>;
-    info(id: number): Promise<{
+    readonly id: number;
+    constructor(httpClient: HttpClient, id: number);
+    info(): Promise<{
         attributes: {
             created_at: Date;
             updated_at: Date;
@@ -29,7 +14,7 @@ export default class LocationClient {
         };
         object: "location";
     }>;
-    create(options: CreateLocationArgs): Promise<{
+    edit(options: EditLocationArgs): Promise<{
         attributes: {
             created_at: Date;
             updated_at: Date;
@@ -39,16 +24,6 @@ export default class LocationClient {
         };
         object: "location";
     }>;
-    edit(id: number, options: EditLocationArgs): Promise<{
-        attributes: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
-            short: string;
-            long: string;
-        };
-        object: "location";
-    }>;
-    delete(id: number): Promise<void>;
+    delete(): Promise<void>;
 }
 //# sourceMappingURL=location.client.d.ts.map

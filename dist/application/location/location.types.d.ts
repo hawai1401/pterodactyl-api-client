@@ -1,4 +1,4 @@
-import type { BaseArgs, ListwithPagination } from "../../types.js";
+import type { BaseArgs } from "../../types.js";
 export interface Location<T extends Date | string> {
     object: "location";
     attributes: {
@@ -8,13 +8,6 @@ export interface Location<T extends Date | string> {
         updated_at: T;
         created_at: T;
     };
-}
-export interface LocationList extends ListwithPagination {
-    data: Location<string>[];
-}
-export interface CreateLocationArgs extends BaseArgs {
-    short: string;
-    long: string;
 }
 export interface EditLocationArgs extends BaseArgs {
     short?: string | undefined;

@@ -1,4 +1,3 @@
-import type { List } from "../../../types.js";
 export interface Egg<T extends string | Date> {
     object: "egg";
     attributes: {
@@ -35,8 +34,5 @@ export interface Egg<T extends string | Date> {
         created_at: T;
         updated_at: T;
     };
-}
-export interface EggList extends List {
-    data: Egg<string>[];
 }
 //# sourceMappingURL=egg.types.d.ts.map
