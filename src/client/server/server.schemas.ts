@@ -1,5 +1,5 @@
 import z from "zod";
-import { paginationSchema, uuidSchema } from "../../schemas.js";
+import { uuidSchema } from "../../schemas.js";
 
 export const userServerId = z.union([z.string().length(8), uuidSchema]);
 export const userServerSubuserId = uuidSchema;
@@ -12,50 +12,45 @@ export const allocationId = z.coerce.number<number>();
 export const state = z.literal(["running", "starting", "stopping", "offline"]);
 export const cronString = z.string().regex(/^(?:\*|\d+|\*\/\d+)$/);
 
-export const userServerActivityPaginationSchema = paginationSchema.extend({
-  event: z
-    .literal([
-      "*",
-      "control.console",
-      "control.start",
-      "control.stop",
-      "control.restart",
-      "control.kill",
-      "file.create",
-      "file.read",
-      "file.update",
-      "file.delete",
-      "file.archive",
-      "file.sftp",
-      "backup.create",
-      "backup.read",
-      "backup.delete",
-      "backup.download",
-      "backup.restore",
-      "allocation.read",
-      "allocation.create",
-      "allocation.update",
-      "allocation.delete",
-      "database.read",
-      "database.create",
-      "database.update",
-      "schedule.read",
-      "schedule.create",
-      "schedule.update",
-      "schedule.delete",
-      "database.delete",
-      "user.read",
-      "user.create",
-      "user.update",
-      "user.delete",
-      "startup.read",
-      "startup.update",
-      "admin.websocket.errors",
-      "admin.websocket.install",
-      "admin.websocket.transfer",
-    ])
-    .optional(),
-});
+export const userServerActivityEvent = z.literal([
+  "server:control.console",
+  "server:control.start",
+  "server:control.stop",
+  "server:control.restart",
+  "server:control.kill",
+  "server:file.create",
+  "server:file.read",
+  "server:file.update",
+  "server:file.delete",
+  "server:file.archive",
+  "server:file.sftp",
+  "server:backup.create",
+  "server:backup.read",
+  "server:backup.delete",
+  "server:backup.download",
+  "server:backup.restore",
+  "server:allocation.read",
+  "server:allocation.create",
+  "server:allocation.update",
+  "server:allocation.delete",
+  "server:database.read",
+  "server:database.create",
+  "server:database.update",
+  "server:schedule.read",
+  "server:schedule.create",
+  "server:schedule.update",
+  "server:schedule.delete",
+  "server:database.delete",
+  "server:user.read",
+  "server:user.create",
+  "server:user.update",
+  "server:user.delete",
+  "server:startup.read",
+  "server:startup.update",
+  "server:admin.websocket.errors",
+  "server:admin.websocket.install",
+  "server:admin.websocket.transfer",
+]);
 
 export const assignAllocationSchema = z.object({
   ip: z.ipv4(),
@@ -142,7 +137,7 @@ export const createTaskSchema = z.discriminatedUnion("action", [
   }),
 ]);
 
-export const serverPermissionSchema = z.enum([
+export const serverPermissionSchema = z.literal([
   "control.console",
   "control.start",
   "control.stop",
@@ -204,8 +199,6 @@ export const createDatabaseSchema = z.object({
 export const restoreBackupSchema = z.object({
   truncate: z.boolean().optional(),
 });
-
-export const serverListSchema = paginationSchema.optional();
 
 export const editVariableSchema = z.object({
   key: z.string(),

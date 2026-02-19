@@ -6,7 +6,7 @@ export const createNodeSchema = z.object({
   description: descriptionSchema,
   location_id: idSchema,
   fqdn: z.string().min(1).max(191),
-  scheme: z.enum(["https", "http"]),
+  scheme: z.literal(["https", "http"]),
   behind_proxy: z.boolean().optional(),
   public: z.boolean().optional(),
   daemon_base: z.string().optional(),

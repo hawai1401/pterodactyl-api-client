@@ -1,5 +1,5 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { Sort } from "../../types.js";
+import HttpClient from "../../class/HttpClient.js";
+import type { BaseListArgs, Sort } from "../../types.js";
 import AllocationClient from "./allocation/allocation.client.js";
 import AllocationsClient from "./allocations/allocations.client.js";
 import BackupClient from "./backup/backup.client.js";
@@ -31,14 +31,14 @@ export default class Servers {
     subusers: SubusersClient;
     readonly id: string;
     constructor(httpClient: HttpClient, panelUrl: URL, id: string);
-    activity<T extends ServerEvent>({ page, per_page, event, sort, }?: {
-        page?: number | undefined;
-        per_page?: number | undefined;
-        event?: T | undefined;
+    activity<T extends ServerEvent>({ page, per_page, filter, sort, }?: (BaseListArgs & {
+        filter?: {
+            event?: T | undefined;
+        } | undefined;
         sort?: {
             timestamp?: Sort | undefined;
-        };
-    }): Promise<ServerActivityList<Date, T>>;
+        } | undefined;
+    }) | undefined): Promise<ServerActivityList<Date, T>>;
     allocation(allocation: number): AllocationClient;
     backup(backup: string): BackupClient;
     database(database: string): DatabaseClient;

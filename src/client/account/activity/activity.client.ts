@@ -1,6 +1,8 @@
+import type z from "zod";
 import type HttpClient from "../../../class/HttpClient.js";
-import type { Sort } from "../../../types.js";
-import { accountActivityPaginationSchema } from "../account.schemas.js";
+import type { BaseListArgs, Sort } from "../../../types.js";
+import buildQueryParams from "../../../utils/buildQueryParams.js";
+import { accountActivityEvent } from "../account.schemas.js";
 import type {
   AuthEvent,
   UserActivityList,
@@ -13,25 +15,39 @@ export default class ActivityClient {
   async list<T extends UserEvent | AuthEvent>({
     page,
     per_page,
-    event,
+    filter,
     sort,
-  }: {
-    page?: number | undefined;
-    per_page?: number | undefined;
-    event?: T | undefined;
-    sort?: {
-      timestamp?: Sort | undefined;
-    };
-  } = {}): Promise<UserActivityList<Date, T>> {
-    const parsedValues = accountActivityPaginationSchema.parse({
+  }:
+    | BaseListArgs & {
+        filter?:
+          | {
+              event?: T | undefined;
+            }
+          | undefined;
+        sort?:
+          | {
+              timestamp?: Sort | undefined;
+            }
+          | undefined;
+      }
+    | undefined = {}): Promise<UserActivityList<Date, T>> {
+    const event = accountActivityEvent.optional().parse(filter?.event);
+    const queries = buildQueryParams<
+      {
+        event?: z.infer<typeof accountActivityEvent> | undefined;
+      },
+      {
+        timestamp?: Sort | undefined;
+      }
+    >({
       page,
       per_page,
-      event,
+      filter: { event },
       sort,
     });
     const res = await this.httpClient.request<UserActivityList<string, T>>(
       "GET",
-      `/client/account/activity?page=${parsedValues.page ?? 1}&per_page=${parsedValues.per_page ?? 50}${parsedValues.event ? `&filter[event]=${parsedValues.event}` : ""}${parsedValues.sort?.timestamp ? (parsedValues.sort.timestamp === "ascending" ? "&sort=timestamp" : "&sort=-timestamp") : ""}`,
+      `/client/account/activity?${queries}`,
     );
     return {
       ...res,

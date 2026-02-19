@@ -1,5 +1,7 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { Sort } from "../../types.js";
+import type z from "zod";
+import HttpClient from "../../class/HttpClient.js";
+import type { BaseListArgs, Sort } from "../../types.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 import AllocationClient from "./allocation/allocation.client.js";
 import AllocationsClient from "./allocations/allocations.client.js";
 import BackupClient from "./backup/backup.client.js";
@@ -14,7 +16,7 @@ import ScheduleClient from "./schedule/schedule.client.js";
 import SchedulesClient from "./schedules/schedules.client.js";
 import {
   renameServerSchema,
-  userServerActivityPaginationSchema,
+  userServerActivityEvent,
   userServerId,
 } from "./server.schemas.js";
 import type {
@@ -64,25 +66,39 @@ export default class Servers {
   async activity<T extends ServerEvent>({
     page,
     per_page,
-    event,
+    filter,
     sort,
-  }: {
-    page?: number | undefined;
-    per_page?: number | undefined;
-    event?: T | undefined;
-    sort?: {
-      timestamp?: Sort | undefined;
-    };
-  } = {}): Promise<ServerActivityList<Date, T>> {
-    const parsedValues = userServerActivityPaginationSchema.parse({
+  }:
+    | (BaseListArgs & {
+        filter?:
+          | {
+              event?: T | undefined;
+            }
+          | undefined;
+        sort?:
+          | {
+              timestamp?: Sort | undefined;
+            }
+          | undefined;
+      })
+    | undefined = {}): Promise<ServerActivityList<Date, T>> {
+    const event = userServerActivityEvent.optional().parse(filter?.event);
+    const queries = buildQueryParams<
+      {
+        event?: z.infer<typeof userServerActivityEvent> | undefined;
+      },
+      {
+        timestamp?: Sort | undefined;
+      }
+    >({
       page,
       per_page,
-      event,
+      filter: { event },
       sort,
     });
     const res = await this.httpClient.request<ServerActivityList<string, T>>(
       "GET",
-      `/client/servers/${this.id}/activity?page=${parsedValues.page ?? 1}&per_page=${parsedValues.per_page ?? 50}${parsedValues.event ? `&filter[event]=${parsedValues.event}` : ""}${parsedValues.sort?.timestamp ? (parsedValues.sort.timestamp === "ascending" ? "&sort=timestamp" : "&sort=-timestamp") : ""}`,
+      `/client/servers/${this.id}/activity?${queries}`,
     );
     return {
       ...res,

@@ -1,3 +1,5 @@
+import HttpClient from "../../class/HttpClient.js";
+import buildQueryParams from "../../utils/buildQueryParams.js";
 import AllocationClient from "./allocation/allocation.client.js";
 import AllocationsClient from "./allocations/allocations.client.js";
 import BackupClient from "./backup/backup.client.js";
@@ -10,7 +12,7 @@ import PowerClient from "./power/power.client.js";
 import RessourceClient from "./ressource/ressource.client.js";
 import ScheduleClient from "./schedule/schedule.client.js";
 import SchedulesClient from "./schedules/schedules.client.js";
-import { renameServerSchema, userServerActivityPaginationSchema, userServerId, } from "./server.schemas.js";
+import { renameServerSchema, userServerActivityEvent, userServerId, } from "./server.schemas.js";
 import StartupClient from "./startup/startup.client.js";
 import SubuserClient from "./subuser/subuser.client.js";
 import SubusersClient from "./subusers/subusers.client.js";
@@ -43,14 +45,15 @@ export default class Servers {
         this.startup = new StartupClient(httpClient, this.id);
         this.subusers = new SubusersClient(httpClient, this.id);
     }
-    async activity({ page, per_page, event, sort, } = {}) {
-        const parsedValues = userServerActivityPaginationSchema.parse({
+    async activity({ page, per_page, filter, sort, } = {}) {
+        const event = userServerActivityEvent.optional().parse(filter?.event);
+        const queries = buildQueryParams({
             page,
             per_page,
-            event,
+            filter: { event },
             sort,
         });
-        const res = await this.httpClient.request("GET", `/client/servers/${this.id}/activity?page=${parsedValues.page ?? 1}&per_page=${parsedValues.per_page ?? 50}${parsedValues.event ? `&filter[event]=${parsedValues.event}` : ""}${parsedValues.sort?.timestamp ? (parsedValues.sort.timestamp === "ascending" ? "&sort=timestamp" : "&sort=-timestamp") : ""}`);
+        const res = await this.httpClient.request("GET", `/client/servers/${this.id}/activity?${queries}`);
         return {
             ...res,
             data: res.data.map((data) => ({

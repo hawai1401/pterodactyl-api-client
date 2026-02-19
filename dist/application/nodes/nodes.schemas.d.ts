@@ -4,10 +4,7 @@ export declare const createNodeSchema: z.ZodObject<{
     description: z.ZodOptional<z.ZodString>;
     location_id: z.ZodInt;
     fqdn: z.ZodString;
-    scheme: z.ZodEnum<{
-        https: "https";
-        http: "http";
-    }>;
+    scheme: z.ZodLiteral<"https" | "http">;
     behind_proxy: z.ZodOptional<z.ZodBoolean>;
     public: z.ZodOptional<z.ZodBoolean>;
     daemon_base: z.ZodOptional<z.ZodString>;

@@ -40,25 +40,50 @@
       "import": "./dist/application/user/index.js",
       "require": "./dist/application/user/index.cjs"
     },
+    "./application/users": {
+      "types": "./dist/application/users/index.d.ts",
+      "import": "./dist/application/users/index.js",
+      "require": "./dist/application/users/index.cjs"
+    },
     "./application/location": {
       "types": "./dist/application/location/index.d.ts",
       "import": "./dist/application/location/index.js",
       "req,uire": "./dist/application/location/index.cjs"
+    },
+    "./application/locations": {
+      "types": "./dist/application/locations/index.d.ts",
+      "import": "./dist/application/locations/index.js",
+      "req,uire": "./dist/application/locations/index.cjs"
     },
     "./application/node": {
       "types": "./dist/application/node/index.d.ts",
       "import": "./dist/application/node/index.js",
       "require": "./dist/application/node/index.cjs"
     },
+    "./application/nodes": {
+      "types": "./dist/application/nodes/index.d.ts",
+      "import": "./dist/application/nodes/index.js",
+      "require": "./dist/application/nodes/index.cjs"
+    },
     "./application/server": {
       "types": "./dist/application/server/index.d.ts",
       "import": "./dist/application/server/index.js",
       "require": "./dist/application/server/index.cjs"
     },
+    "./application/servers": {
+      "types": "./dist/application/servers/index.d.ts",
+      "import": "./dist/application/servers/index.js",
+      "require": "./dist/application/servers/index.cjs"
+    },
     "./application/nest": {
       "types": "./dist/application/nest/index.d.ts",
       "import": "./dist/application/nest/index.js",
       "require": "./dist/application/nest/index.cjs"
+    },
+    "./application/nests": {
+      "types": "./dist/application/nests/index.d.ts",
+      "import": "./dist/application/nests/index.js",
+      "require": "./dist/application/nests/index.cjs"
     }
   },
   "scripts": {

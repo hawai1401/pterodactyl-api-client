@@ -33,6 +33,11 @@ export interface ListwithPagination extends List {
   };
 }
 
+export interface BaseListArgs {
+  page?: number | undefined;
+  per_page?: number | undefined;
+}
+
 export type EnvironmentVariable = Uppercase<string>;
 
 export type Sort = "ascending" | "descending";

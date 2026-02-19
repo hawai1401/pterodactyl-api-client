@@ -1,28 +1,23 @@
 import z from "zod";
-import { paginationSchema } from "../../schemas.js";
 export const passwordSchema = z.object({
     password: z.string().min(8),
 });
 export const a2fSchema = passwordSchema.extend({
     code: z.coerce.string().length(6),
 });
-export const accountActivityPaginationSchema = paginationSchema.extend({
-    event: z
-        .literal([
-        "user:api-key.create",
-        "user:api-key.delete",
-        "user:ssh-key.create",
-        "user:ssh-key.delete",
-        "user:account.email-changed",
-        "user:account.password-changed",
-        "user:two-factor.create",
-        "user:two-factor.delete",
-        "auth:success",
-        "auth:fail",
-        "auth:checkpoint",
-    ])
-        .optional(),
-});
+export const accountActivityEvent = z.literal([
+    "user:api-key.create",
+    "user:api-key.delete",
+    "user:ssh-key.create",
+    "user:ssh-key.delete",
+    "user:account.email-changed",
+    "user:account.password-changed",
+    "user:two-factor.create",
+    "user:two-factor.delete",
+    "auth:success",
+    "auth:fail",
+    "auth:checkpoint",
+]);
 export const createApiKeySchema = z.object({
     description: z.string(),
     allowed_ips: z.ipv4().array().max(50).optional(),
