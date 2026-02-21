@@ -1,5 +1,5 @@
 import type HttpClient from "../../class/HttpClient.js";
-import type { UserServer, UserServerAttributesWithDate } from "../../client/server/server.types.js";
+import type { UserServer, UserServerInfoAttributes } from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
 import type { ApplicationServerId, EditApplicationServerArgs } from "./server.types.js";
 import DatabasesClient from "./databases/databases.client.js";
@@ -14,31 +14,15 @@ export default class ServerClient {
         attributes: {
             created_at: Date;
             updated_at: Date;
-            server_owner: boolean;
-            identifier: string;
-            internal_id: number;
+            id: number;
+            external_id: string | null;
             uuid: string;
+            identifier: string;
             name: string;
-            is_node_under_maintenance: boolean;
             description: string;
-            status: null;
-            is_suspended: boolean;
-            is_installing: boolean;
-            is_transferring: boolean;
-            node: string;
-            sftp_details: {
-                ip: string;
-                port: number;
-            };
-            invocation: string;
-            docker_image: string;
-            egg_features: string[];
-            feature_limits: {
-                databases: number;
-                allocations: number;
-                backups: number;
-            };
-            user_permissions: import("../../client/server/server.types.js").ServerPermissions[];
+            server_owner: boolean;
+            status: "installing" | "suspended" | null;
+            suspended: boolean;
             limits: {
                 memory: number;
                 swap: number;
@@ -48,15 +32,21 @@ export default class ServerClient {
                 threads: null | string;
                 oom_disabled: boolean;
             };
-            relationships: {
-                allocations: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").Allocation[];
-                };
-                variables: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").EggVariable[];
-                };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                installed: number;
+                environment: Record<import("../../types.js").EnvironmentVariable, string>;
             };
         };
         object: "server";
@@ -65,31 +55,15 @@ export default class ServerClient {
         attributes: {
             created_at: Date;
             updated_at: Date;
-            server_owner: boolean;
-            identifier: string;
-            internal_id: number;
+            id: number;
+            external_id: string | null;
             uuid: string;
+            identifier: string;
             name: string;
-            is_node_under_maintenance: boolean;
             description: string;
-            status: null;
-            is_suspended: boolean;
-            is_installing: boolean;
-            is_transferring: boolean;
-            node: string;
-            sftp_details: {
-                ip: string;
-                port: number;
-            };
-            invocation: string;
-            docker_image: string;
-            egg_features: string[];
-            feature_limits: {
-                databases: number;
-                allocations: number;
-                backups: number;
-            };
-            user_permissions: import("../../client/server/server.types.js").ServerPermissions[];
+            server_owner: boolean;
+            status: "installing" | "suspended" | null;
+            suspended: boolean;
             limits: {
                 memory: number;
                 swap: number;
@@ -99,22 +73,28 @@ export default class ServerClient {
                 threads: null | string;
                 oom_disabled: boolean;
             };
-            relationships: {
-                allocations: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").Allocation[];
-                };
-                variables: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").EggVariable[];
-                };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                installed: number;
+                environment: Record<import("../../types.js").EnvironmentVariable, string>;
             };
         };
         object: "server";
     }>;
-    suspend(): Promise<UserServer<UserServerAttributesWithDate<string>>>;
-    unsuspend(): Promise<UserServer<UserServerAttributesWithDate<string>>>;
-    reinstall(): Promise<UserServer<UserServerAttributesWithDate<string>>>;
-    delete(force?: boolean | undefined): Promise<UserServer<UserServerAttributesWithDate<string>>>;
+    suspend(): Promise<UserServer<UserServerInfoAttributes>>;
+    unsuspend(): Promise<UserServer<UserServerInfoAttributes>>;
+    reinstall(): Promise<UserServer<UserServerInfoAttributes>>;
+    delete(force?: boolean | undefined): Promise<UserServer<UserServerInfoAttributes>>;
 }
 //# sourceMappingURL=server.client.d.ts.map

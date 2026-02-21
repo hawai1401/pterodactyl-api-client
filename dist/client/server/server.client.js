@@ -81,7 +81,16 @@ export default class Servers {
         return new SubuserClient(this.httpClient, this.id, subuser);
     }
     info() {
-        return this.httpClient.request("GET", `/client/servers/${this.id}`);
+        return this.httpClient
+            .request("GET", `/client/servers/${this.id}`)
+            .then((res) => ({
+            ...res,
+            attributes: {
+                ...res.attributes,
+                updated_at: new Date(res.attributes.updated_at),
+                created_at: new Date(res.attributes.created_at),
+            },
+        }));
     }
     edit(options) {
         return this.httpClient.request("POST", `/client/servers/${this.id}/settings/rename`, renameServerSchema.parse(options));

@@ -2,7 +2,7 @@ import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
 import type {
   UserServer,
-  UserServerAttributesWithDate,
+  UserServerInfoAttributes,
 } from "../../client/server/server.types.js";
 import DatabaseClient from "./database/database.client.js";
 import {
@@ -41,7 +41,7 @@ export default class ServerClient {
 
   async info() {
     const res = await this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>
+      UserServer<UserServerInfoAttributes>
     >(
       "GET",
       `/application/servers/${this.id ?? `external/${this.external_id}`}`,
@@ -59,13 +59,11 @@ export default class ServerClient {
   async edit({ details, configuration, startup }: EditApplicationServerArgs) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     const basePath = `/application/servers/${this.id}`;
-    const requests: Promise<
-      UserServer<UserServerAttributesWithDate<string>>
-    >[] = [];
+    const requests: Promise<UserServer<UserServerInfoAttributes>>[] = [];
     if (details)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerAttributesWithDate<string>>,
+          UserServer<UserServerInfoAttributes>,
           z.infer<typeof editApplicationServerDetailsSchema>
         >(
           "PATCH",
@@ -76,7 +74,7 @@ export default class ServerClient {
     if (configuration)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerAttributesWithDate<string>>,
+          UserServer<UserServerInfoAttributes>,
           z.infer<typeof editApplicationServerConfigurationSchema>
         >(
           "PATCH",
@@ -87,7 +85,7 @@ export default class ServerClient {
     if (startup)
       requests.push(
         this.httpClient.request<
-          UserServer<UserServerAttributesWithDate<string>>,
+          UserServer<UserServerInfoAttributes>,
           z.infer<typeof editApplicationServerStartupSchema>
         >(
           "PATCH",
@@ -113,29 +111,33 @@ export default class ServerClient {
 
   suspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${this.id}/suspend`);
+    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+      "POST",
+      `/application/servers/${this.id}/suspend`,
+    );
   }
 
   unsuspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${this.id}/unsuspend`);
+    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+      "POST",
+      `/application/servers/${this.id}/unsuspend`,
+    );
   }
 
   reinstall() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>
-    >("POST", `/application/servers/${this.id}/reinstall`);
+    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+      "POST",
+      `/application/servers/${this.id}/reinstall`,
+    );
   }
 
   delete(force?: boolean | undefined) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>
-    >("DELETE", `/application/servers/${this.id}${force ? "?force=true" : ""}`);
+    return this.httpClient.request<UserServer<UserServerInfoAttributes>>(
+      "DELETE",
+      `/application/servers/${this.id}${force ? "?force=true" : ""}`,
+    );
   }
 }

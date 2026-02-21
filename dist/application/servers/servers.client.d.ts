@@ -75,31 +75,15 @@ export default class ServersClient {
         attributes: {
             created_at: Date;
             updated_at: Date;
-            server_owner: boolean;
-            identifier: string;
-            internal_id: number;
+            id: number;
+            external_id: string | null;
             uuid: string;
+            identifier: string;
             name: string;
-            is_node_under_maintenance: boolean;
             description: string;
-            status: null;
-            is_suspended: boolean;
-            is_installing: boolean;
-            is_transferring: boolean;
-            node: string;
-            sftp_details: {
-                ip: string;
-                port: number;
-            };
-            invocation: string;
-            docker_image: string;
-            egg_features: string[];
-            feature_limits: {
-                databases: number;
-                allocations: number;
-                backups: number;
-            };
-            user_permissions: import("../../client/server/server.types.js").ServerPermissions[];
+            server_owner: boolean;
+            status: "installing" | "suspended" | null;
+            suspended: boolean;
             limits: {
                 memory: number;
                 swap: number;
@@ -109,15 +93,21 @@ export default class ServersClient {
                 threads: null | string;
                 oom_disabled: boolean;
             };
-            relationships: {
-                allocations: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").Allocation[];
-                };
-                variables: {
-                    object: "list";
-                    data: import("../../client/server/server.types.js").EggVariable[];
-                };
+            feature_limits: {
+                databases: number;
+                allocations: number;
+                backups: number;
+            };
+            user: number;
+            node: number;
+            allocation: number;
+            nest: number;
+            egg: number;
+            container: {
+                startup_command: string;
+                image: string;
+                installed: number;
+                environment: Record<import("../../types.js").EnvironmentVariable, string>;
             };
         };
         object: "server";

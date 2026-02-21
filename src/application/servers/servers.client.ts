@@ -2,7 +2,7 @@ import z from "zod";
 import type HttpClient from "../../class/HttpClient.js";
 import type {
   UserServer,
-  UserServerAttributesWithDate,
+  UserServerInfoAttributes,
 } from "../../client/server/server.types.js";
 import {
   createServerSchema,
@@ -66,7 +66,7 @@ export default class ServersClient {
 
   async create(options: CreateServerArgs) {
     const res = await this.httpClient.request<
-      UserServer<UserServerAttributesWithDate<string>>,
+      UserServer<UserServerInfoAttributes>,
       z.infer<typeof createServerSchema>
     >("POST", `/application/servers`, createServerSchema.parse(options));
     return {

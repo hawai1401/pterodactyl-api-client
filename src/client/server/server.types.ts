@@ -1,4 +1,10 @@
-import type { BaseArgs, IP, ListwithPagination, Tuple } from "../../types.js";
+import type {
+  BaseArgs,
+  EnvironmentVariable,
+  IP,
+  ListwithPagination,
+  Tuple,
+} from "../../types.js";
 
 export type ServerPermissions =
   | ServerControlPermissions
@@ -90,6 +96,45 @@ export interface EggVariable {
   };
 }
 
+export interface UserServerInfoAttributes {
+  id: number;
+  external_id: string | null;
+  uuid: string;
+  identifier: string;
+  name: string;
+  description: string;
+  server_owner: boolean;
+  status: "installing" | "suspended" | null;
+  suspended: boolean;
+  limits: {
+    memory: number;
+    swap: number;
+    disk: number;
+    io: number;
+    cpu: number;
+    threads: null | string;
+    oom_disabled: boolean;
+  };
+  feature_limits: {
+    databases: number;
+    allocations: number;
+    backups: number;
+  };
+  user: number;
+  node: number;
+  allocation: number;
+  nest: number;
+  egg: number;
+  container: {
+    startup_command: string;
+    image: string;
+    installed: number;
+    environment: Record<EnvironmentVariable, string>;
+  };
+  updated_at: string;
+  created_at: string;
+}
+
 export interface UserServerAttributes {
   server_owner: boolean;
   identifier: string;
@@ -145,7 +190,7 @@ export interface UserServerAttributesWithDate<
 }
 
 export interface UserServer<
-  T extends UserServerAttributes | UserServerAttributesWithDate<string>,
+  T extends UserServerAttributes | UserServerAttributesWithDate<string> | UserServerInfoAttributes,
 > {
   object: "server";
   attributes: T;
