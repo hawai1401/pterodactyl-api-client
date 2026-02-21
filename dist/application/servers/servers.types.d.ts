@@ -9,9 +9,9 @@ export interface CreateServerArgs extends BaseArgs {
     description?: string | undefined;
     user: number;
     egg: number;
-    docker_image?: string | undefined;
-    startup?: string | undefined;
-    environment?: Record<EnvironmentVariable, string> | undefined;
+    docker_image: string;
+    startup: string;
+    environment: Record<EnvironmentVariable, string>;
     skip_scripts?: boolean | undefined;
     limits: {
         memory: number;
