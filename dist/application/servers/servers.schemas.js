@@ -15,20 +15,20 @@ export const createServerSchema = z.object({
     skip_scripts: z.boolean().optional(),
     oom_disabled: z.boolean().optional(),
     limits: z.object({
-        memory: z.int().positive().min(0),
+        memory: z.int().positive(),
         swap: z.int().min(-1),
-        disk: z.int().positive().min(0),
+        disk: z.int().positive(),
         io: z.int().positive().min(10).max(1000),
         threads: z
             .string()
             .regex(/^[0-9-,]+$/)
             .optional(),
-        cpu: z.int().positive().min(0),
+        cpu: z.int().positive(),
     }),
     feature_limits: z.object({
-        databases: z.int().positive().min(0),
-        backups: z.int().positive().min(0),
-        allocations: z.int().positive().min(0).optional(),
+        databases: z.int().min(0),
+        backups: z.int().min(0),
+        allocations: z.int().min(0).optional(),
     }),
     allocation: z.object({
         default: z.int().positive(),

@@ -21,21 +21,21 @@ export const editApplicationServerConfigurationSchema = z.object({
     allocation: z.int().positive(),
     oom_disabled: z.boolean().optional(),
     limits: z.object({
-        memory: z.int().positive().min(0).optional(),
+        memory: z.int().positive().optional(),
         swap: z.int().min(-1).optional(),
-        disk: z.int().positive().min(0).optional(),
+        disk: z.int().positive().optional(),
         io: z.int().positive().min(10).max(1000).optional(),
         threads: z
             .string()
             .regex(/^[0-9-,]+$/)
             .optional(),
-        cpu: z.int().positive().min(0).optional(),
+        cpu: z.int().positive().optional(),
     }),
     feature_limits: z
         .object({
-        databases: z.int().positive().min(0),
-        backups: z.int().positive().min(0),
-        allocations: z.int().positive().min(0).optional(),
+        databases: z.int().min(0),
+        backups: z.int().min(0),
+        allocations: z.int().min(0).optional(),
     })
         .optional(),
     add_allocations: z.int().positive().array().optional(),
