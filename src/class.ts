@@ -1,10 +1,9 @@
 import { ApplicationAPI } from "./application/index.js";
 import { ClientAPI } from "./client/index.js";
 import { clientSchema } from "./schemas.js";
+import type { role } from "./types.js";
 
-type role = "user" | "admin";
-
-export default class PterodactylAPIClient<T extends "user" | "admin"> {
+export default class PterodactylAPIClient<T extends role> {
   private apiKey: string;
   readonly panelUrl: URL;
   readonly role: T;
