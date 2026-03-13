@@ -38,9 +38,9 @@ export const editApplicationServerConfigurationSchema = z.object({
   }),
   feature_limits: z
     .object({
-      databases: z.int().positive().min(0),
-      backups: z.int().positive().min(0),
-      allocations: z.int().positive().min(0).optional(),
+      databases: z.int().min(0),
+      backups: z.int().min(0),
+      allocations: z.int().min(0).optional(),
     })
     .optional(),
   add_allocations: z.int().positive().array().optional(),

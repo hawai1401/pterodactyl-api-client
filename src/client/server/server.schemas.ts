@@ -120,19 +120,19 @@ export const createTaskSchema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("command"),
     payload: z.string(),
-    time_offset: z.int().positive().min(0).max(900),
+    time_offset: z.int().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
   z.object({
     action: z.literal("power"),
     payload: z.literal(["start", "stop", "restart", "kill"]),
-    time_offset: z.int().positive().min(0).max(900),
+    time_offset: z.int().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
   z.object({
     action: z.literal("backup"),
     payload: z.string().optional(),
-    time_offset: z.int().positive().min(0).max(900),
+    time_offset: z.int().min(0).max(900),
     continue_on_failure: z.boolean().optional(),
   }),
 ]);

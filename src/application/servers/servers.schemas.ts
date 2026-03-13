@@ -27,9 +27,9 @@ export const createServerSchema = z.object({
     cpu: z.int().positive().min(0),
   }),
   feature_limits: z.object({
-    databases: z.int().positive().min(0),
-    backups: z.int().positive().min(0),
-    allocations: z.int().positive().min(0).optional(),
+    databases: z.int().min(0),
+    backups: z.int().min(0),
+    allocations: z.int().min(0).optional(),
   }),
   allocation: z.object({
     default: z.int().positive(),
