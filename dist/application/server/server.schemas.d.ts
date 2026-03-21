@@ -16,12 +16,12 @@ export declare const editApplicationServerConfigurationSchema: z.ZodObject<{
     allocation: z.ZodInt;
     oom_disabled: z.ZodOptional<z.ZodBoolean>;
     limits: z.ZodObject<{
-        memory: z.ZodOptional<z.ZodInt>;
-        swap: z.ZodOptional<z.ZodInt>;
-        disk: z.ZodOptional<z.ZodInt>;
-        io: z.ZodOptional<z.ZodInt>;
+        memory: z.ZodInt;
+        swap: z.ZodInt;
+        disk: z.ZodInt;
+        io: z.ZodInt;
         threads: z.ZodOptional<z.ZodString>;
-        cpu: z.ZodOptional<z.ZodInt>;
+        cpu: z.ZodInt;
     }, z.z.core.$strip>;
     feature_limits: z.ZodOptional<z.ZodObject<{
         databases: z.ZodInt;
