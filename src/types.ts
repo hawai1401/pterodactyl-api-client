@@ -2,7 +2,7 @@ export type method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 export type role = "user" | "admin";
 
-export type BaseArgs = Record<string, any>;
+export type BaseArgs = Record<string, unknown>;
 
 export type IP = `${number}.${number}.${number}.${number}`;
 
