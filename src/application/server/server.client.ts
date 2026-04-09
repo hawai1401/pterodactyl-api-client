@@ -1,18 +1,18 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
-import DatabaseClient from "./database/database.client.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
+import DatabaseClient from './database/database.client.js';
 import {
   applicationServerIdSchema,
   editApplicationServerConfigurationSchema,
   editApplicationServerDetailsSchema,
   editApplicationServerStartupSchema,
-} from "./server.schemas.js";
+} from './server.schemas.js';
 import type {
   ApplicationServerId,
   EditApplicationServerArgs,
-} from "./server.types.js";
-import DatabasesClient from "./databases/databases.client.js";
-import type { ApplicationServer } from "../servers/servers.types.js";
+} from './server.types.js';
+import DatabasesClient from './databases/databases.client.js';
+import type { ApplicationServer } from '../servers/servers.types.js';
 
 export default class ServerClient {
   public databases: DatabasesClient;
@@ -38,7 +38,7 @@ export default class ServerClient {
 
   async info() {
     const res = await this.httpClient.request<ApplicationServer<string>>(
-      "GET",
+      'GET',
       `/application/servers/${this.id ?? `external/${this.external_id}`}`,
     );
     return {
@@ -61,7 +61,7 @@ export default class ServerClient {
           ApplicationServer<string>,
           z.infer<typeof editApplicationServerDetailsSchema>
         >(
-          "PATCH",
+          'PATCH',
           `${basePath}/details`,
           editApplicationServerDetailsSchema.parse(details),
         ),
@@ -72,7 +72,7 @@ export default class ServerClient {
           ApplicationServer<string>,
           z.infer<typeof editApplicationServerConfigurationSchema>
         >(
-          "PATCH",
+          'PATCH',
           `${basePath}/build`,
           editApplicationServerConfigurationSchema.parse(configuration),
         ),
@@ -83,14 +83,14 @@ export default class ServerClient {
           ApplicationServer<string>,
           z.infer<typeof editApplicationServerStartupSchema>
         >(
-          "PATCH",
+          'PATCH',
           `${basePath}/startup`,
           editApplicationServerStartupSchema.parse(startup),
         ),
       );
 
     if (requests.length === 0)
-      throw new Error("Aucunes modifications spécifiées !");
+      throw new Error('Aucunes modifications spécifiées !');
 
     const res = await Promise.all(requests);
 
@@ -107,7 +107,7 @@ export default class ServerClient {
   suspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<void>(
-      "POST",
+      'POST',
       `/application/servers/${this.id}/suspend`,
     );
   }
@@ -115,7 +115,7 @@ export default class ServerClient {
   unsuspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<void>(
-      "POST",
+      'POST',
       `/application/servers/${this.id}/unsuspend`,
     );
   }
@@ -123,7 +123,7 @@ export default class ServerClient {
   reinstall() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<void>(
-      "POST",
+      'POST',
       `/application/servers/${this.id}/reinstall`,
     );
   }
@@ -131,8 +131,8 @@ export default class ServerClient {
   delete(force?: boolean | undefined) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     return this.httpClient.request<void>(
-      "DELETE",
-      `/application/servers/${this.id}${force ? "?force=true" : ""}`,
+      'DELETE',
+      `/application/servers/${this.id}${force ? '?force=true' : ''}`,
     );
   }
 }

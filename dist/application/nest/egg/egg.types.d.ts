@@ -1,5 +1,5 @@
 export interface Egg<T extends string | Date> {
-    object: "egg";
+    object: 'egg';
     attributes: {
         id: number;
         uuid: string;

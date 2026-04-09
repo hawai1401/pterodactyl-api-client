@@ -1,12 +1,12 @@
-import type HttpClient from "../../../../class/HttpClient.js";
-import type { TaskAction } from "../../server.types.js";
-import type { ScheduleTask } from "../schedule.types.js";
+import type HttpClient from '../../../../class/HttpClient.js';
+import type { TaskAction } from '../../server.types.js';
+import type { ScheduleTask } from '../schedule.types.js';
 import {
   createTaskSchema,
   userServerScheduleTaskId,
-} from "../../server.schemas.js";
-import type z from "zod";
-import type { CreateScheduleTaskArgs } from "../tasks.types.js";
+} from '../../server.schemas.js';
+import type z from 'zod';
+import type { CreateScheduleTaskArgs } from '../tasks.types.js';
 
 export default class TaskClient {
   readonly task: number;
@@ -25,7 +25,7 @@ export default class TaskClient {
       ScheduleTask<string>,
       z.infer<typeof createTaskSchema>
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`,
       createTaskSchema.parse(options),
     );
@@ -41,7 +41,7 @@ export default class TaskClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`,
     );
   }

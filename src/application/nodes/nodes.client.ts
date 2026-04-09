@@ -1,9 +1,9 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
-import type { CreateNodeArgs, Node, NodeList } from "./nodes.types.js";
-import { createNodeSchema, listNodesFilterSchema } from "./nodes.schemas.js";
-import type { BaseListArgs, Sort } from "../../types.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
+import type { CreateNodeArgs, Node, NodeList } from './nodes.types.js';
+import { createNodeSchema, listNodesFilterSchema } from './nodes.schemas.js';
+import type { BaseListArgs, Sort } from '../../types.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 
 export default class NodesClient {
   constructor(private httpClient: HttpClient) {}
@@ -44,7 +44,7 @@ export default class NodesClient {
       }
     >({ ...options, filter });
     const res = await this.httpClient.request<NodeList>(
-      "GET",
+      'GET',
       `/application/nodes?${queries}`,
     );
     return {
@@ -64,7 +64,7 @@ export default class NodesClient {
     const res = await this.httpClient.request<
       Node<string>,
       z.infer<typeof createNodeSchema>
-    >("POST", "/application/nodes", createNodeSchema.parse(options));
+    >('POST', '/application/nodes', createNodeSchema.parse(options));
     return {
       ...res,
       attributes: {

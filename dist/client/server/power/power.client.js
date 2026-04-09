@@ -6,23 +6,23 @@ export default class PowerClient {
         this.server = server;
     }
     start() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
-            signal: "start",
+        return this.httpClient.request('POST', `/client/servers/${this.server}/power`, {
+            signal: 'start',
         });
     }
     stop() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
-            signal: "stop",
+        return this.httpClient.request('POST', `/client/servers/${this.server}/power`, {
+            signal: 'stop',
         });
     }
     restart() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
-            signal: "restart",
+        return this.httpClient.request('POST', `/client/servers/${this.server}/power`, {
+            signal: 'restart',
         });
     }
     kill() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/power`, {
-            signal: "kill",
+        return this.httpClient.request('POST', `/client/servers/${this.server}/power`, {
+            signal: 'kill',
         });
     }
 }

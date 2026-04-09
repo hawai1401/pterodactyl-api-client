@@ -1,13 +1,13 @@
-import type z from "zod";
-import type HttpClient from "../../../class/HttpClient.js";
-import type { BaseListArgs, IP, Sort } from "../../../types.js";
-import buildQueryParams from "../../../utils/buildQueryParams.js";
-import { listAllocationsFilterSchema } from "../node.schemas.js";
+import type z from 'zod';
+import type HttpClient from '../../../class/HttpClient.js';
+import type { BaseListArgs, IP, Sort } from '../../../types.js';
+import buildQueryParams from '../../../utils/buildQueryParams.js';
+import { listAllocationsFilterSchema } from '../node.schemas.js';
 import type {
   ApplicationAllocationList,
   ApplicationAllocationListWithDate,
   CreateApplicationAllocationArgs,
-} from "./allocations.types.js";
+} from './allocations.types.js';
 
 export default class AllocationClient {
   constructor(
@@ -31,7 +31,7 @@ export default class AllocationClient {
       { id?: Sort | undefined; uuid?: Sort | undefined }
     >({ ...options, filter });
     return this.httpClient.request<ApplicationAllocationListWithDate>(
-      "GET",
+      'GET',
       `/application/nodes/${this.node}/allocations?${queries}`,
     );
   }
@@ -40,6 +40,6 @@ export default class AllocationClient {
     return this.httpClient.request<
       ApplicationAllocationList,
       CreateApplicationAllocationArgs
-    >("POST", `/application/nodes/${this.node}/allocations`, options);
+    >('POST', `/application/nodes/${this.node}/allocations`, options);
   }
 }

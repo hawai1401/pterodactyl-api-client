@@ -1,21 +1,21 @@
-import z from "zod";
-import type HttpClient from "../../../class/HttpClient.js";
+import z from 'zod';
+import type HttpClient from '../../../class/HttpClient.js';
 import {
   applicationServerId,
   createApplicationDatabaseSchema,
-} from "../server.schemas.js";
+} from '../server.schemas.js';
 import type {
   ApplicationDatabaseList,
   CreateApplicationDatabase,
   CreatedApplicationDatabase,
-} from "./databases.types.js";
+} from './databases.types.js';
 
 export default class DatabasesClient {
   constructor(private httpClient: HttpClient) {}
 
   async list(server: number) {
     const res = await this.httpClient.request<ApplicationDatabaseList>(
-      "GET",
+      'GET',
       `/application/servers/${applicationServerId.parse(server)}/databases`,
     );
     return {
@@ -36,7 +36,7 @@ export default class DatabasesClient {
       CreatedApplicationDatabase,
       z.infer<typeof createApplicationDatabaseSchema>
     >(
-      "POST",
+      'POST',
       `/application/servers/${applicationServerId.parse(server)}/databases`,
       createApplicationDatabaseSchema.parse(args),
     );

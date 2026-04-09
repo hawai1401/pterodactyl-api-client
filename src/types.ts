@@ -1,6 +1,6 @@
-export type method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export type method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-export type role = "user" | "admin";
+export type role = 'user' | 'admin';
 
 export type BaseArgs = Record<string, unknown>;
 
@@ -15,7 +15,7 @@ export interface Pagination {
   links: Record<string, string>;
 }
 
-type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N
+type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N
   ? R
   : _TupleOf<T, N, [T, ...R]>;
 
@@ -26,7 +26,7 @@ export type Tuple<T, N extends number> = N extends N
   : never;
 
 export interface List {
-  object: "list";
+  object: 'list';
 }
 
 export interface ListwithPagination extends List {
@@ -42,4 +42,4 @@ export interface BaseListArgs {
 
 export type EnvironmentVariable = Uppercase<string>;
 
-export type Sort = "ascending" | "descending";
+export type Sort = 'ascending' | 'descending';

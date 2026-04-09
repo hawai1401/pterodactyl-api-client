@@ -1,6 +1,6 @@
-import type { BaseListArgs } from "../types.js";
-import { Account } from "./account/index.js";
-import { Server, type UserServerList } from "./server/index.js";
+import type { BaseListArgs } from '../types.js';
+import { Account } from './account/index.js';
+import { Server, type UserServerList } from './server/index.js';
 export default class ClientAPI {
     private httpClient;
     readonly panelUrl: URL;

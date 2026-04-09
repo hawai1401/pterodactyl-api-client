@@ -1,10 +1,10 @@
-import type HttpClient from "../../../class/HttpClient.js";
+import type HttpClient from '../../../class/HttpClient.js';
 import type {
   CreateSubuserArgs,
   Subuser,
   SubuserList,
-} from "../subuser.types.js";
-import { createSubuserSchema } from "../server.schemas.js";
+} from '../subuser.types.js';
+import { createSubuserSchema } from '../server.schemas.js';
 
 export default class SubusersClient {
   constructor(
@@ -14,7 +14,7 @@ export default class SubusersClient {
 
   async list() {
     const res = await this.httpClient.request<SubuserList>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/users`,
     );
     return {
@@ -34,7 +34,7 @@ export default class SubusersClient {
       Subuser<string>,
       CreateSubuserArgs
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/users`,
       createSubuserSchema.parse(options),
     );

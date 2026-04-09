@@ -1,6 +1,6 @@
-import z from "zod";
-import { createServerSchema, listServersFilterSchema, } from "./servers.schemas.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+import z from 'zod';
+import { createServerSchema, listServersFilterSchema, } from './servers.schemas.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 export default class ServersClient {
     httpClient;
     constructor(httpClient) {
@@ -9,7 +9,7 @@ export default class ServersClient {
     async list(options = {}) {
         const filter = listServersFilterSchema.optional().parse(options.filter);
         const queries = buildQueryParams({ ...options, filter });
-        const res = await this.httpClient.request("GET", `/application/servers?${queries}`);
+        const res = await this.httpClient.request('GET', `/application/servers?${queries}`);
         return {
             ...res,
             data: res.data.map((server) => ({
@@ -23,7 +23,7 @@ export default class ServersClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/application/servers`, createServerSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/application/servers`, createServerSchema.parse(options));
         return {
             ...res,
             attributes: {

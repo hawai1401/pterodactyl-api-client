@@ -1,11 +1,11 @@
-import type z from "zod";
-import type HttpClient from "../../../class/HttpClient.js";
+import type z from 'zod';
+import type HttpClient from '../../../class/HttpClient.js';
 import type {
   CreateScheduleArgs,
   Schedule,
   ScheduleList,
-} from "../schedule.types.js";
-import { createScheduleSchema } from "../server.schemas.js";
+} from '../schedule.types.js';
+import { createScheduleSchema } from '../server.schemas.js';
 
 export default class SchedulesClient {
   constructor(
@@ -15,7 +15,7 @@ export default class SchedulesClient {
 
   async list() {
     const res = await this.httpClient.request<ScheduleList>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/schedules`,
     );
     return {
@@ -55,7 +55,7 @@ export default class SchedulesClient {
       Schedule<string>,
       z.infer<typeof createScheduleSchema>
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/schedules`,
       createScheduleSchema.parse(options),
     );

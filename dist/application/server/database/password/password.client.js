@@ -8,6 +8,6 @@ export default class PasswordClient {
         this.database = database;
     }
     reset() {
-        return this.httpClient.request("POST", `/application/servers/${this.server}/databases/${this.database}/reset-password`);
+        return this.httpClient.request('POST', `/application/servers/${this.server}/databases/${this.database}/reset-password`);
     }
 }

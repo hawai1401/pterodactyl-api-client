@@ -1,9 +1,9 @@
-import type HttpClient from "../../../../class/HttpClient.js";
-import type { TaskAction } from "../../server.types.js";
-import type { Schedule, ScheduleTask } from "../schedule.types.js";
-import type { CreateScheduleTaskArgs } from "../tasks.types.js";
-import { createTaskSchema } from "../../server.schemas.js";
-import type z from "zod";
+import type HttpClient from '../../../../class/HttpClient.js';
+import type { TaskAction } from '../../server.types.js';
+import type { Schedule, ScheduleTask } from '../schedule.types.js';
+import type { CreateScheduleTaskArgs } from '../tasks.types.js';
+import { createTaskSchema } from '../../server.schemas.js';
+import type z from 'zod';
 
 export default class TasksClient {
   constructor(
@@ -14,7 +14,7 @@ export default class TasksClient {
 
   async list() {
     const res = await this.httpClient.request<Schedule<string>>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/schedules/${this.schedule}`,
     );
     return {
@@ -35,7 +35,7 @@ export default class TasksClient {
       ScheduleTask<string, T>,
       z.infer<typeof createTaskSchema>
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/schedules/${this.schedule}/tasks`,
       createTaskSchema.parse(options),
     );

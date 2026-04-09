@@ -1,6 +1,6 @@
-import type HttpClient from "../../../../class/HttpClient.js";
-import type { TaskAction } from "../../server.types.js";
-import type { CreateScheduleTaskArgs } from "../tasks.types.js";
+import type HttpClient from '../../../../class/HttpClient.js';
+import type { TaskAction } from '../../server.types.js';
+import type { CreateScheduleTaskArgs } from '../tasks.types.js';
 export default class TaskClient {
     private httpClient;
     readonly server: string;

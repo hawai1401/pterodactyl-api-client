@@ -1,4 +1,4 @@
-import type HttpClient from "../../../class/HttpClient.js";
+import type HttpClient from '../../../class/HttpClient.js';
 export default class EggsClient {
     private httpClient;
     readonly nest: number;

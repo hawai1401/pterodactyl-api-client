@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { BaseListArgs, IP } from "../../../types.js";
-import type { ApplicationAllocationList, ApplicationAllocationListWithDate, CreateApplicationAllocationArgs } from "./allocations.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { BaseListArgs, IP } from '../../../types.js';
+import type { ApplicationAllocationList, ApplicationAllocationListWithDate, CreateApplicationAllocationArgs } from './allocations.types.js';
 export default class AllocationClient {
     private httpClient;
     readonly node: number;

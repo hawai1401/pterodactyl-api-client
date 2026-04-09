@@ -1,4 +1,4 @@
-import type { BaseArgs, EnvironmentVariable } from "../../types.js";
+import type { BaseArgs, EnvironmentVariable } from '../../types.js';
 export interface ApplicationServerId {
     id?: number | undefined;
     external_id?: string | undefined;

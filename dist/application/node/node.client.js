@@ -1,8 +1,8 @@
-import z from "zod";
-import { nodeId } from "./node.schemas.js";
-import { createNodeSchema } from "../nodes/nodes.schemas.js";
-import AllocationsClient from "./allocations/allocations.client.js";
-import AllocationClient from "./allocation/allocation.client.js";
+import z from 'zod';
+import { nodeId } from './node.schemas.js';
+import { createNodeSchema } from '../nodes/nodes.schemas.js';
+import AllocationsClient from './allocations/allocations.client.js';
+import AllocationClient from './allocation/allocation.client.js';
 export default class NodeClient {
     httpClient;
     allocations;
@@ -16,7 +16,7 @@ export default class NodeClient {
         return new AllocationClient(this.httpClient, this.id, id);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/application/nodes/${this.id}`);
+        const res = await this.httpClient.request('GET', `/application/nodes/${this.id}`);
         return {
             ...res,
             attributes: {
@@ -27,7 +27,7 @@ export default class NodeClient {
         };
     }
     async edit(options) {
-        const res = await this.httpClient.request("PATCH", `/application/nodes/${this.id}`, createNodeSchema.parse(options));
+        const res = await this.httpClient.request('PATCH', `/application/nodes/${this.id}`, createNodeSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -38,9 +38,9 @@ export default class NodeClient {
         };
     }
     configuration() {
-        return this.httpClient.request("GET", `/application/nodes/${this.id}/configuration`);
+        return this.httpClient.request('GET', `/application/nodes/${this.id}/configuration`);
     }
     delete() {
-        return this.httpClient.request("DELETE", `/application/nodes/${this.id}`);
+        return this.httpClient.request('DELETE', `/application/nodes/${this.id}`);
     }
 }

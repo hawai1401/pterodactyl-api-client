@@ -1,18 +1,18 @@
-import type { BaseArgs, IP, ListwithPagination, Tuple } from "../../types.js";
-import type { AllocationList } from "./allocation.types.js";
-import type { EggVariableList } from "./startup/startup.types.js";
-export type ServerPermissions = ServerControlPermissions | FileManagementPermissions | BackupPermissions | NetworkAllocationPermissions | DatabsePermissions | SchedulePermissions | UserManagementPermissions | StartupPermissions | AdminPermissions | "*";
-export type ServerControlPermissions = "control.console" | "control.start" | "control.stop" | "control.restart" | "control.kill";
-export type FileManagementPermissions = "file.create" | "file.read" | "file.update" | "file.delete" | "file.archive" | "file.sftp";
-export type BackupPermissions = "backup.create" | "backup.read" | "backup.delete" | "backup.download" | "backup.restore";
-export type NetworkAllocationPermissions = "allocation.read" | "allocation.create" | "allocation.update" | "allocation.delete";
-export type DatabsePermissions = "database.read" | "database.create" | "database.update" | "database.delete";
-export type SchedulePermissions = "schedule.read" | "schedule.create" | "schedule.update" | "schedule.delete";
-export type UserManagementPermissions = "user.read" | "user.create" | "user.update" | "user.delete";
-export type StartupPermissions = "startup.read" | "startup.update";
-export type AdminPermissions = "admin.websocket.errors" | "admin.websocket.install" | "admin.websocket.transfer";
+import type { BaseArgs, IP, ListwithPagination, Tuple } from '../../types.js';
+import type { AllocationList } from './allocation.types.js';
+import type { EggVariableList } from './startup/startup.types.js';
+export type ServerPermissions = ServerControlPermissions | FileManagementPermissions | BackupPermissions | NetworkAllocationPermissions | DatabsePermissions | SchedulePermissions | UserManagementPermissions | StartupPermissions | AdminPermissions | '*';
+export type ServerControlPermissions = 'control.console' | 'control.start' | 'control.stop' | 'control.restart' | 'control.kill';
+export type FileManagementPermissions = 'file.create' | 'file.read' | 'file.update' | 'file.delete' | 'file.archive' | 'file.sftp';
+export type BackupPermissions = 'backup.create' | 'backup.read' | 'backup.delete' | 'backup.download' | 'backup.restore';
+export type NetworkAllocationPermissions = 'allocation.read' | 'allocation.create' | 'allocation.update' | 'allocation.delete';
+export type DatabsePermissions = 'database.read' | 'database.create' | 'database.update' | 'database.delete';
+export type SchedulePermissions = 'schedule.read' | 'schedule.create' | 'schedule.update' | 'schedule.delete';
+export type UserManagementPermissions = 'user.read' | 'user.create' | 'user.update' | 'user.delete';
+export type StartupPermissions = 'startup.read' | 'startup.update';
+export type AdminPermissions = 'admin.websocket.errors' | 'admin.websocket.install' | 'admin.websocket.transfer';
 export interface Allocation {
-    object: "allocation";
+    object: 'allocation';
     attributes: {
         id: number;
         ip: IP;
@@ -23,7 +23,7 @@ export interface Allocation {
     };
 }
 export interface EggVariable {
-    object: "egg_variable";
+    object: 'egg_variable';
     attributes: {
         name: string;
         description: string;
@@ -35,7 +35,7 @@ export interface EggVariable {
     };
 }
 export interface BaseUserServer {
-    object: "server";
+    object: 'server';
     attributes: {
         server_owner: boolean;
         identifier: string;
@@ -82,13 +82,13 @@ export type UserServer = BaseUserServer & ({
     };
 } | {
     attributes: {
-        status: "installing";
+        status: 'installing';
         is_installing: true;
         is_suspended: false;
     };
 } | {
     attributes: {
-        status: "suspended";
+        status: 'suspended';
         is_installing: false;
         is_suspended: true;
     };
@@ -102,24 +102,24 @@ export type UserServerWithDetails = UserServer & {
 export interface UserServerList extends ListwithPagination {
     data: UserServer[];
 }
-export type State = "running" | "starting" | "stopping" | "offline";
-export type Signal = "start" | "stop" | "restart" | "kill";
+export type State = 'running' | 'starting' | 'stopping' | 'offline';
+export type Signal = 'start' | 'stop' | 'restart' | 'kill';
 export interface EditServerArgs extends BaseArgs {
     name: string;
     description?: string | undefined;
 }
-export type TaskAction = "command" | "power" | "backup";
-export type ServerFileEvent = "server:file.read" | "server:file.download" | "server:file.write" | "server:file.copy" | "server:file.rename" | "server:file.compress" | "server:file.decompress" | "server:file.delete" | "server:file.create-directory" | "server:file.pull";
-export type ServerConsoleEvent = "server:console.command";
-export type ServerSettingsEvent = "server:settings.rename" | "server:settings.description";
-export type ServerReinstallEvent = "server:reinstall";
-export type ServerStartupEvent = "server:startup.image" | "server:startup.edit";
-export type ServerDatabaseEvent = "server:database.create" | "server:database.rotate-password" | "server:database.delete";
-export type ServerScheduleEvent = "server:schedule.create" | "server:schedule.update" | "server:schedule.execute" | "server:schedule.delete";
-export type ServerSubuserEvent = "server:subuser.create" | "server:subuser.update" | "server:subuser.delete";
-export type ServerAllocationEvent = "server:allocation.notes" | "server:allocation.primary" | "server:allocation.create" | "server:allocation.delete";
-export type ServerTaskEvent = "server:task.create" | "server:task.update" | "server:task.delete";
-export type ServerBackupEvent = "server:backup.start" | "server:backup.unlock" | "server:backup.lock" | "server:backup.delete" | "server:backup.download" | "server:backup.restore" | "server:backup.restore-complete";
+export type TaskAction = 'command' | 'power' | 'backup';
+export type ServerFileEvent = 'server:file.read' | 'server:file.download' | 'server:file.write' | 'server:file.copy' | 'server:file.rename' | 'server:file.compress' | 'server:file.decompress' | 'server:file.delete' | 'server:file.create-directory' | 'server:file.pull';
+export type ServerConsoleEvent = 'server:console.command';
+export type ServerSettingsEvent = 'server:settings.rename' | 'server:settings.description';
+export type ServerReinstallEvent = 'server:reinstall';
+export type ServerStartupEvent = 'server:startup.image' | 'server:startup.edit';
+export type ServerDatabaseEvent = 'server:database.create' | 'server:database.rotate-password' | 'server:database.delete';
+export type ServerScheduleEvent = 'server:schedule.create' | 'server:schedule.update' | 'server:schedule.execute' | 'server:schedule.delete';
+export type ServerSubuserEvent = 'server:subuser.create' | 'server:subuser.update' | 'server:subuser.delete';
+export type ServerAllocationEvent = 'server:allocation.notes' | 'server:allocation.primary' | 'server:allocation.create' | 'server:allocation.delete';
+export type ServerTaskEvent = 'server:task.create' | 'server:task.update' | 'server:task.delete';
+export type ServerBackupEvent = 'server:backup.start' | 'server:backup.unlock' | 'server:backup.lock' | 'server:backup.delete' | 'server:backup.download' | 'server:backup.restore' | 'server:backup.restore-complete';
 export type ServerEvent = ServerFileEvent | ServerConsoleEvent | ServerSettingsEvent | ServerReinstallEvent | ServerStartupEvent | ServerDatabaseEvent | ServerScheduleEvent | ServerSubuserEvent | ServerAllocationEvent | ServerTaskEvent | ServerBackupEvent;
 export interface OldNew {
     old: string;
@@ -153,7 +153,7 @@ export interface EmailRevoked {
 }
 export interface TaskPayload<T extends TaskAction = TaskAction> extends NameOnly {
     action: T;
-    payload: T extends "power" ? Signal : string;
+    payload: T extends 'power' ? Signal : string;
 }
 export type AllocationType = `${IP}:${number}`;
 export interface AllocationInterface {
@@ -176,71 +176,71 @@ export interface FileRename<N extends number = number> {
     count: N;
 }
 export type ServerActivityMap = {
-    "server:file.read": FileSingle;
-    "server:file.download": FileSingle;
-    "server:file.write": FileSingle;
-    "server:file.copy": FileSingle;
-    "server:file.rename": FileRename;
-    "server:file.compress": FileBatch;
-    "server:file.delete": FileBatch;
-    "server:file.decompress": {
+    'server:file.read': FileSingle;
+    'server:file.download': FileSingle;
+    'server:file.write': FileSingle;
+    'server:file.copy': FileSingle;
+    'server:file.rename': FileRename;
+    'server:file.compress': FileBatch;
+    'server:file.delete': FileBatch;
+    'server:file.decompress': {
         directory: string;
         files: string;
     };
-    "server:file.create-directory": {
+    'server:file.create-directory': {
         name: string;
         directory: string;
     };
-    "server:file.pull": {
+    'server:file.pull': {
         directory: string;
         url: string;
     };
-    "server:console.command": {
+    'server:console.command': {
         command: string;
     };
-    "server:settings.rename": OldNew;
-    "server:settings.description": OldNew;
-    "server:startup.image": OldNew;
-    "server:startup.edit": {
+    'server:settings.rename': OldNew;
+    'server:settings.description': OldNew;
+    'server:startup.image': OldNew;
+    'server:startup.edit': {
         variable: string;
     } & OldNew;
-    "server:database.create": NameOnly;
-    "server:database.rotate-password": NameOnly;
-    "server:database.delete": NameOnly;
-    "server:schedule.create": NameOnly;
-    "server:schedule.update": {
+    'server:database.create': NameOnly;
+    'server:database.rotate-password': NameOnly;
+    'server:database.delete': NameOnly;
+    'server:schedule.create': NameOnly;
+    'server:schedule.update': {
         name: string;
         active: boolean;
     };
-    "server:schedule.execute": NameOnly;
-    "server:schedule.delete": NameOnly;
-    "server:subuser.create": EmailPerms;
-    "server:subuser.update": PermissionsUpdate;
-    "server:subuser.delete": EmailRevoked;
-    "server:allocation.notes": {
+    'server:schedule.execute': NameOnly;
+    'server:schedule.delete': NameOnly;
+    'server:subuser.create': EmailPerms;
+    'server:subuser.update': PermissionsUpdate;
+    'server:subuser.delete': EmailRevoked;
+    'server:allocation.notes': {
         old: null | string;
         new: null | string;
     } & AllocationInterface;
-    "server:allocation.primary": AllocationInterface;
-    "server:allocation.create": AllocationInterface;
-    "server:allocation.delete": AllocationInterface;
-    "server:task.create": TaskPayload;
-    "server:task.update": TaskPayload;
-    "server:task.delete": NameOnly;
-    "server:backup.start": NameLocked;
-    "server:backup.unlock": NameOnly;
-    "server:backup.lock": NameOnly;
-    "server:backup.delete": NameFailed;
-    "server:backup.download": NameOnly;
-    "server:backup.restore": {
+    'server:allocation.primary': AllocationInterface;
+    'server:allocation.create': AllocationInterface;
+    'server:allocation.delete': AllocationInterface;
+    'server:task.create': TaskPayload;
+    'server:task.update': TaskPayload;
+    'server:task.delete': NameOnly;
+    'server:backup.start': NameLocked;
+    'server:backup.unlock': NameOnly;
+    'server:backup.lock': NameOnly;
+    'server:backup.delete': NameFailed;
+    'server:backup.download': NameOnly;
+    'server:backup.restore': {
         name: string;
         truncate: boolean;
     };
-    "server:backup.restore-complete": NameOnly;
+    'server:backup.restore-complete': NameOnly;
 };
 export type ServerActivityProperties<U extends ServerEvent> = U extends keyof ServerActivityMap ? ServerActivityMap[U] : never;
 export interface ActivityLog<T extends string | Date, U extends ServerEvent = ServerEvent> {
-    object: "activity_log";
+    object: 'activity_log';
     attributes: {
         id: string;
         batch: null;

@@ -1,11 +1,11 @@
-import z from "zod";
-import { descriptionSchema, idSchema, nameSchema } from "../../schemas.js";
+import z from 'zod';
+import { descriptionSchema, idSchema, nameSchema } from '../../schemas.js';
 export const createNodeSchema = z.object({
     name: nameSchema,
     description: descriptionSchema,
     location_id: idSchema,
     fqdn: z.string().min(1).max(191),
-    scheme: z.literal(["https", "http"]),
+    scheme: z.literal(['https', 'http']),
     behind_proxy: z.boolean().optional(),
     public: z.boolean().optional(),
     daemon_base: z.string().optional(),

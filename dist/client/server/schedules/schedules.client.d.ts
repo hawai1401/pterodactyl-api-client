@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateScheduleArgs } from "../schedule.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { CreateScheduleArgs } from '../schedule.types.js';
 export default class SchedulesClient {
     private httpClient;
     readonly server: string;

@@ -1,5 +1,5 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { EditLocationArgs } from "./location.types.js";
+import type HttpClient from '../../class/HttpClient.js';
+import type { EditLocationArgs } from './location.types.js';
 export default class LocationClient {
     private httpClient;
     readonly id: number;

@@ -1,4 +1,4 @@
-import type { BaseArgs, IP, List } from "../../../types.js";
+import type { BaseArgs, IP, List } from '../../../types.js';
 
 export interface ApplicationDatabaseAttributes<T extends string | Date> {
   id: number;
@@ -6,14 +6,14 @@ export interface ApplicationDatabaseAttributes<T extends string | Date> {
   host: number;
   database: string;
   username: string;
-  remote: string | IP | "%";
+  remote: string | IP | '%';
   max_connections: number;
   created_at: T;
   updated_at: T;
 }
 
 export interface ApplicationDatabase<T extends string | Date> {
-  object: "server_database";
+  object: 'server_database';
   attributes: ApplicationDatabaseAttributes<T>;
 }
 
@@ -23,7 +23,7 @@ export interface ApplicationDatabaseList extends List {
 
 export interface CreateApplicationDatabase extends BaseArgs {
   database: string;
-  remote: string | IP | "%";
+  remote: string | IP | '%';
   host: number;
 }
 

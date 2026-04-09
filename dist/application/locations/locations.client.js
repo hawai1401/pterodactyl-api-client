@@ -1,6 +1,6 @@
-import z from "zod";
-import { createLocationSchema, listLocationsFilterSchema, } from "./locations.schemas.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+import z from 'zod';
+import { createLocationSchema, listLocationsFilterSchema, } from './locations.schemas.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 export default class LocationsClient {
     httpClient;
     constructor(httpClient) {
@@ -9,7 +9,7 @@ export default class LocationsClient {
     async list(options = {}) {
         const filter = listLocationsFilterSchema.optional().parse(options.filter);
         const queries = buildQueryParams({ ...options, filter });
-        const res = await this.httpClient.request("GET", `/application/locations?${queries}`);
+        const res = await this.httpClient.request('GET', `/application/locations?${queries}`);
         return {
             ...res,
             data: res.data.map((location) => ({
@@ -23,7 +23,7 @@ export default class LocationsClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/application/locations`, createLocationSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/application/locations`, createLocationSchema.parse(options));
         return {
             ...res,
             attributes: {

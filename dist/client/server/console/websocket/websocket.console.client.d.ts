@@ -1,6 +1,6 @@
-import HttpClient from "../../../../class/HttpClient.js";
-import type { WebSocketCredentials, WebSocketCredentialsOptions } from "./websocket.console.types.js";
-import type { Signal } from "../../server.types.js";
+import HttpClient from '../../../../class/HttpClient.js';
+import type { WebSocketCredentials, WebSocketCredentialsOptions } from './websocket.console.types.js';
+import type { Signal } from '../../server.types.js';
 export default class WebsocketClient {
     private httpClient;
     private panelUrl;

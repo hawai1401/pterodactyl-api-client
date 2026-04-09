@@ -1,11 +1,11 @@
-import type z from "zod";
-import type HttpClient from "../../../class/HttpClient.js";
-import { assignAllocationSchema } from "../server.schemas.js";
-import type { Allocation } from "../server.types.js";
+import type z from 'zod';
+import type HttpClient from '../../../class/HttpClient.js';
+import { assignAllocationSchema } from '../server.schemas.js';
+import type { Allocation } from '../server.types.js';
 import type {
   AllocationList,
   AssignAllocationArgs,
-} from "../allocation.types.js";
+} from '../allocation.types.js';
 
 export default class AllocationsClient {
   constructor(
@@ -15,7 +15,7 @@ export default class AllocationsClient {
 
   list() {
     return this.httpClient.request<AllocationList>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/network/allocations`,
     );
   }
@@ -25,7 +25,7 @@ export default class AllocationsClient {
       Allocation,
       z.infer<typeof assignAllocationSchema>
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/network/allocations`,
       assignAllocationSchema.parse(options),
     );

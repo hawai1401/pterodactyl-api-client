@@ -6,6 +6,6 @@ export default class RessourceClient {
         this.server = server;
     }
     usage() {
-        return this.httpClient.request("GET", `/client/servers/${this.server}/resources`);
+        return this.httpClient.request('GET', `/client/servers/${this.server}/resources`);
     }
 }

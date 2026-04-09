@@ -1,5 +1,5 @@
-import type { BaseArgs, method } from "../types.js";
-import { PterodactylAPIError } from "./APIError.js";
+import type { BaseArgs, method } from '../types.js';
+import { PterodactylAPIError } from './APIError.js';
 
 export default class HttpClient {
   constructor(
@@ -14,14 +14,14 @@ export default class HttpClient {
   >(
     method: V,
     path: string,
-    body?: V extends "GET" ? null : V extends "DELETE" ? null : U,
+    body?: V extends 'GET' ? null : V extends 'DELETE' ? null : U,
   ): Promise<T> {
     const res = await fetch(new URL(`api${path}`, this.baseURL), {
       method,
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
       body: body ? JSON.stringify(body) : null,
     });

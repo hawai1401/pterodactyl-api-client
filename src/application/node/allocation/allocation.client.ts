@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import { allocationId } from "../node.schemas.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import { allocationId } from '../node.schemas.js';
 
 export default class AllocationClient {
   readonly id: number;
@@ -13,7 +13,7 @@ export default class AllocationClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/application/nodes/${this.node}/allocations/${this.id}`,
     );
   }

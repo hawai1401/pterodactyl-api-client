@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const applicationServerId: z.ZodInt;
 export declare const applicationServerExternalId: z.ZodString;
 export declare const applicationServerDatabaseId: z.ZodInt;

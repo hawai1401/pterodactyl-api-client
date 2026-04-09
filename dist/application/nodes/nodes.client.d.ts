@@ -1,6 +1,6 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { CreateNodeArgs } from "./nodes.types.js";
-import type { BaseListArgs, Sort } from "../../types.js";
+import type HttpClient from '../../class/HttpClient.js';
+import type { CreateNodeArgs } from './nodes.types.js';
+import type { BaseListArgs, Sort } from '../../types.js';
 export default class NodesClient {
     private httpClient;
     constructor(httpClient: HttpClient);

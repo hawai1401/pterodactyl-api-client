@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 
 export const createLocationSchema = z.object({
   short: z.string().min(3).max(60),

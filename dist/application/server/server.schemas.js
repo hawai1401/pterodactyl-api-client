@@ -1,5 +1,5 @@
-import z from "zod";
-import { idSchema, nameSchema } from "../../schemas.js";
+import z from 'zod';
+import { idSchema, nameSchema } from '../../schemas.js';
 export const applicationServerId = idSchema;
 export const applicationServerExternalId = nameSchema;
 export const applicationServerDatabaseId = idSchema;

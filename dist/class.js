@@ -1,6 +1,6 @@
-import { ApplicationAPI } from "./application/index.js";
-import { ClientAPI } from "./client/index.js";
-import { clientSchema } from "./schemas.js";
+import { ApplicationAPI } from './application/index.js';
+import { ClientAPI } from './client/index.js';
+import { clientSchema } from './schemas.js';
 export default class PterodactylAPIClient {
     apiKey;
     panelUrl;
@@ -14,13 +14,13 @@ export default class PterodactylAPIClient {
         this.apiKey = apiKey;
     }
     get admin() {
-        if (this.role === "admin")
-            // @ts-expect-error
+        if (this.role === 'admin')
+            // @ts-expect-error Works well
             return new ApplicationAPI({
                 panelUrl: this.panelUrl,
                 apiKey: this.apiKey,
             });
-        // @ts-expect-error
+        // @ts-expect-error Works well
         return;
     }
     /**

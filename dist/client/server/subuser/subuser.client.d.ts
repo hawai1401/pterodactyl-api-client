@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { EditSubuserArgs } from "../subuser.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { EditSubuserArgs } from '../subuser.types.js';
 export default class SubuserClient {
     private httpClient;
     readonly server: string;
@@ -12,7 +12,7 @@ export default class SubuserClient {
             username: string;
             email: string;
             image: string;
-            "2fa_enabled": boolean;
+            '2fa_enabled': boolean;
             permissions: import("../server.types.js").ServerPermissions[];
         };
         object: "server_subuser";
@@ -24,7 +24,7 @@ export default class SubuserClient {
             username: string;
             email: string;
             image: string;
-            "2fa_enabled": boolean;
+            '2fa_enabled': boolean;
             permissions: import("../server.types.js").ServerPermissions[];
         };
         object: "server_subuser";

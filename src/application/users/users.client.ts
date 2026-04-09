@@ -1,15 +1,15 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
-import { createUserSchema, listUsersFilterSchema } from "./users.schemas.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
+import { createUserSchema, listUsersFilterSchema } from './users.schemas.js';
 import type {
   CreateUserArgs,
   User,
   UserAttributes,
   UserList,
   UserWithServersAttributes,
-} from "./users.types.js";
-import type { BaseListArgs, Sort } from "../../types.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+} from './users.types.js';
+import type { BaseListArgs, Sort } from '../../types.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 
 export default class UsersClient {
   constructor(private httpClient: HttpClient) {}
@@ -52,7 +52,10 @@ export default class UsersClient {
       UserList<
         T extends true ? UserWithServersAttributes : UserAttributes<string>
       >
-    >("GET", `/application/users?${queries}${options.includeServers ? "&include=servers" : ""}`);
+    >(
+      'GET',
+      `/application/users?${queries}${options.includeServers ? '&include=servers' : ''}`,
+    );
     return {
       ...res,
       data: res.data.map((user) => ({
@@ -88,6 +91,6 @@ export default class UsersClient {
     return this.httpClient.request<
       User<UserAttributes<string>>,
       z.infer<typeof createUserSchema>
-    >("POST", "/application/users", createUserSchema.parse(args));
+    >('POST', '/application/users', createUserSchema.parse(args));
   }
 }

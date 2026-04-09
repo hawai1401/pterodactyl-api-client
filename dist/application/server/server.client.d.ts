@@ -1,7 +1,7 @@
-import type HttpClient from "../../class/HttpClient.js";
-import DatabaseClient from "./database/database.client.js";
-import type { ApplicationServerId, EditApplicationServerArgs } from "./server.types.js";
-import DatabasesClient from "./databases/databases.client.js";
+import type HttpClient from '../../class/HttpClient.js';
+import DatabaseClient from './database/database.client.js';
+import type { ApplicationServerId, EditApplicationServerArgs } from './server.types.js';
+import DatabasesClient from './databases/databases.client.js';
 export default class ServerClient {
     private httpClient;
     databases: DatabasesClient;

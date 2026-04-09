@@ -1,7 +1,7 @@
-import z from "zod";
-import DatabaseClient from "./database/database.client.js";
-import { applicationServerIdSchema, editApplicationServerConfigurationSchema, editApplicationServerDetailsSchema, editApplicationServerStartupSchema, } from "./server.schemas.js";
-import DatabasesClient from "./databases/databases.client.js";
+import z from 'zod';
+import DatabaseClient from './database/database.client.js';
+import { applicationServerIdSchema, editApplicationServerConfigurationSchema, editApplicationServerDetailsSchema, editApplicationServerStartupSchema, } from './server.schemas.js';
+import DatabasesClient from './databases/databases.client.js';
 export default class ServerClient {
     httpClient;
     databases;
@@ -20,7 +20,7 @@ export default class ServerClient {
         return new DatabaseClient(this.httpClient, this.id, database);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/application/servers/${this.id ?? `external/${this.external_id}`}`);
+        const res = await this.httpClient.request('GET', `/application/servers/${this.id ?? `external/${this.external_id}`}`);
         return {
             ...res,
             attributes: {
@@ -36,13 +36,13 @@ export default class ServerClient {
         const basePath = `/application/servers/${this.id}`;
         const requests = [];
         if (details)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/details`, editApplicationServerDetailsSchema.parse(details)));
+            requests.push(this.httpClient.request('PATCH', `${basePath}/details`, editApplicationServerDetailsSchema.parse(details)));
         if (configuration)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/build`, editApplicationServerConfigurationSchema.parse(configuration)));
+            requests.push(this.httpClient.request('PATCH', `${basePath}/build`, editApplicationServerConfigurationSchema.parse(configuration)));
         if (startup)
-            requests.push(this.httpClient.request("PATCH", `${basePath}/startup`, editApplicationServerStartupSchema.parse(startup)));
+            requests.push(this.httpClient.request('PATCH', `${basePath}/startup`, editApplicationServerStartupSchema.parse(startup)));
         if (requests.length === 0)
-            throw new Error("Aucunes modifications spécifiées !");
+            throw new Error('Aucunes modifications spécifiées !');
         const res = await Promise.all(requests);
         return {
             ...res[0],
@@ -56,21 +56,21 @@ export default class ServerClient {
     suspend() {
         if (!this.id)
             throw new Error("L'id du serveur est nécessaire !");
-        return this.httpClient.request("POST", `/application/servers/${this.id}/suspend`);
+        return this.httpClient.request('POST', `/application/servers/${this.id}/suspend`);
     }
     unsuspend() {
         if (!this.id)
             throw new Error("L'id du serveur est nécessaire !");
-        return this.httpClient.request("POST", `/application/servers/${this.id}/unsuspend`);
+        return this.httpClient.request('POST', `/application/servers/${this.id}/unsuspend`);
     }
     reinstall() {
         if (!this.id)
             throw new Error("L'id du serveur est nécessaire !");
-        return this.httpClient.request("POST", `/application/servers/${this.id}/reinstall`);
+        return this.httpClient.request('POST', `/application/servers/${this.id}/reinstall`);
     }
     delete(force) {
         if (!this.id)
             throw new Error("L'id du serveur est nécessaire !");
-        return this.httpClient.request("DELETE", `/application/servers/${this.id}${force ? "?force=true" : ""}`);
+        return this.httpClient.request('DELETE', `/application/servers/${this.id}${force ? '?force=true' : ''}`);
     }
 }

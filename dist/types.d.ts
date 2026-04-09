@@ -1,5 +1,5 @@
-export type method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-export type role = "user" | "admin";
+export type method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+export type role = 'user' | 'admin';
 export type BaseArgs = Record<string, unknown>;
 export type IP = `${number}.${number}.${number}.${number}`;
 export interface Pagination {
@@ -10,10 +10,10 @@ export interface Pagination {
     total_pages: number;
     links: Record<string, string>;
 }
-type _TupleOf<T, N extends number, R extends unknown[]> = R["length"] extends N ? R : _TupleOf<T, N, [T, ...R]>;
+type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N ? R : _TupleOf<T, N, [T, ...R]>;
 export type Tuple<T, N extends number> = N extends N ? number extends N ? T[] : _TupleOf<T, N, []> : never;
 export interface List {
-    object: "list";
+    object: 'list';
 }
 export interface ListwithPagination extends List {
     meta: {
@@ -25,6 +25,6 @@ export interface BaseListArgs {
     per_page?: number | undefined;
 }
 export type EnvironmentVariable = Uppercase<string>;
-export type Sort = "ascending" | "descending";
+export type Sort = 'ascending' | 'descending';
 export {};
 //# sourceMappingURL=types.d.ts.map

@@ -1,18 +1,18 @@
-import type { BaseArgs, List } from "../../types.js";
-import type { Signal, TaskAction } from "./server.types.js";
+import type { BaseArgs, List } from '../../types.js';
+import type { Signal, TaskAction } from './server.types.js';
 
-export type CronString = "*" | `${number}` | `*/${number}`;
+export type CronString = '*' | `${number}` | `*/${number}`;
 
 export interface ScheduleTask<
   T extends string | Date,
   A extends TaskAction = TaskAction,
 > {
-  object: "schedule_task";
+  object: 'schedule_task';
   attributes: {
     id: number;
     sequence_id: number;
     action: A;
-    payload: A extends "power" ? Signal : string;
+    payload: A extends 'power' ? Signal : string;
     time_offset: number;
     is_queued: boolean;
     continue_on_failure: boolean;
@@ -26,7 +26,7 @@ export interface ScheduleTaskList extends List {
 }
 
 export interface Schedule<T extends string | Date> {
-  object: "server_schedule";
+  object: 'server_schedule';
   attributes: {
     id: number;
     name: string;

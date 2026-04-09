@@ -1,4 +1,4 @@
-import { paginationSchema, sort } from "../schemas.js";
+import { paginationSchema, sort } from '../schemas.js';
 export default function buildQueryParams(params) {
     const queryParts = [];
     // Handle filters
@@ -12,7 +12,7 @@ export default function buildQueryParams(params) {
     if (params.sort) {
         for (const [key, direction] of Object.entries(params.sort)) {
             const parsedDirection = sort.parse(direction);
-            const prefix = parsedDirection === "descending" ? "-" : "";
+            const prefix = parsedDirection === 'descending' ? '-' : '';
             queryParts.push(`sort=${prefix}${key}`);
         }
     }
@@ -25,5 +25,5 @@ export default function buildQueryParams(params) {
         queryParts.push(`page=${parsedPaginationParams.page}`);
     if (parsedPaginationParams.per_page && parsedPaginationParams.per_page !== 50)
         queryParts.push(`per_page=${parsedPaginationParams.per_page}`);
-    return queryParts.join("&");
+    return queryParts.join('&');
 }

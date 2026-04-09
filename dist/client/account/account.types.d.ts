@@ -1,9 +1,9 @@
-import type { BaseArgs } from "../../types.js";
+import type { BaseArgs } from '../../types.js';
 export interface EditAcountArgs extends BaseArgs {
     password: string;
 }
 export interface user {
-    object: "user";
+    object: 'user';
     attributes: {
         id: number;
         admin: boolean;

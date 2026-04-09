@@ -1,4 +1,4 @@
-import { createTaskSchema } from "../../server.schemas.js";
+import { createTaskSchema } from '../../server.schemas.js';
 export default class TasksClient {
     httpClient;
     server;
@@ -9,7 +9,7 @@ export default class TasksClient {
         this.schedule = schedule;
     }
     async list() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/schedules/${this.schedule}`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/schedules/${this.schedule}`);
         return {
             ...res.attributes.relationships.tasks,
             data: res.attributes.relationships.tasks.data.map((task) => ({
@@ -23,7 +23,7 @@ export default class TasksClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/schedules/${this.schedule}/tasks`, createTaskSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}/tasks`, createTaskSchema.parse(options));
         return {
             ...res,
             attributes: {

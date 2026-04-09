@@ -1,4 +1,4 @@
-import { createScheduleSchema } from "../server.schemas.js";
+import { createScheduleSchema } from '../server.schemas.js';
 export default class SchedulesClient {
     httpClient;
     server;
@@ -7,7 +7,7 @@ export default class SchedulesClient {
         this.server = server;
     }
     async list() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/schedules`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/schedules`);
         return {
             ...res,
             data: res.data.map((schedule) => ({
@@ -38,7 +38,7 @@ export default class SchedulesClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/schedules`, createScheduleSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/schedules`, createScheduleSchema.parse(options));
         return {
             ...res,
             attributes: {

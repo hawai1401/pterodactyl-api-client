@@ -1,5 +1,5 @@
-import type { BaseArgs, ListwithPagination } from "../../types.js";
-import type { ApplicationServer } from "../servers/servers.types.js";
+import type { BaseArgs, ListwithPagination } from '../../types.js';
+import type { ApplicationServer } from '../servers/servers.types.js';
 
 export interface UserAttributes<T extends string | Date> {
   id: number;
@@ -11,7 +11,7 @@ export interface UserAttributes<T extends string | Date> {
   last_name: string;
   language: string;
   root_admin: true;
-  "2fa": boolean;
+  '2fa': boolean;
   created_at: T;
   updated_at: T;
 }
@@ -19,14 +19,14 @@ export interface UserAttributes<T extends string | Date> {
 export interface User<
   T extends UserAttributes<string> | UserWithServersAttributes,
 > {
-  object: "user";
+  object: 'user';
   attributes: T;
 }
 
 export interface UserWithServersAttributes extends UserAttributes<string> {
   relationships: {
     servers: {
-      object: "list";
+      object: 'list';
       data: ApplicationServer<string>[];
     };
   };

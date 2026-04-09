@@ -1,6 +1,6 @@
-import HttpClient from "../../../../class/HttpClient.js";
-import WebSocket from "ws";
-import { userServerWebsocketSchema } from "../../server.schemas.js";
+import HttpClient from '../../../../class/HttpClient.js';
+import WebSocket from 'ws';
+import { userServerWebsocketSchema } from '../../server.schemas.js';
 export default class WebsocketClient {
     httpClient;
     panelUrl;
@@ -11,7 +11,7 @@ export default class WebsocketClient {
         this.server = server;
     }
     credentials() {
-        return this.httpClient.request("GET", `/client/servers/${this.server}/websocket`);
+        return this.httpClient.request('GET', `/client/servers/${this.server}/websocket`);
     }
     async connect(options = {}) {
         const { onConsoleOutput, onStats, onStatusChange } = userServerWebsocketSchema.parse(options);
@@ -22,38 +22,38 @@ export default class WebsocketClient {
                     Origin: this.panelUrl.origin,
                 },
             });
-            socket.addEventListener("open", () => {
+            socket.addEventListener('open', () => {
                 socket.send(JSON.stringify({
-                    event: "auth",
+                    event: 'auth',
                     args: [credentials.data.token],
                 }));
-                socket.addEventListener("message", async (event) => {
+                socket.addEventListener('message', async (event) => {
                     const data = JSON.parse(event.data.toString());
-                    if (data.event === "stats" && onStats)
+                    if (data.event === 'stats' && onStats)
                         await onStats(JSON.parse(data.args[0]));
-                    if (data.event === "status" && onStatusChange)
+                    if (data.event === 'status' && onStatusChange)
                         await onStatusChange(data.args[0]);
-                    if (data.event === "console output" && onConsoleOutput)
+                    if (data.event === 'console output' && onConsoleOutput)
                         await onConsoleOutput(data.args[0]);
                 });
                 setTimeout(() => {
                     resolve({
                         sendCommand(command) {
                             socket.send(JSON.stringify({
-                                event: "send command",
+                                event: 'send command',
                                 args: [command],
                             }));
                         },
                         sendSignal(state) {
                             socket.send(JSON.stringify({
-                                event: "set state",
+                                event: 'set state',
                                 args: [state],
                             }));
                         },
                     });
                 }, 1000);
             });
-            socket.addEventListener("error", (err) => {
+            socket.addEventListener('error', (err) => {
                 reject(err);
             });
         });

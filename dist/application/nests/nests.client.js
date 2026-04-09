@@ -4,7 +4,7 @@ export default class NestsClient {
         this.httpClient = httpClient;
     }
     async list() {
-        const res = await this.httpClient.request("GET", "/application/nests");
+        const res = await this.httpClient.request('GET', '/application/nests');
         return {
             ...res,
             data: res.data.map((nest) => ({

@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { EditAcountArgs } from "../account.types.js";
-import type { A2FData, EnableA2fArgs, RecoveryTokens } from "./a2f.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { EditAcountArgs } from '../account.types.js';
+import type { A2FData, EnableA2fArgs, RecoveryTokens } from './a2f.types.js';
 export default class A2fClient {
     private httpClient;
     constructor(httpClient: HttpClient);

@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const userServerFilterSchema: z.ZodObject<{
     uuid: z.ZodOptional<z.ZodUUID>;
     name: z.ZodOptional<z.ZodString>;

@@ -1,4 +1,4 @@
-import type { BaseArgs, List, Pagination, Tuple } from "../../types.js";
+import type { BaseArgs, List, Pagination, Tuple } from '../../types.js';
 export interface BackupList<N extends number = number> extends List {
     data: Tuple<Backup<string>, N>;
     meta: {
@@ -15,13 +15,13 @@ export interface RestoreBackupArgs extends BaseArgs {
     truncate?: boolean | undefined;
 }
 export interface DownloadBackupUrl {
-    object: "signed_url";
+    object: 'signed_url';
     attributes: {
         url: string;
     };
 }
 export interface Backup<T extends string | Date> {
-    object: "backup";
+    object: 'backup';
     attributes: {
         uuid: string;
         name: string;

@@ -1,4 +1,4 @@
-import { editImageSchema } from "../server.schemas.js";
+import { editImageSchema } from '../server.schemas.js';
 export default class ImageClient {
     httpClient;
     server;
@@ -7,6 +7,6 @@ export default class ImageClient {
         this.server = server;
     }
     edit(options) {
-        return this.httpClient.request("PUT", `/client/servers/${this.server}/settings/docker-image`, editImageSchema.parse(options));
+        return this.httpClient.request('PUT', `/client/servers/${this.server}/settings/docker-image`, editImageSchema.parse(options));
     }
 }

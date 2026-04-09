@@ -1,6 +1,6 @@
-import { createScheduleSchema, userServerScheduleId, } from "../server.schemas.js";
-import TaskClient from "./task/task.client.js";
-import TasksClient from "./tasks/tasks.client.js";
+import { createScheduleSchema, userServerScheduleId, } from '../server.schemas.js';
+import TaskClient from './task/task.client.js';
+import TasksClient from './tasks/tasks.client.js';
 export default class ScheduleClient {
     httpClient;
     server;
@@ -16,7 +16,7 @@ export default class ScheduleClient {
         return new TaskClient(this.httpClient, this.server, this.schedule, task);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/schedules/${this.schedule}`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/schedules/${this.schedule}`);
         return {
             ...res,
             attributes: {
@@ -43,12 +43,12 @@ export default class ScheduleClient {
         };
     }
     edit(options) {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/schedules/${this.schedule}`, createScheduleSchema.parse(options));
+        return this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}`, createScheduleSchema.parse(options));
     }
     delete() {
-        return this.httpClient.request("DELETE", `/client/servers/${this.server}/schedules/${this.schedule}`);
+        return this.httpClient.request('DELETE', `/client/servers/${this.server}/schedules/${this.schedule}`);
     }
     execute() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/schedules/${this.schedule}/execute`);
+        return this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}/execute`);
     }
 }

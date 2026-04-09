@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const userId: z.ZodInt;
 export declare const externalUserId: z.ZodString;
 export declare const userIdSchema: z.ZodObject<{

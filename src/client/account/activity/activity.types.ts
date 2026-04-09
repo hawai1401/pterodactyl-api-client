@@ -1,4 +1,4 @@
-import type { IP, ListwithPagination } from "../../../types.js";
+import type { IP, ListwithPagination } from '../../../types.js';
 
 export interface listActivityArgs {
   page?: number | undefined;
@@ -6,14 +6,14 @@ export interface listActivityArgs {
   event?: UserEvent | AuthEvent | undefined;
 }
 
-export type UserApiKeyEvent = "user:api-key.create" | "user:api-key.delete";
-export type UserSshKeyEvent = "user:ssh-key.create" | "user:ssh-key.delete";
+export type UserApiKeyEvent = 'user:api-key.create' | 'user:api-key.delete';
+export type UserSshKeyEvent = 'user:ssh-key.create' | 'user:ssh-key.delete';
 export type UserAccountEvent =
-  | "user:account.email-changed"
-  | "user:account.password-changed";
+  | 'user:account.email-changed'
+  | 'user:account.password-changed';
 export type UserTwoFactorEvent =
-  | "user:two-factor.create"
-  | "user:two-factor.delete";
+  | 'user:two-factor.create'
+  | 'user:two-factor.delete';
 
 export type UserEvent =
   | UserApiKeyEvent
@@ -21,7 +21,7 @@ export type UserEvent =
   | UserAccountEvent
   | UserTwoFactorEvent;
 
-export type AuthEvent = "auth:success" | "auth:fail" | "auth:checkpoint";
+export type AuthEvent = 'auth:success' | 'auth:fail' | 'auth:checkpoint';
 
 export interface UserActivityList<
   U,
@@ -33,13 +33,13 @@ export interface UserActivityList<
 type UserActivityProperties<U extends UserEvent | AuthEvent> =
   (U extends UserApiKeyEvent ? { identifier: string } : never) &
     (U extends UserSshKeyEvent ? { fingerprint: string } : never) &
-    (U extends "user:email-changed" ? { old: string; new: string } : never);
+    (U extends 'user:email-changed' ? { old: string; new: string } : never);
 
 export interface UserActivityEvent<
   T,
   U extends UserEvent | AuthEvent = UserEvent | AuthEvent,
 > {
-  object: "activity_log";
+  object: 'activity_log';
   attributes: {
     id: string;
     batch: null;

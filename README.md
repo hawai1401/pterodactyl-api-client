@@ -20,22 +20,22 @@ npm install pterodactyl-api-client
 ### ESM
 
 ```js
-import { PterodactylAPIClient } from "pterodactyl-api-client";
+import { PterodactylAPIClient } from 'pterodactyl-api-client';
 
 const client = new PterodactylAPIClient({
-  baseUrl: "https://panel.example.com",
-  apiKey: "VOTRE_CLE_API",
+  baseUrl: 'https://panel.example.com',
+  apiKey: 'VOTRE_CLE_API',
 });
 ```
 
 ### CommonJS
 
 ```js
-const { PterodactylAPIClient } = require("pterodactyl-api-client");
+const { PterodactylAPIClient } = require('pterodactyl-api-client');
 
 const client = new PterodactylAPIClient({
-  baseUrl: "https://panel.example.com",
-  apiKey: "VOTRE_CLE_API",
+  baseUrl: 'https://panel.example.com',
+  apiKey: 'VOTRE_CLE_API',
 });
 ```
 
@@ -57,7 +57,7 @@ const keys = await client.user.account.apiKey.list();
 console.log(keys.data);
 
 const created = await client.user.account.apiKey.create({
-  description: "Bot",
+  description: 'Bot',
 });
 ```
 
@@ -117,7 +117,7 @@ Les erreurs retournées par l’API sont encapsulées dans une classe d’erreur
 - erreurs API avec statut HTTP
 
 ```js
-import { PterodactylAPIError } from "pterodactyl-api-client";
+import { PterodactylAPIError } from 'pterodactyl-api-client';
 
 try {
   const activity = await client.user.servers.activity.list({
@@ -126,10 +126,10 @@ try {
   });
 } catch (e) {
   if (e instanceof PterodactylAPIError) {
-    console.error("HTTP Status :", e.status);
-    console.error("Message :", e.message);
-    console.error("Endpoint :", e.path);
-    console.error("Contenu de la requête :", e?.body ?? "Aucun");
+    console.error('HTTP Status :', e.status);
+    console.error('Message :', e.message);
+    console.error('Endpoint :', e.path);
+    console.error('Contenu de la requête :', e?.body ?? 'Aucun');
   }
 }
 ```

@@ -1,5 +1,5 @@
-import { userServerCommandSchema } from "../server.schemas.js";
-import WebsocketClient from "./websocket/websocket.console.client.js";
+import { userServerCommandSchema } from '../server.schemas.js';
+import WebsocketClient from './websocket/websocket.console.client.js';
 export default class ConsoleClient {
     httpClient;
     server;
@@ -10,6 +10,6 @@ export default class ConsoleClient {
         this.websocket = new WebsocketClient(httpClient, panelUrl, this.server);
     }
     send(options) {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/command`, userServerCommandSchema.parse(options));
+        return this.httpClient.request('POST', `/client/servers/${this.server}/command`, userServerCommandSchema.parse(options));
     }
 }

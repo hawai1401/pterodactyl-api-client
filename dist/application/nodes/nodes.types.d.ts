@@ -1,7 +1,7 @@
-import type { BaseArgs, ListwithPagination } from "../../types.js";
-export type Scheme = "https" | "http";
+import type { BaseArgs, ListwithPagination } from '../../types.js';
+export type Scheme = 'https' | 'http';
 export interface Node<T extends string | Date> {
-    object: "node";
+    object: 'node';
     attributes: {
         id: number;
         uuid: string;

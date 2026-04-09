@@ -1,7 +1,7 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import { applicationServerDatabaseId } from "../server.schemas.js";
-import type { ApplicationDatabase } from "../databases/databases.types.js";
-import PasswordClient from "./password/password.client.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import { applicationServerDatabaseId } from '../server.schemas.js';
+import type { ApplicationDatabase } from '../databases/databases.types.js';
+import PasswordClient from './password/password.client.js';
 
 export default class DatabaseClient {
   public password: PasswordClient;
@@ -18,7 +18,7 @@ export default class DatabaseClient {
 
   async info() {
     const res = await this.httpClient.request<ApplicationDatabase<string>>(
-      "GET",
+      'GET',
       `/application/servers/${this.server}/databases/${this.id}`,
     );
     return {
@@ -33,7 +33,7 @@ export default class DatabaseClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/application/servers/${this.server}/databases/${this.id}`,
     );
   }

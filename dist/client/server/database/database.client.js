@@ -1,5 +1,5 @@
-import { userServerDatabaseId } from "../server.schemas.js";
-import PasswordClient from "./password/password.client.js";
+import { userServerDatabaseId } from '../server.schemas.js';
+import PasswordClient from './password/password.client.js';
 export default class DatabaseClient {
     httpClient;
     server;
@@ -12,6 +12,6 @@ export default class DatabaseClient {
         this.database = userServerDatabaseId.parse(database);
     }
     delete() {
-        return this.httpClient.request("DELETE", `/client/servers/${this.server}/databases/${this.database}`);
+        return this.httpClient.request('DELETE', `/client/servers/${this.server}/databases/${this.database}`);
     }
 }

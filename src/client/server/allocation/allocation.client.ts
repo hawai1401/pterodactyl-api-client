@@ -1,7 +1,7 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { Allocation } from "../server.types.js";
-import type { EditAllocationArgs } from "../allocation.types.js";
-import { allocationId, editAllocationSchema } from "../server.schemas.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { Allocation } from '../server.types.js';
+import type { EditAllocationArgs } from '../allocation.types.js';
+import { allocationId, editAllocationSchema } from '../server.schemas.js';
 
 export default class AllocationClient {
   readonly allocation: number;
@@ -16,14 +16,14 @@ export default class AllocationClient {
 
   setPrimary() {
     return this.httpClient.request<Allocation>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`,
     );
   }
 
   edit(options: EditAllocationArgs = {}) {
     return this.httpClient.request<Allocation, EditAllocationArgs>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/network/allocations/${this.allocation}`,
       editAllocationSchema.parse(options),
     );
@@ -31,7 +31,7 @@ export default class AllocationClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/network/allocations/${this.allocation}`,
     );
   }

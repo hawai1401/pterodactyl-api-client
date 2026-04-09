@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateApplicationDatabase } from "./databases.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { CreateApplicationDatabase } from './databases.types.js';
 export default class DatabasesClient {
     private httpClient;
     constructor(httpClient: HttpClient);

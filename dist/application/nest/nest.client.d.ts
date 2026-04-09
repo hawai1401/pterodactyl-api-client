@@ -1,6 +1,6 @@
-import type HttpClient from "../../class/HttpClient.js";
-import EggsClient from "./eggs/eggs.client.js";
-import EggClient from "./egg/egg.client.js";
+import type HttpClient from '../../class/HttpClient.js';
+import EggsClient from './eggs/eggs.client.js';
+import EggClient from './egg/egg.client.js';
 export default class NestClient {
     private httpClient;
     eggs: EggsClient;

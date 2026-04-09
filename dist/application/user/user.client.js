@@ -1,6 +1,6 @@
-import z from "zod";
-import { userIdSchema } from "./user.schemas.js";
-import { createUserSchema } from "../users/users.schemas.js";
+import z from 'zod';
+import { userIdSchema } from './user.schemas.js';
+import { createUserSchema } from '../users/users.schemas.js';
 export default class UserClient {
     httpClient;
     id;
@@ -12,7 +12,7 @@ export default class UserClient {
         this.external_id = external_id;
     }
     async info({ includeServers, } = {}) {
-        const res = await this.httpClient.request("GET", `/application/users/${this.id ?? `external/${this.external_id}`}${includeServers ? "?include=servers" : ""}`);
+        const res = await this.httpClient.request('GET', `/application/users/${this.id ?? `external/${this.external_id}`}${includeServers ? '?include=servers' : ''}`);
         return {
             ...res,
             attributes: {
@@ -25,11 +25,11 @@ export default class UserClient {
     edit(args) {
         if (!this.id)
             throw new Error("L'id de l'utilisateur est requis !");
-        return this.httpClient.request("PATCH", `/application/users/${this.id}`, createUserSchema.parse(args));
+        return this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(args));
     }
     delete() {
         if (!this.id)
             throw new Error("L'id de l'utilisateur est requis !");
-        return this.httpClient.request("DELETE", `/application/users/${this.id}`);
+        return this.httpClient.request('DELETE', `/application/users/${this.id}`);
     }
 }

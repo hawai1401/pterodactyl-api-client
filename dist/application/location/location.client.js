@@ -1,5 +1,5 @@
-import z from "zod";
-import { editLocationSchema, locationId } from "./location.schemas.js";
+import z from 'zod';
+import { editLocationSchema, locationId } from './location.schemas.js';
 export default class LocationClient {
     httpClient;
     id;
@@ -8,7 +8,7 @@ export default class LocationClient {
         this.id = locationId.parse(id);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/application/locations/${this.id}`);
+        const res = await this.httpClient.request('GET', `/application/locations/${this.id}`);
         return {
             ...res,
             attributes: {
@@ -19,7 +19,7 @@ export default class LocationClient {
         };
     }
     async edit(options) {
-        const res = await this.httpClient.request("PATCH", `/application/locations/${this.id}`, editLocationSchema.parse(options));
+        const res = await this.httpClient.request('PATCH', `/application/locations/${this.id}`, editLocationSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -30,6 +30,6 @@ export default class LocationClient {
         };
     }
     delete() {
-        return this.httpClient.request("DELETE", `/application/locations/${this.id}`);
+        return this.httpClient.request('DELETE', `/application/locations/${this.id}`);
     }
 }

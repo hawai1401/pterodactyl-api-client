@@ -1,6 +1,6 @@
-import type { BaseArgs, IP, List } from "../../../types.js";
+import type { BaseArgs, IP, List } from '../../../types.js';
 export interface ApiKey<L, C = L> {
-    object: "api_key";
+    object: 'api_key';
     attributes: {
         identifier: string;
         description: string;

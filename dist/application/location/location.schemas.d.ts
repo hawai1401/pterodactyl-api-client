@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const locationId: z.ZodInt;
 export declare const editLocationSchema: z.ZodObject<{
     short: z.ZodOptional<z.ZodString>;

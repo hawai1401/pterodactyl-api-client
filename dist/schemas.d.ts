@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const idSchema: z.ZodInt;
 export declare const uuidSchema: z.ZodUUID;
 export declare const nameSchema: z.ZodString;

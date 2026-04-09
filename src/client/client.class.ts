@@ -1,9 +1,9 @@
-import HttpClient from "../class/HttpClient.js";
-import type { BaseListArgs } from "../types.js";
-import buildQueryParams from "../utils/buildQueryParams.js";
-import { Account } from "./account/index.js";
-import { userServerFilterSchema } from "./client.schema.js";
-import { Server, type UserServerList } from "./server/index.js";
+import HttpClient from '../class/HttpClient.js';
+import type { BaseListArgs } from '../types.js';
+import buildQueryParams from '../utils/buildQueryParams.js';
+import { Account } from './account/index.js';
+import { userServerFilterSchema } from './client.schema.js';
+import { Server, type UserServerList } from './server/index.js';
 
 export default class ClientAPI {
   private httpClient: HttpClient;
@@ -38,7 +38,7 @@ export default class ClientAPI {
       ...options,
       filter,
     });
-    return this.httpClient.request<UserServerList>("GET", `/client?${queries}`);
+    return this.httpClient.request<UserServerList>('GET', `/client?${queries}`);
   }
 
   server(id: string) {

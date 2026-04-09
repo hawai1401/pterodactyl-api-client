@@ -1,5 +1,5 @@
-import buildQueryParams from "../../../utils/buildQueryParams.js";
-import { accountActivityEvent } from "../account.schemas.js";
+import buildQueryParams from '../../../utils/buildQueryParams.js';
+import { accountActivityEvent } from '../account.schemas.js';
 export default class ActivityClient {
     httpClient;
     constructor(httpClient) {
@@ -13,7 +13,7 @@ export default class ActivityClient {
             filter: { event },
             sort,
         });
-        const res = await this.httpClient.request("GET", `/client/account/activity?${queries}`);
+        const res = await this.httpClient.request('GET', `/client/account/activity?${queries}`);
         return {
             ...res,
             data: res.data.map((activity) => ({

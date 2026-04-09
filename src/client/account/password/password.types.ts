@@ -1,4 +1,4 @@
-import type { BaseArgs } from "../../../types.js";
+import type { BaseArgs } from '../../../types.js';
 
 export interface EditPasswordArgs extends BaseArgs {
   current_password: string;

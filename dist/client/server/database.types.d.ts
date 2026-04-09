@@ -1,10 +1,10 @@
-import type { BaseArgs, IP, List } from "../../types.js";
+import type { BaseArgs, IP, List } from '../../types.js';
 export interface DatabaseList extends List {
     data: Database[];
 }
 export interface CreateDatabaseArgs extends BaseArgs {
     database: string;
-    remote: string | IP | "%";
+    remote: string | IP | '%';
 }
 export interface DatabaseAttributes {
     id: string;
@@ -14,17 +14,17 @@ export interface DatabaseAttributes {
     };
     name: string;
     username: string;
-    connections_from: string | IP | "%";
+    connections_from: string | IP | '%';
     max_connections: number;
 }
 export interface Database {
-    object: "server_database";
+    object: 'server_database';
     attributes: DatabaseAttributes;
 }
 export interface DatabaseAttributesWithPassword extends DatabaseAttributes {
     relationships: {
         password: {
-            object: "database_password";
+            object: 'database_password';
             attributes: {
                 password: string;
             };
@@ -32,7 +32,7 @@ export interface DatabaseAttributesWithPassword extends DatabaseAttributes {
     };
 }
 export interface DatabaseWithPassword {
-    object: "server_database";
+    object: 'server_database';
     attributes: DatabaseAttributesWithPassword;
 }
 //# sourceMappingURL=database.types.d.ts.map

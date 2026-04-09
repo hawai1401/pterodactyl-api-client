@@ -1,4 +1,4 @@
-import { createSubuserSchema } from "../server.schemas.js";
+import { createSubuserSchema } from '../server.schemas.js';
 export default class SubusersClient {
     httpClient;
     server;
@@ -7,7 +7,7 @@ export default class SubusersClient {
         this.server = server;
     }
     async list() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/users`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/users`);
         return {
             ...res,
             data: res.data.map((subuser) => ({
@@ -20,7 +20,7 @@ export default class SubusersClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/users`, createSubuserSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/users`, createSubuserSchema.parse(options));
         return {
             ...res,
             attributes: {

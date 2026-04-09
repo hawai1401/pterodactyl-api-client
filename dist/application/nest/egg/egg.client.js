@@ -1,4 +1,4 @@
-import { nestEggId } from "../nest.schemas.js";
+import { nestEggId } from '../nest.schemas.js';
 export default class EggClient {
     httpClient;
     nest;
@@ -9,7 +9,7 @@ export default class EggClient {
         this.egg = nestEggId.parse(egg);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/application/nests/${this.nest}/eggs/${this.egg}`);
+        const res = await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.egg}`);
         return {
             ...res,
             attributes: {

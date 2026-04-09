@@ -1,8 +1,8 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { CreateNodeArgs } from "../nodes/nodes.types.js";
-import type { NodeConfiguration } from "./node.types.js";
-import AllocationsClient from "./allocations/allocations.client.js";
-import AllocationClient from "./allocation/allocation.client.js";
+import type HttpClient from '../../class/HttpClient.js';
+import type { CreateNodeArgs } from '../nodes/nodes.types.js';
+import type { NodeConfiguration } from './node.types.js';
+import AllocationsClient from './allocations/allocations.client.js';
+import AllocationClient from './allocation/allocation.client.js';
 export default class NodeClient {
     private httpClient;
     allocations: AllocationsClient;

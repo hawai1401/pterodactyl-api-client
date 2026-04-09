@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const userServerId: z.ZodUnion<readonly [z.ZodString, z.ZodUUID]>;
 export declare const userServerSubuserId: z.ZodUUID;
 export declare const userServerDatabaseId: z.ZodString;

@@ -1,11 +1,11 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
-import { nodeId } from "./node.schemas.js";
-import type { CreateNodeArgs, Node } from "../nodes/nodes.types.js";
-import { createNodeSchema } from "../nodes/nodes.schemas.js";
-import type { NodeConfiguration } from "./node.types.js";
-import AllocationsClient from "./allocations/allocations.client.js";
-import AllocationClient from "./allocation/allocation.client.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
+import { nodeId } from './node.schemas.js';
+import type { CreateNodeArgs, Node } from '../nodes/nodes.types.js';
+import { createNodeSchema } from '../nodes/nodes.schemas.js';
+import type { NodeConfiguration } from './node.types.js';
+import AllocationsClient from './allocations/allocations.client.js';
+import AllocationClient from './allocation/allocation.client.js';
 
 export default class NodeClient {
   public allocations: AllocationsClient;
@@ -25,7 +25,7 @@ export default class NodeClient {
 
   async info() {
     const res = await this.httpClient.request<Node<string>>(
-      "GET",
+      'GET',
       `/application/nodes/${this.id}`,
     );
     return {
@@ -43,7 +43,7 @@ export default class NodeClient {
       Node<string>,
       z.infer<typeof createNodeSchema>
     >(
-      "PATCH",
+      'PATCH',
       `/application/nodes/${this.id}`,
       createNodeSchema.parse(options),
     );
@@ -59,14 +59,14 @@ export default class NodeClient {
 
   configuration() {
     return this.httpClient.request<NodeConfiguration>(
-      "GET",
+      'GET',
       `/application/nodes/${this.id}/configuration`,
     );
   }
 
   delete() {
     return this.httpClient.request<NodeConfiguration>(
-      "DELETE",
+      'DELETE',
       `/application/nodes/${this.id}`,
     );
   }

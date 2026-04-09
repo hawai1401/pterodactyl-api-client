@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateBackupArgs } from "../backup.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { CreateBackupArgs } from '../backup.types.js';
 export default class BackupsClient {
     private httpClient;
     readonly server: string;

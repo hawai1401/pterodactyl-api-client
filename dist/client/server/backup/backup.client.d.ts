@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { DownloadBackupUrl, RestoreBackupArgs } from "../backup.types.js";
-import LockClient from "./lock/lock.client.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { DownloadBackupUrl, RestoreBackupArgs } from '../backup.types.js';
+import LockClient from './lock/lock.client.js';
 export default class BackupClient {
     private httpClient;
     readonly server: string;

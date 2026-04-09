@@ -1,12 +1,15 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { EggList } from "./eggs.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { EggList } from './eggs.types.js';
 
 export default class EggsClient {
-  constructor(private httpClient: HttpClient, readonly nest: number) {}
+  constructor(
+    private httpClient: HttpClient,
+    readonly nest: number,
+  ) {}
 
   async list() {
     const res = await this.httpClient.request<EggList>(
-      "GET",
+      'GET',
       `/application/nests/${this.nest}/eggs`,
     );
     return {

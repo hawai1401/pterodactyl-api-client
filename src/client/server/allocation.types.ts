@@ -1,5 +1,5 @@
-import type { BaseArgs, IP, List } from "../../types.js";
-import type { Allocation } from "./server.types.js";
+import type { BaseArgs, IP, List } from '../../types.js';
+import type { Allocation } from './server.types.js';
 
 export interface AllocationList extends List {
   data: Allocation[];

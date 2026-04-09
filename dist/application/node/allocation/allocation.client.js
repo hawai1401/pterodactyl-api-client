@@ -1,4 +1,4 @@
-import { allocationId } from "../node.schemas.js";
+import { allocationId } from '../node.schemas.js';
 export default class AllocationClient {
     httpClient;
     node;
@@ -9,6 +9,6 @@ export default class AllocationClient {
         this.id = allocationId.parse(id);
     }
     delete() {
-        return this.httpClient.request("DELETE", `/application/nodes/${this.node}/allocations/${this.id}`);
+        return this.httpClient.request('DELETE', `/application/nodes/${this.node}/allocations/${this.id}`);
     }
 }

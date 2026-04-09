@@ -1,7 +1,7 @@
-import type { BaseArgs } from "../../types.js";
+import type { BaseArgs } from '../../types.js';
 
 export interface Location<T extends Date | string> {
-  object: "location";
+  object: 'location';
   attributes: {
     id: number;
     short: string;

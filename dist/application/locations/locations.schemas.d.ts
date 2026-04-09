@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const createLocationSchema: z.ZodObject<{
     short: z.ZodString;
     long: z.ZodString;

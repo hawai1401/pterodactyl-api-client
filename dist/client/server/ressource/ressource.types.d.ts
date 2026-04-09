@@ -1,6 +1,6 @@
-import type { State } from "../server.types.js";
+import type { State } from '../server.types.js';
 export interface Stats {
-    object: "stats";
+    object: 'stats';
     attributes: {
         current_state: State;
         is_suspended: boolean;

@@ -1,6 +1,6 @@
-import z from "zod";
-import { createNodeSchema, listNodesFilterSchema } from "./nodes.schemas.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+import z from 'zod';
+import { createNodeSchema, listNodesFilterSchema } from './nodes.schemas.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 export default class NodesClient {
     httpClient;
     constructor(httpClient) {
@@ -9,7 +9,7 @@ export default class NodesClient {
     async list(options = {}) {
         const filter = listNodesFilterSchema.optional().parse(options.filter);
         const queries = buildQueryParams({ ...options, filter });
-        const res = await this.httpClient.request("GET", `/application/nodes?${queries}`);
+        const res = await this.httpClient.request('GET', `/application/nodes?${queries}`);
         return {
             ...res,
             data: res.data.map((node) => ({
@@ -23,7 +23,7 @@ export default class NodesClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", "/application/nodes", createNodeSchema.parse(options));
+        const res = await this.httpClient.request('POST', '/application/nodes', createNodeSchema.parse(options));
         return {
             ...res,
             attributes: {

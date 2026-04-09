@@ -1,10 +1,10 @@
-import type { ApplicationDatabaseAttributes } from "../databases/databases.types.js";
+import type { ApplicationDatabaseAttributes } from '../databases/databases.types.js';
 export interface ApplicationDatabaseWithPassword {
-    object: "server_database";
+    object: 'server_database';
     attributes: ApplicationDatabaseAttributes<string> & {
         relationships: {
             password: {
-                object: "database_password";
+                object: 'database_password';
                 attributes: {
                     password: string;
                 };

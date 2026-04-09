@@ -1,5 +1,5 @@
-import z from "zod";
-import { uuidSchema } from "../schemas.js";
+import z from 'zod';
+import { uuidSchema } from '../schemas.js';
 export const userServerFilterSchema = z.object({
     uuid: uuidSchema.optional(),
     name: z.string().optional(),

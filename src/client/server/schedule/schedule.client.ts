@@ -1,12 +1,12 @@
-import type HttpClient from "../../../class/HttpClient.js";
+import type HttpClient from '../../../class/HttpClient.js';
 import {
   createScheduleSchema,
   userServerScheduleId,
-} from "../server.schemas.js";
-import TaskClient from "./task/task.client.js";
-import type z from "zod";
-import type { CreateScheduleArgs, Schedule } from "../schedule.types.js";
-import TasksClient from "./tasks/tasks.client.js";
+} from '../server.schemas.js';
+import TaskClient from './task/task.client.js';
+import type z from 'zod';
+import type { CreateScheduleArgs, Schedule } from '../schedule.types.js';
+import TasksClient from './tasks/tasks.client.js';
 
 export default class ScheduleClient {
   public tasks: TasksClient;
@@ -27,7 +27,7 @@ export default class ScheduleClient {
 
   async info() {
     const res = await this.httpClient.request<Schedule<string>>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/schedules/${this.schedule}`,
     );
     return {
@@ -58,7 +58,7 @@ export default class ScheduleClient {
 
   edit(options: CreateScheduleArgs) {
     return this.httpClient.request<void, z.infer<typeof createScheduleSchema>>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/schedules/${this.schedule}`,
       createScheduleSchema.parse(options),
     );
@@ -66,14 +66,14 @@ export default class ScheduleClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/schedules/${this.schedule}`,
     );
   }
 
   execute() {
     return this.httpClient.request<void>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/schedules/${this.schedule}/execute`,
     );
   }

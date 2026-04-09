@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateApiKeyArgs, DeleteApiKeyArgs } from "./api-key.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { CreateApiKeyArgs, DeleteApiKeyArgs } from './api-key.types.js';
 export default class ApiKeyClient {
     private httpClient;
     constructor(httpClient: HttpClient);

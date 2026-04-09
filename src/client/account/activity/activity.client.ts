@@ -1,13 +1,13 @@
-import type z from "zod";
-import type HttpClient from "../../../class/HttpClient.js";
-import type { BaseListArgs, Sort } from "../../../types.js";
-import buildQueryParams from "../../../utils/buildQueryParams.js";
-import { accountActivityEvent } from "../account.schemas.js";
+import type z from 'zod';
+import type HttpClient from '../../../class/HttpClient.js';
+import type { BaseListArgs, Sort } from '../../../types.js';
+import buildQueryParams from '../../../utils/buildQueryParams.js';
+import { accountActivityEvent } from '../account.schemas.js';
 import type {
   AuthEvent,
   UserActivityList,
   UserEvent,
-} from "./activity.types.js";
+} from './activity.types.js';
 
 export default class ActivityClient {
   constructor(private httpClient: HttpClient) {}
@@ -18,7 +18,7 @@ export default class ActivityClient {
     filter,
     sort,
   }:
-    | BaseListArgs & {
+    | (BaseListArgs & {
         filter?:
           | {
               event?: T | undefined;
@@ -29,7 +29,7 @@ export default class ActivityClient {
               timestamp?: Sort | undefined;
             }
           | undefined;
-      }
+      })
     | undefined = {}): Promise<UserActivityList<Date, T>> {
     const event = accountActivityEvent.optional().parse(filter?.event);
     const queries = buildQueryParams<
@@ -46,7 +46,7 @@ export default class ActivityClient {
       sort,
     });
     const res = await this.httpClient.request<UserActivityList<string, T>>(
-      "GET",
+      'GET',
       `/client/account/activity?${queries}`,
     );
     return {

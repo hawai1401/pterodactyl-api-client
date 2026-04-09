@@ -1,13 +1,13 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { NestList } from "./nests.types.js";
+import type HttpClient from '../../class/HttpClient.js';
+import type { NestList } from './nests.types.js';
 
 export default class NestsClient {
   constructor(private httpClient: HttpClient) {}
 
   async list() {
     const res = await this.httpClient.request<NestList>(
-      "GET",
-      "/application/nests",
+      'GET',
+      '/application/nests',
     );
     return {
       ...res,

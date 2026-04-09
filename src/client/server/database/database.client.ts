@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import { userServerDatabaseId } from "../server.schemas.js";
-import PasswordClient from "./password/password.client.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import { userServerDatabaseId } from '../server.schemas.js';
+import PasswordClient from './password/password.client.js';
 
 export default class DatabaseClient {
   public password: PasswordClient;
@@ -17,7 +17,7 @@ export default class DatabaseClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/databases/${this.database}`,
     );
   }

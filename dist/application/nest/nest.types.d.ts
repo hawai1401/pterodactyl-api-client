@@ -1,5 +1,5 @@
 export interface Nest<T extends string | Date> {
-    object: "nest";
+    object: 'nest';
     attributes: {
         id: number;
         uuid: string;

@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const passwordSchema: z.ZodObject<{
     password: z.ZodString;
 }, z.z.core.$strip>;

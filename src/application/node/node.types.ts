@@ -1,4 +1,4 @@
-import type { IP } from "../../types.js";
+import type { IP } from '../../types.js';
 
 export interface NodeConfiguration {
   debug: boolean;

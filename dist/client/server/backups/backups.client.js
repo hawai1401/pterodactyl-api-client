@@ -1,4 +1,4 @@
-import { createBackupSchema } from "../server.schemas.js";
+import { createBackupSchema } from '../server.schemas.js';
 export default class BackupsClient {
     httpClient;
     server;
@@ -7,7 +7,7 @@ export default class BackupsClient {
         this.server = server;
     }
     async list() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/backups`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/backups`);
         return {
             ...res,
             data: res.data.map((backup) => ({
@@ -23,7 +23,7 @@ export default class BackupsClient {
         };
     }
     async create(options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/backups`, createBackupSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/backups`, createBackupSchema.parse(options));
         return {
             ...res,
             attributes: {

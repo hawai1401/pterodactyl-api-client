@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import PasswordClient from "./password/password.client.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import PasswordClient from './password/password.client.js';
 export default class DatabaseClient {
     private httpClient;
     readonly server: number;

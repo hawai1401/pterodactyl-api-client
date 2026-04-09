@@ -1,10 +1,10 @@
-import z from "zod";
+import z from 'zod';
 import {
   descriptionSchema,
   idSchema,
   nameSchema,
   uuidSchema,
-} from "../../schemas.js";
+} from '../../schemas.js';
 
 export const createServerSchema = z.object({
   external_id: nameSchema.optional(),

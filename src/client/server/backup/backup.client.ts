@@ -1,11 +1,11 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import { restoreBackupSchema, userServerBackupId } from "../server.schemas.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import { restoreBackupSchema, userServerBackupId } from '../server.schemas.js';
 import type {
   Backup,
   DownloadBackupUrl,
   RestoreBackupArgs,
-} from "../backup.types.js";
-import LockClient from "./lock/lock.client.js";
+} from '../backup.types.js';
+import LockClient from './lock/lock.client.js';
 
 export default class BackupClient {
   readonly backup: string;
@@ -22,7 +22,7 @@ export default class BackupClient {
 
   async info() {
     const res = await this.httpClient.request<Backup<string>>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/backups/${this.backup}`,
     );
     return {
@@ -39,21 +39,21 @@ export default class BackupClient {
 
   download() {
     return this.httpClient.request<DownloadBackupUrl>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/backups/${this.backup}/download`,
     );
   }
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/backups/${this.backup}`,
     );
   }
 
   restore(options: RestoreBackupArgs = {}) {
     return this.httpClient.request<void, RestoreBackupArgs>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/backups/${this.backup}/restore`,
       restoreBackupSchema.parse(options),
     );

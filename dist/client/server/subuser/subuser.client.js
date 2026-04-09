@@ -1,4 +1,4 @@
-import { editSubuserSchema, userServerSubuserId } from "../server.schemas.js";
+import { editSubuserSchema, userServerSubuserId } from '../server.schemas.js';
 export default class SubuserClient {
     httpClient;
     server;
@@ -9,7 +9,7 @@ export default class SubuserClient {
         this.subuser = userServerSubuserId.parse(subuser);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/users/${this.subuser}`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/users/${this.subuser}`);
         return {
             ...res,
             attributes: {
@@ -19,7 +19,7 @@ export default class SubuserClient {
         };
     }
     async edit(options) {
-        const res = await this.httpClient.request("POST", `/client/servers/${this.server}/users/${this.subuser}`, editSubuserSchema.parse(options));
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/users/${this.subuser}`, editSubuserSchema.parse(options));
         return {
             ...res,
             attributes: {
@@ -29,6 +29,6 @@ export default class SubuserClient {
         };
     }
     delete() {
-        return this.httpClient.request("DELETE", `/client/servers/${this.server}/users/${this.subuser}`);
+        return this.httpClient.request('DELETE', `/client/servers/${this.server}/users/${this.subuser}`);
     }
 }

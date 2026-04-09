@@ -1,1 +1,1 @@
-export * from "./websocket/websocket.console.types.js";
+export * from './websocket/websocket.console.types.js';

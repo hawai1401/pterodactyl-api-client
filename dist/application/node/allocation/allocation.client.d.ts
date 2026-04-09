@@ -1,4 +1,4 @@
-import type HttpClient from "../../../class/HttpClient.js";
+import type HttpClient from '../../../class/HttpClient.js';
 export default class AllocationClient {
     private httpClient;
     readonly node: number;

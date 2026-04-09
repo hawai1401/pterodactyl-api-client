@@ -6,7 +6,7 @@ export default class EggsClient {
         this.nest = nest;
     }
     async list() {
-        const res = await this.httpClient.request("GET", `/application/nests/${this.nest}/eggs`);
+        const res = await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs`);
         return {
             ...res,
             data: res.data.map((egg) => ({

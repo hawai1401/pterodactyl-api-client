@@ -1,16 +1,16 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
 import {
   createServerSchema,
   listServersFilterSchema,
-} from "./servers.schemas.js";
+} from './servers.schemas.js';
 import type {
   ApplicationServer,
   ApplicationServerList,
   CreateServerArgs,
-} from "./servers.types.js";
-import type { BaseListArgs, Sort } from "../../types.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+} from './servers.types.js';
+import type { BaseListArgs, Sort } from '../../types.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 
 export default class ServersClient {
   constructor(private httpClient: HttpClient) {}
@@ -48,7 +48,7 @@ export default class ServersClient {
       { id?: Sort | undefined; uuid?: Sort | undefined }
     >({ ...options, filter });
     const res = await this.httpClient.request<ApplicationServerList>(
-      "GET",
+      'GET',
       `/application/servers?${queries}`,
     );
     return {
@@ -68,7 +68,7 @@ export default class ServersClient {
     const res = await this.httpClient.request<
       ApplicationServer<string>,
       z.infer<typeof createServerSchema>
-    >("POST", `/application/servers`, createServerSchema.parse(options));
+    >('POST', `/application/servers`, createServerSchema.parse(options));
     return {
       ...res,
       attributes: {

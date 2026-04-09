@@ -1,6 +1,6 @@
-import z from "zod";
-import { createUserSchema, listUsersFilterSchema } from "./users.schemas.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+import z from 'zod';
+import { createUserSchema, listUsersFilterSchema } from './users.schemas.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 export default class UsersClient {
     httpClient;
     constructor(httpClient) {
@@ -14,7 +14,7 @@ export default class UsersClient {
             sort: options.sort,
             filter,
         });
-        const res = await this.httpClient.request("GET", `/application/users?${queries}${options.includeServers ? "&include=servers" : ""}`);
+        const res = await this.httpClient.request('GET', `/application/users?${queries}${options.includeServers ? '&include=servers' : ''}`);
         return {
             ...res,
             data: res.data.map((user) => ({
@@ -44,6 +44,6 @@ export default class UsersClient {
         };
     }
     create(args) {
-        return this.httpClient.request("POST", "/application/users", createUserSchema.parse(args));
+        return this.httpClient.request('POST', '/application/users', createUserSchema.parse(args));
     }
 }

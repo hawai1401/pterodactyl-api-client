@@ -1,8 +1,8 @@
-import type { BaseArgs, IP, List, ListwithPagination } from "../../../types.js";
+import type { BaseArgs, IP, List, ListwithPagination } from '../../../types.js';
 export type Port = `${number}`;
 export type PortRange = `${number}-${number}`;
 export interface ApplicationAllocation {
-    object: "allocation";
+    object: 'allocation';
     attributes: {
         id: number;
         ip: IP;

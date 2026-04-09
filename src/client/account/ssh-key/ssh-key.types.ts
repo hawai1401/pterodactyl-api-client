@@ -1,7 +1,7 @@
-import type { BaseArgs, List } from "../../../types.js";
+import type { BaseArgs, List } from '../../../types.js';
 
 export interface SshKey<T> {
-  object: "ssh_key";
+  object: 'ssh_key';
   attributes: {
     name: string;
     fingerprint: string;

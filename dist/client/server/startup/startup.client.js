@@ -1,4 +1,4 @@
-import { editVariableSchema } from "../server.schemas.js";
+import { editVariableSchema } from '../server.schemas.js';
 export default class StartupClient {
     httpClient;
     server;
@@ -7,9 +7,9 @@ export default class StartupClient {
         this.server = server;
     }
     info() {
-        return this.httpClient.request("GET", `/client/servers/${this.server}/settings/startup`);
+        return this.httpClient.request('GET', `/client/servers/${this.server}/settings/startup`);
     }
     edit(options) {
-        return this.httpClient.request("PUT", `/client/servers/${this.server}/settings/startup`, editVariableSchema.parse(options));
+        return this.httpClient.request('PUT', `/client/servers/${this.server}/settings/startup`, editVariableSchema.parse(options));
     }
 }

@@ -1,5 +1,5 @@
-import { applicationServerDatabaseId } from "../server.schemas.js";
-import PasswordClient from "./password/password.client.js";
+import { applicationServerDatabaseId } from '../server.schemas.js';
+import PasswordClient from './password/password.client.js';
 export default class DatabaseClient {
     httpClient;
     server;
@@ -12,7 +12,7 @@ export default class DatabaseClient {
         this.password = new PasswordClient(httpClient, server, this.id);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/application/servers/${this.server}/databases/${this.id}`);
+        const res = await this.httpClient.request('GET', `/application/servers/${this.server}/databases/${this.id}`);
         return {
             ...res,
             attributes: {
@@ -23,6 +23,6 @@ export default class DatabaseClient {
         };
     }
     delete() {
-        return this.httpClient.request("DELETE", `/application/servers/${this.server}/databases/${this.id}`);
+        return this.httpClient.request('DELETE', `/application/servers/${this.server}/databases/${this.id}`);
     }
 }

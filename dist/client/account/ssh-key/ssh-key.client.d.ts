@@ -1,5 +1,5 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { CreateSshKeyArgs, DeleteSshKeyArgs } from "./ssh-key.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { CreateSshKeyArgs, DeleteSshKeyArgs } from './ssh-key.types.js';
 export default class SshKeyClient {
     private httpClient;
     constructor(httpClient: HttpClient);

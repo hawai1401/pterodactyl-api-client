@@ -1,6 +1,6 @@
-import type HttpClient from "../../class/HttpClient.js";
-import type { CreateUserArgs, User, UserAttributes, UserWithServersAttributes } from "../users/users.types.js";
-import type { UserId } from "./user.types.js";
+import type HttpClient from '../../class/HttpClient.js';
+import type { CreateUserArgs, User, UserAttributes, UserWithServersAttributes } from '../users/users.types.js';
+import type { UserId } from './user.types.js';
 export default class UserClient {
     private httpClient;
     readonly id: number | undefined;

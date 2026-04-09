@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import { createBackupSchema } from "../server.schemas.js";
-import type { Backup, BackupList, CreateBackupArgs } from "../backup.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import { createBackupSchema } from '../server.schemas.js';
+import type { Backup, BackupList, CreateBackupArgs } from '../backup.types.js';
 
 export default class BackupsClient {
   constructor(
@@ -10,7 +10,7 @@ export default class BackupsClient {
 
   async list() {
     const res = await this.httpClient.request<BackupList>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/backups`,
     );
     return {
@@ -30,7 +30,7 @@ export default class BackupsClient {
 
   async create(options: CreateBackupArgs) {
     const res = await this.httpClient.request<Backup<string>, CreateBackupArgs>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/backups`,
       createBackupSchema.parse(options),
     );

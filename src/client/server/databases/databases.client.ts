@@ -1,7 +1,7 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { DatabaseWithPassword } from "../database.types.js";
-import { createDatabaseSchema } from "../server.schemas.js";
-import type { CreateDatabaseArgs, DatabaseList } from "../database.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { DatabaseWithPassword } from '../database.types.js';
+import { createDatabaseSchema } from '../server.schemas.js';
+import type { CreateDatabaseArgs, DatabaseList } from '../database.types.js';
 
 export default class DatabasesClient {
   constructor(
@@ -11,7 +11,7 @@ export default class DatabasesClient {
 
   list() {
     return this.httpClient.request<DatabaseList>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/databases`,
     );
   }
@@ -21,7 +21,7 @@ export default class DatabasesClient {
       DatabaseWithPassword,
       CreateDatabaseArgs
     >(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/databases`,
       createDatabaseSchema.parse(options),
     );

@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { Allocation } from "../server.types.js";
-import type { EditAllocationArgs } from "../allocation.types.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { Allocation } from '../server.types.js';
+import type { EditAllocationArgs } from '../allocation.types.js';
 export default class AllocationClient {
     private httpClient;
     readonly server: string;

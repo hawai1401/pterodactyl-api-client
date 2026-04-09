@@ -1,5 +1,5 @@
-import type { BaseArgs, ListwithPagination } from "../../types.js";
-import type { Location } from "../location/location.types.js";
+import type { BaseArgs, ListwithPagination } from '../../types.js';
+import type { Location } from '../location/location.types.js';
 export interface LocationList extends ListwithPagination {
     data: Location<string>[];
 }

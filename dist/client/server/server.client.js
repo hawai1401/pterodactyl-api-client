@@ -1,21 +1,21 @@
-import HttpClient from "../../class/HttpClient.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
-import AllocationClient from "./allocation/allocation.client.js";
-import AllocationsClient from "./allocations/allocations.client.js";
-import BackupClient from "./backup/backup.client.js";
-import BackupsClient from "./backups/backups.client.js";
-import ConsoleClient from "./console/console.client.js";
-import DatabaseClient from "./database/database.client.js";
-import DatabasesClient from "./databases/databases.client.js";
-import ImageClient from "./image/image.client.js";
-import PowerClient from "./power/power.client.js";
-import RessourceClient from "./ressource/ressource.client.js";
-import ScheduleClient from "./schedule/schedule.client.js";
-import SchedulesClient from "./schedules/schedules.client.js";
-import { renameServerSchema, userServerActivityEvent, userServerId, } from "./server.schemas.js";
-import StartupClient from "./startup/startup.client.js";
-import SubuserClient from "./subuser/subuser.client.js";
-import SubusersClient from "./subusers/subusers.client.js";
+import HttpClient from '../../class/HttpClient.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
+import AllocationClient from './allocation/allocation.client.js';
+import AllocationsClient from './allocations/allocations.client.js';
+import BackupClient from './backup/backup.client.js';
+import BackupsClient from './backups/backups.client.js';
+import ConsoleClient from './console/console.client.js';
+import DatabaseClient from './database/database.client.js';
+import DatabasesClient from './databases/databases.client.js';
+import ImageClient from './image/image.client.js';
+import PowerClient from './power/power.client.js';
+import RessourceClient from './ressource/ressource.client.js';
+import ScheduleClient from './schedule/schedule.client.js';
+import SchedulesClient from './schedules/schedules.client.js';
+import { renameServerSchema, userServerActivityEvent, userServerId, } from './server.schemas.js';
+import StartupClient from './startup/startup.client.js';
+import SubuserClient from './subuser/subuser.client.js';
+import SubusersClient from './subusers/subusers.client.js';
 export default class Servers {
     httpClient;
     panelUrl;
@@ -53,7 +53,7 @@ export default class Servers {
             filter: { event },
             sort,
         });
-        const res = await this.httpClient.request("GET", `/client/servers/${this.id}/activity?${queries}`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.id}/activity?${queries}`);
         return {
             ...res,
             data: res.data.map((data) => ({
@@ -81,12 +81,12 @@ export default class Servers {
         return new SubuserClient(this.httpClient, this.id, subuser);
     }
     info() {
-        return this.httpClient.request("GET", `/client/servers/${this.id}`);
+        return this.httpClient.request('GET', `/client/servers/${this.id}`);
     }
     edit(options) {
-        return this.httpClient.request("POST", `/client/servers/${this.id}/settings/rename`, renameServerSchema.parse(options));
+        return this.httpClient.request('POST', `/client/servers/${this.id}/settings/rename`, renameServerSchema.parse(options));
     }
     reinstall() {
-        return this.httpClient.request("POST", `/client/servers/${this.id}/settings/reinstall`);
+        return this.httpClient.request('POST', `/client/servers/${this.id}/settings/reinstall`);
     }
 }

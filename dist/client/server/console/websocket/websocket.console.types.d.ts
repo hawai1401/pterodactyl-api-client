@@ -1,4 +1,4 @@
-import type { State } from "../../server.types.js";
+import type { State } from '../../server.types.js';
 export interface WebSocketCredentials {
     data: {
         token: string;
@@ -31,14 +31,14 @@ export type ServerStatsString = `{
   state: ${State};
   uptime: ${number};
 }`;
-export type WebSocketEvent = "auth success" | "status" | "stats" | "console output";
+export type WebSocketEvent = 'auth success' | 'status' | 'stats' | 'console output';
 export type WebSocketMessage = {
-    event: "auth success";
+    event: 'auth success';
 } | {
-    event: "stats";
+    event: 'stats';
     args: [ServerStatsString];
 } | {
-    event: "status" | "console output";
+    event: 'status' | 'console output';
     args: [State];
 };
 //# sourceMappingURL=websocket.console.types.d.ts.map

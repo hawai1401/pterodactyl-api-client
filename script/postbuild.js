@@ -1,15 +1,15 @@
-import fs from "fs";
+import fs from 'fs';
 
 const dirs = fs
-  .readdirSync("./dist")
+  .readdirSync('./dist')
   .filter(
-    (name) => !name.includes(".") && !(name === "class" || name === "utils"),
+    (name) => !name.includes('.') && !(name === 'class' || name === 'utils'),
   );
 
 for (const dir of dirs) {
   const subDirs = fs
     .readdirSync(`./dist/${dir}`)
-    .filter((name) => !name.includes("."));
+    .filter((name) => !name.includes('.'));
 
   for (const subDir of subDirs) {
     fs.createWriteStream(`./dist/${dir}/${subDir}/index.cjs`).write(
@@ -22,6 +22,6 @@ for (const dir of dirs) {
   );
 }
 
-fs.createWriteStream("./dist/index.cjs").write(
+fs.createWriteStream('./dist/index.cjs').write(
   `"use strict";\nconst pkg = require("./index.js");\nmodule.exports = pkg;\n`,
 );

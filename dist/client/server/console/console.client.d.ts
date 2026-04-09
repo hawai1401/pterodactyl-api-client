@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { SendConsoleCommandArgs } from "./console.types.js";
-import WebsocketClient from "./websocket/websocket.console.client.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { SendConsoleCommandArgs } from './console.types.js';
+import WebsocketClient from './websocket/websocket.console.client.js';
 export default class ConsoleClient {
     private httpClient;
     readonly server: string;

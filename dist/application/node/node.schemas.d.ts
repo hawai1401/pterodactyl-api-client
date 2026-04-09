@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export declare const nodeId: z.ZodInt;
 export declare const allocationId: z.ZodInt;
 export declare const listAllocationsFilterSchema: z.ZodObject<{

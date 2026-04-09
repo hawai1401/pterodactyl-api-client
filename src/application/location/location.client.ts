@@ -1,7 +1,7 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
-import { editLocationSchema, locationId } from "./location.schemas.js";
-import type { EditLocationArgs, Location } from "./location.types.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
+import { editLocationSchema, locationId } from './location.schemas.js';
+import type { EditLocationArgs, Location } from './location.types.js';
 
 export default class LocationClient {
   readonly id: number;
@@ -15,7 +15,7 @@ export default class LocationClient {
 
   async info() {
     const res = await this.httpClient.request<Location<string>>(
-      "GET",
+      'GET',
       `/application/locations/${this.id}`,
     );
     return {
@@ -33,7 +33,7 @@ export default class LocationClient {
       Location<string>,
       z.infer<typeof editLocationSchema>
     >(
-      "PATCH",
+      'PATCH',
       `/application/locations/${this.id}`,
       editLocationSchema.parse(options),
     );
@@ -49,7 +49,7 @@ export default class LocationClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/application/locations/${this.id}`,
     );
   }

@@ -1,4 +1,4 @@
-import z from "zod";
+import z from 'zod';
 export const passwordSchema = z.object({
     password: z.string().min(8),
 });
@@ -6,17 +6,17 @@ export const a2fSchema = passwordSchema.extend({
     code: z.coerce.string().length(6),
 });
 export const accountActivityEvent = z.literal([
-    "user:api-key.create",
-    "user:api-key.delete",
-    "user:ssh-key.create",
-    "user:ssh-key.delete",
-    "user:account.email-changed",
-    "user:account.password-changed",
-    "user:two-factor.create",
-    "user:two-factor.delete",
-    "auth:success",
-    "auth:fail",
-    "auth:checkpoint",
+    'user:api-key.create',
+    'user:api-key.delete',
+    'user:ssh-key.create',
+    'user:ssh-key.delete',
+    'user:account.email-changed',
+    'user:account.password-changed',
+    'user:two-factor.create',
+    'user:two-factor.delete',
+    'auth:success',
+    'auth:fail',
+    'auth:checkpoint',
 ]);
 export const createApiKeySchema = z.object({
     description: z.string(),
@@ -39,7 +39,7 @@ export const createSshKeySchema = z.object({
         .string()
         .min(50)
         .max(5000)
-        .regex(SSH_KEY_REGEX, "Invalid SSH public key format"),
+        .regex(SSH_KEY_REGEX, 'Invalid SSH public key format'),
 });
 export const deleteSshKeySchema = z.object({
     fingerprint: z.string(),

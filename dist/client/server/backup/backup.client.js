@@ -1,5 +1,5 @@
-import { restoreBackupSchema, userServerBackupId } from "../server.schemas.js";
-import LockClient from "./lock/lock.client.js";
+import { restoreBackupSchema, userServerBackupId } from '../server.schemas.js';
+import LockClient from './lock/lock.client.js';
 export default class BackupClient {
     httpClient;
     server;
@@ -12,7 +12,7 @@ export default class BackupClient {
         this.lock = new LockClient(httpClient, server, backup);
     }
     async info() {
-        const res = await this.httpClient.request("GET", `/client/servers/${this.server}/backups/${this.backup}`);
+        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/backups/${this.backup}`);
         return {
             ...res,
             attributes: {
@@ -25,12 +25,12 @@ export default class BackupClient {
         };
     }
     download() {
-        return this.httpClient.request("GET", `/client/servers/${this.server}/backups/${this.backup}/download`);
+        return this.httpClient.request('GET', `/client/servers/${this.server}/backups/${this.backup}/download`);
     }
     delete() {
-        return this.httpClient.request("DELETE", `/client/servers/${this.server}/backups/${this.backup}`);
+        return this.httpClient.request('DELETE', `/client/servers/${this.server}/backups/${this.backup}`);
     }
     restore(options = {}) {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/backups/${this.backup}/restore`, restoreBackupSchema.parse(options));
+        return this.httpClient.request('POST', `/client/servers/${this.server}/backups/${this.backup}/restore`, restoreBackupSchema.parse(options));
     }
 }

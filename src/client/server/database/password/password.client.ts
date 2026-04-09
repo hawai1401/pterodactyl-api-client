@@ -1,5 +1,5 @@
-import type HttpClient from "../../../../class/HttpClient.js";
-import type { DatabaseWithPassword } from "../../database.types.js";
+import type HttpClient from '../../../../class/HttpClient.js';
+import type { DatabaseWithPassword } from '../../database.types.js';
 
 export default class PasswordClient {
   constructor(
@@ -10,7 +10,7 @@ export default class PasswordClient {
 
   async rotate() {
     const res = await this.httpClient.request<DatabaseWithPassword>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/databases/${this.database}/rotate-password`,
     );
     return {

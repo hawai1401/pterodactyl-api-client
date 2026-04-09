@@ -2,10 +2,10 @@ import type {
   BaseArgs,
   EnvironmentVariable,
   ListwithPagination,
-} from "../../types.js";
+} from '../../types.js';
 
 export interface BaseApplicationServer<T extends string | Date> {
-  object: "server";
+  object: 'server';
   attributes: {
     id: number;
     external_id: null;
@@ -48,7 +48,7 @@ export type ApplicationServer<T extends string | Date> =
     (
       | {
           attributes: {
-            status: "suspended";
+            status: 'suspended';
             container: {
               installed: 0;
             };
@@ -56,7 +56,7 @@ export type ApplicationServer<T extends string | Date> =
         }
       | {
           attributes: {
-            status: "installing" | null;
+            status: 'installing' | null;
             container: {
               installed: 1;
             };

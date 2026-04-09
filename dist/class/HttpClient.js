@@ -1,4 +1,4 @@
-import { PterodactylAPIError } from "./APIError.js";
+import { PterodactylAPIError } from './APIError.js';
 export default class HttpClient {
     baseURL;
     apiKey;
@@ -11,8 +11,8 @@ export default class HttpClient {
             method,
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
-                "Content-Type": "application/json",
-                Accept: "application/json",
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
             },
             body: body ? JSON.stringify(body) : null,
         });

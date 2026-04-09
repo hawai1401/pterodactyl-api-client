@@ -1,6 +1,6 @@
-import type HttpClient from "../../../class/HttpClient.js";
-import type { EditSubuserArgs, Subuser } from "../subuser.types.js";
-import { editSubuserSchema, userServerSubuserId } from "../server.schemas.js";
+import type HttpClient from '../../../class/HttpClient.js';
+import type { EditSubuserArgs, Subuser } from '../subuser.types.js';
+import { editSubuserSchema, userServerSubuserId } from '../server.schemas.js';
 
 export default class SubuserClient {
   readonly subuser: string;
@@ -15,7 +15,7 @@ export default class SubuserClient {
 
   async info() {
     const res = await this.httpClient.request<Subuser<string>>(
-      "GET",
+      'GET',
       `/client/servers/${this.server}/users/${this.subuser}`,
     );
     return {
@@ -29,7 +29,7 @@ export default class SubuserClient {
 
   async edit(options: EditSubuserArgs) {
     const res = await this.httpClient.request<Subuser<string>, EditSubuserArgs>(
-      "POST",
+      'POST',
       `/client/servers/${this.server}/users/${this.subuser}`,
       editSubuserSchema.parse(options),
     );
@@ -44,7 +44,7 @@ export default class SubuserClient {
 
   delete() {
     return this.httpClient.request<void>(
-      "DELETE",
+      'DELETE',
       `/client/servers/${this.server}/users/${this.subuser}`,
     );
   }

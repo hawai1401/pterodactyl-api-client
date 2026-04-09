@@ -8,6 +8,6 @@ export default class LockClient {
         this.backup = backup;
     }
     toggle() {
-        return this.httpClient.request("POST", `/client/servers/${this.server}/backups/${this.backup}/lock`);
+        return this.httpClient.request('POST', `/client/servers/${this.server}/backups/${this.backup}/lock`);
     }
 }

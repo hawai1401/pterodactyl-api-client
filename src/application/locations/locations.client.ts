@@ -1,13 +1,13 @@
-import z from "zod";
-import type HttpClient from "../../class/HttpClient.js";
+import z from 'zod';
+import type HttpClient from '../../class/HttpClient.js';
 import {
   createLocationSchema,
   listLocationsFilterSchema,
-} from "./locations.schemas.js";
-import type { CreateLocationArgs, LocationList } from "./locations.types.js";
-import type { Location } from "../location/location.types.js";
-import type { BaseListArgs, Sort } from "../../types.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
+} from './locations.schemas.js';
+import type { CreateLocationArgs, LocationList } from './locations.types.js';
+import type { Location } from '../location/location.types.js';
+import type { BaseListArgs, Sort } from '../../types.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
 
 export default class LocationsClient {
   constructor(private httpClient: HttpClient) {}
@@ -34,7 +34,7 @@ export default class LocationsClient {
       }
     >({ ...options, filter });
     const res = await this.httpClient.request<LocationList>(
-      "GET",
+      'GET',
       `/application/locations?${queries}`,
     );
     return {
@@ -54,7 +54,7 @@ export default class LocationsClient {
     const res = await this.httpClient.request<
       Location<string>,
       z.infer<typeof createLocationSchema>
-    >("POST", `/application/locations`, createLocationSchema.parse(options));
+    >('POST', `/application/locations`, createLocationSchema.parse(options));
     return {
       ...res,
       attributes: {

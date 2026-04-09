@@ -1,33 +1,33 @@
-import type z from "zod";
-import HttpClient from "../../class/HttpClient.js";
-import type { BaseListArgs, Sort } from "../../types.js";
-import buildQueryParams from "../../utils/buildQueryParams.js";
-import AllocationClient from "./allocation/allocation.client.js";
-import AllocationsClient from "./allocations/allocations.client.js";
-import BackupClient from "./backup/backup.client.js";
-import BackupsClient from "./backups/backups.client.js";
-import ConsoleClient from "./console/console.client.js";
-import DatabaseClient from "./database/database.client.js";
-import DatabasesClient from "./databases/databases.client.js";
-import ImageClient from "./image/image.client.js";
-import PowerClient from "./power/power.client.js";
-import RessourceClient from "./ressource/ressource.client.js";
-import ScheduleClient from "./schedule/schedule.client.js";
-import SchedulesClient from "./schedules/schedules.client.js";
+import type z from 'zod';
+import HttpClient from '../../class/HttpClient.js';
+import type { BaseListArgs, Sort } from '../../types.js';
+import buildQueryParams from '../../utils/buildQueryParams.js';
+import AllocationClient from './allocation/allocation.client.js';
+import AllocationsClient from './allocations/allocations.client.js';
+import BackupClient from './backup/backup.client.js';
+import BackupsClient from './backups/backups.client.js';
+import ConsoleClient from './console/console.client.js';
+import DatabaseClient from './database/database.client.js';
+import DatabasesClient from './databases/databases.client.js';
+import ImageClient from './image/image.client.js';
+import PowerClient from './power/power.client.js';
+import RessourceClient from './ressource/ressource.client.js';
+import ScheduleClient from './schedule/schedule.client.js';
+import SchedulesClient from './schedules/schedules.client.js';
 import {
   renameServerSchema,
   userServerActivityEvent,
   userServerId,
-} from "./server.schemas.js";
+} from './server.schemas.js';
 import type {
   EditServerArgs,
   ServerEvent,
   ServerActivityList,
   UserServerWithDetails,
-} from "./server.types.js";
-import StartupClient from "./startup/startup.client.js";
-import SubuserClient from "./subuser/subuser.client.js";
-import SubusersClient from "./subusers/subusers.client.js";
+} from './server.types.js';
+import StartupClient from './startup/startup.client.js';
+import SubuserClient from './subuser/subuser.client.js';
+import SubusersClient from './subusers/subusers.client.js';
 
 export default class Servers {
   public allocations: AllocationsClient;
@@ -96,7 +96,7 @@ export default class Servers {
       sort,
     });
     const res = await this.httpClient.request<ServerActivityList<string, T>>(
-      "GET",
+      'GET',
       `/client/servers/${this.id}/activity?${queries}`,
     );
     return {
@@ -133,14 +133,14 @@ export default class Servers {
 
   info() {
     return this.httpClient.request<UserServerWithDetails>(
-      "GET",
+      'GET',
       `/client/servers/${this.id}`,
     );
   }
 
   edit(options: EditServerArgs) {
     return this.httpClient.request<void, EditServerArgs>(
-      "POST",
+      'POST',
       `/client/servers/${this.id}/settings/rename`,
       renameServerSchema.parse(options),
     );
@@ -148,7 +148,7 @@ export default class Servers {
 
   reinstall() {
     return this.httpClient.request<void>(
-      "POST",
+      'POST',
       `/client/servers/${this.id}/settings/reinstall`,
     );
   }
