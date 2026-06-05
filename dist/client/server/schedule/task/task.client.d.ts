@@ -7,7 +7,7 @@ export declare class TaskClient {
     readonly schedule: number;
     readonly task: number;
     constructor(httpClient: HttpClient, server: string, schedule: number, task: number);
-    edit<T extends TaskAction>(payload: CreateTaskPayload<T>): Promise<Task<T>>;
+    update<T extends TaskAction>(payload: CreateTaskPayload<T>): Promise<Task<T>>;
     delete(): Promise<void>;
 }
 //# sourceMappingURL=task.client.d.ts.map

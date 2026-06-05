@@ -23,7 +23,7 @@ export class ScheduleClient {
             tasks: relationships.tasks.data.map((taskObject) => taskObject.attributes),
         };
     }
-    edit(payload) {
+    update(payload) {
         return this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}`, createScheduleSchema.parse(payload));
     }
     delete() {

@@ -10,7 +10,7 @@ export declare class ScheduleClient {
     constructor(httpClient: HttpClient, server: string, schedule: number);
     task(task: number): TaskClient;
     fetch(): Promise<Schedule>;
-    edit(payload: CreateSchedulePayload): Promise<void>;
+    update(payload: CreateSchedulePayload): Promise<void>;
     delete(): Promise<void>;
     execute(): Promise<void>;
 }

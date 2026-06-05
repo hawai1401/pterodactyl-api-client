@@ -10,7 +10,7 @@ export class TaskClient {
         this.schedule = schedule;
         this.task = userServerTaskId.parse(task);
     }
-    async edit(payload) {
+    async update(payload) {
         const taskObject = await this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`, createTaskSchema.parse(payload), { parseDates: true });
         return taskObject.attributes;
     }

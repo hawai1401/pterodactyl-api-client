@@ -5,13 +5,13 @@ export declare const applicationServerIdSchema: import("zod").ZodObject<{
     id: import("zod").ZodOptional<import("zod").ZodInt>;
     external_id: import("zod").ZodOptional<import("zod").ZodString>;
 }, import("zod/v4/core").$strip>;
-export declare const editApplicationServerDetailsSchema: import("zod").ZodObject<{
+export declare const setApplicationServerDetailsSchema: import("zod").ZodObject<{
     name: import("zod").ZodString;
     user: import("zod").ZodInt;
     external_id: import("zod").ZodOptional<import("zod").ZodString>;
     description: import("zod").ZodOptional<import("zod").ZodString>;
 }, import("zod/v4/core").$strip>;
-export declare const editApplicationServerConfigurationSchema: import("zod").ZodObject<{
+export declare const setApplicationServerConfigurationSchema: import("zod").ZodObject<{
     allocation: import("zod").ZodInt;
     oom_disabled: import("zod").ZodOptional<import("zod").ZodBoolean>;
     limits: import("zod").ZodObject<{
@@ -30,7 +30,7 @@ export declare const editApplicationServerConfigurationSchema: import("zod").Zod
     add_allocations: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
     remove_allocations: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
 }, import("zod/v4/core").$strip>;
-export declare const editApplicationServerStartupSchema: import("zod").ZodObject<{
+export declare const setApplicationServerStartupSchema: import("zod").ZodObject<{
     startup: import("zod").ZodString;
     environment: import("zod").ZodRecord<import("zod").ZodString, import("zod").ZodString>;
     egg: import("zod").ZodInt;

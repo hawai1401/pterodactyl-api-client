@@ -98,6 +98,22 @@ export interface ApplicationServer<ServerStatus extends Status = Status> {
   createdAt: Date;
 }
 
+export interface ApplicationServerLimits {
+  memory: number;
+  swap: number;
+  disk: number;
+  io: number;
+  threads?: string | undefined;
+  cpu: number;
+  oom_disabled?: boolean | undefined;
+}
+
+export interface ApplicationServerFeatureLimits {
+  databases: number;
+  backups: number;
+  allocations?: number | undefined;
+}
+
 export interface CreateServerPayload extends BasePayload {
   external_id?: string | undefined;
   name: string;
@@ -108,19 +124,8 @@ export interface CreateServerPayload extends BasePayload {
   startup: string;
   environment: Record<EnvironmentVariable, string>;
   skip_scripts?: boolean | undefined;
-  limits: {
-    memory: number;
-    swap: number;
-    disk: number;
-    io: number;
-    threads?: string | undefined;
-    cpu: number;
-  };
-  feature_limits: {
-    databases: number;
-    backups: number;
-    allocations?: number | undefined;
-  };
+  limits: ApplicationServerLimits;
+  feature_limits: ApplicationServerFeatureLimits;
   allocation: {
     default: number;
     additional?: number[] | undefined;

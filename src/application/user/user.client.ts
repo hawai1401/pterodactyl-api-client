@@ -53,7 +53,7 @@ export class UserClient {
     } as User<IncludeServers extends true ? IncludeServers : false>;
   }
 
-  async edit(payload: CreateUserPayload): Promise<User> {
+  async update(payload: CreateUserPayload): Promise<User> {
     if (!this.id) throw new Error("L'id de l'utilisateur est requis !");
 
     const userObject = await this.httpClient.request<

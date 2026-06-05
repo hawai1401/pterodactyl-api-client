@@ -10,7 +10,7 @@ export declare class NodeClient {
     constructor(httpClient: HttpClient, id: number);
     allocation(id: number): AllocationClient;
     fetch(): Promise<Node>;
-    edit(payload: CreateNodePayload): Promise<Node>;
+    update(payload: CreateNodePayload): Promise<Node>;
     configuration(): Promise<NodeConfiguration>;
     delete(): Promise<NodeConfiguration>;
 }

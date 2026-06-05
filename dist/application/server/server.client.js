@@ -1,5 +1,5 @@
 import { DatabaseClient } from './database/database.client.js';
-import { applicationServerIdSchema, editApplicationServerConfigurationSchema, editApplicationServerDetailsSchema, editApplicationServerStartupSchema, } from './server.schemas.js';
+import { applicationServerIdSchema, setApplicationServerConfigurationSchema, setApplicationServerDetailsSchema, setApplicationServerStartupSchema, } from './server.schemas.js';
 import { DatabasesClient } from './databases/databases.client.js';
 export class ServerClient {
     httpClient;
@@ -22,7 +22,7 @@ export class ServerClient {
         const serverObject = await this.httpClient.request('GET', `/application/servers/${this.id ?? `external/${this.external_id}`}`, { parseDates: true });
         return serverObject.attributes;
     }
-    async edit({ details, configuration, startup, }) {
+    async update({ details, configuration, startup, }) {
         if (!this.id)
             throw new Error("L'id du serveur est nécessaire !");
         const basePath = `/application/servers/${this.id}`;
@@ -30,17 +30,17 @@ export class ServerClient {
             {
                 data: details,
                 endpoint: 'details',
-                schema: editApplicationServerDetailsSchema,
+                schema: setApplicationServerDetailsSchema,
             },
             {
                 data: configuration,
                 endpoint: 'build',
-                schema: editApplicationServerConfigurationSchema,
+                schema: setApplicationServerConfigurationSchema,
             },
             {
                 data: startup,
                 endpoint: 'startup',
-                schema: editApplicationServerStartupSchema,
+                schema: setApplicationServerStartupSchema,
             },
         ];
         const requests = updates

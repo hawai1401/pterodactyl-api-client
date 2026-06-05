@@ -1,6 +1,6 @@
 import type { HttpClient } from '../../../class/HttpClient.js';
 import type { SetImagePayload } from './image.types.js';
-import { editImageSchema } from '../server.schemas.js';
+import { setImageSchema } from '../server.schemas.js';
 
 export class ImageClient {
   constructor(
@@ -12,7 +12,7 @@ export class ImageClient {
     return this.httpClient.request<void, SetImagePayload>(
       'PUT',
       `/client/servers/${this.server}/settings/docker-image`,
-      editImageSchema.parse(payload),
+      setImageSchema.parse(payload),
     );
   }
 }

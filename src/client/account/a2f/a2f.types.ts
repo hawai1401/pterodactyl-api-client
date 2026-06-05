@@ -1,7 +1,7 @@
 import type { Tuple } from '../../../types.js';
-import type { BaseEditAccountPayload } from '../account.types.js';
+import type { BaseUpdateAccountPayload } from '../account.types.js';
 
-export interface EnableA2fPayload extends BaseEditAccountPayload {
+export interface EnableA2fPayload extends BaseUpdateAccountPayload {
   code: string | number;
 }
 export type RecoveryTokens = Tuple<string, 8>;

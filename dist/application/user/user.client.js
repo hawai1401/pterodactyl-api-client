@@ -21,7 +21,7 @@ export class UserClient {
             servers: relationships.servers.data.map((serverObject) => serverObject.attributes),
         };
     }
-    async edit(payload) {
+    async update(payload) {
         if (!this.id)
             throw new Error("L'id de l'utilisateur est requis !");
         const userObject = await this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(payload), { parseDates: true });

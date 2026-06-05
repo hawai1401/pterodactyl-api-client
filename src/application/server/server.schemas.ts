@@ -13,14 +13,14 @@ export const applicationServerIdSchema = object({
     "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
 });
 
-export const editApplicationServerDetailsSchema = object({
+export const setApplicationServerDetailsSchema = object({
   name: string().min(1).max(191),
   user: int().positive(),
   external_id: applicationServerExternalId.optional(),
   description: string().optional(),
 });
 
-export const editApplicationServerConfigurationSchema = object({
+export const setApplicationServerConfigurationSchema = object({
   allocation: int().positive(),
   oom_disabled: boolean().optional(),
   limits: object({
@@ -42,7 +42,7 @@ export const editApplicationServerConfigurationSchema = object({
   remove_allocations: int().positive().array().optional(),
 });
 
-export const editApplicationServerStartupSchema = object({
+export const setApplicationServerStartupSchema = object({
   startup: string(),
   environment: record(string().uppercase(), string()),
   egg: int().positive(),

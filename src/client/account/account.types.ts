@@ -1,6 +1,6 @@
 import type { BasePayload } from '../../types.js';
 
-export interface BaseEditAccountPayload extends BasePayload {
+export interface BaseUpdateAccountPayload extends BasePayload {
   password: string;
 }
 

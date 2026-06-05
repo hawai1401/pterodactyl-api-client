@@ -40,7 +40,7 @@ export class NodeClient {
     return nodeObject.attributes;
   }
 
-  async edit(payload: CreateNodePayload): Promise<Node> {
+  async update(payload: CreateNodePayload): Promise<Node> {
     const nodeObject = await this.httpClient.request<
       NodeObject,
       zInfer<typeof createNodeSchema>

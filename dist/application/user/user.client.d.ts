@@ -7,7 +7,7 @@ export declare class UserClient {
     readonly external_id: string | undefined;
     constructor(httpClient: HttpClient, ids: UserId);
     fetch<IncludeServers extends boolean>(options?: FetchUserOptions<IncludeServers>): Promise<User<IncludeServers extends true ? IncludeServers : false>>;
-    edit(payload: CreateUserPayload): Promise<User>;
+    update(payload: CreateUserPayload): Promise<User>;
     delete(): Promise<void>;
 }
 //# sourceMappingURL=user.client.d.ts.map

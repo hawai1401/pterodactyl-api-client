@@ -1,1 +1,1 @@
-{"version":3,"file":"email.types.d.ts","sourceRoot":"","sources":["../../../../src/client/account/email/email.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,sBAAsB,EAAE,MAAM,qBAAqB,CAAC;AAElE,MAAM,WAAW,eAAgB,SAAQ,sBAAsB;IAC7D,KAAK,EAAE,MAAM,CAAC;CACf"}
+{"version":3,"file":"email.types.d.ts","sourceRoot":"","sources":["../../../../src/client/account/email/email.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,wBAAwB,EAAE,MAAM,qBAAqB,CAAC;AAEpE,MAAM,WAAW,eAAgB,SAAQ,wBAAwB;IAC/D,KAAK,EAAE,MAAM,CAAC;CACf"}

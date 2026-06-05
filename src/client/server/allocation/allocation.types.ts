@@ -1,5 +1,5 @@
 import type { BasePayload } from '../../../types.js';
 
-export interface EditAllocationPayload extends BasePayload {
+export interface UpdateAllocationPayload extends BasePayload {
   notes?: string | undefined;
 }

@@ -44,7 +44,7 @@ export class ScheduleClient {
     };
   }
 
-  edit(payload: CreateSchedulePayload) {
+  update(payload: CreateSchedulePayload) {
     return this.httpClient.request<void, zInfer<typeof createScheduleSchema>>(
       'POST',
       `/client/servers/${this.server}/schedules/${this.schedule}`,

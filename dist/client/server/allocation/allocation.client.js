@@ -1,4 +1,4 @@
-import { allocationId, editAllocationSchema } from '../server.schemas.js';
+import { allocationId, updateAllocationSchema } from '../server.schemas.js';
 export class AllocationClient {
     httpClient;
     server;
@@ -12,8 +12,8 @@ export class AllocationClient {
         const allocationObject = await this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`);
         return allocationObject.attributes;
     }
-    async edit(payload) {
-        const allocationObject = await this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}`, editAllocationSchema.parse(payload));
+    async setNote(payload) {
+        const allocationObject = await this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}`, updateAllocationSchema.parse(payload));
         return allocationObject.attributes;
     }
     delete() {

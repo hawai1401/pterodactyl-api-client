@@ -1,5 +1,5 @@
 import type { infer as zInfer } from 'zod';
-import type { BaseEditAccountPayload } from '../account.types.js';
+import type { BaseUpdateAccountPayload } from '../account.types.js';
 import type {
   A2fCredentials,
   A2fData,
@@ -19,7 +19,7 @@ export class A2fClient extends BaseClient {
     return recoveryTokensObject.attributes.tokens as RecoveryTokens;
   }
 
-  disable(payload: BaseEditAccountPayload) {
+  disable(payload: BaseUpdateAccountPayload) {
     return this.httpClient.request<void, zInfer<typeof passwordSchema>>(
       'POST',
       '/client/account/two-factor/disable',

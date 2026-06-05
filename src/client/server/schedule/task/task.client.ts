@@ -16,7 +16,7 @@ export class TaskClient {
     this.task = userServerTaskId.parse(task);
   }
 
-  async edit<T extends TaskAction>(
+  async update<T extends TaskAction>(
     payload: CreateTaskPayload<T>,
   ): Promise<Task<T>> {
     const taskObject = await this.httpClient.request<

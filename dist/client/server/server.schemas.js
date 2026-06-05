@@ -53,7 +53,7 @@ export const assignAllocationSchema = object({
     ip: ipv4(),
     port: userServerPort,
 });
-export const editAllocationSchema = object({
+export const updateAllocationSchema = object({
     notes: string().min(1).max(255).optional(),
 });
 export const userServerCommandSchema = object({
@@ -186,7 +186,7 @@ export const setUserServerDetailsSchema = object({
     name: string().min(1).max(255),
     description: string().max(500).optional(),
 });
-export const editImageSchema = object({
+export const setImageSchema = object({
     docker_image: string()
         .max(191)
         .regex(/^[\w#\.\/\- ]*\|?~?[\w\.\/\-:@ ]*$/),

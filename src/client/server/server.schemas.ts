@@ -70,7 +70,7 @@ export const assignAllocationSchema = object({
   port: userServerPort,
 });
 
-export const editAllocationSchema = object({
+export const updateAllocationSchema = object({
   notes: string().min(1).max(255).optional(),
 });
 
@@ -217,7 +217,7 @@ export const setUserServerDetailsSchema = object({
   description: string().max(500).optional(),
 });
 
-export const editImageSchema = object({
+export const setImageSchema = object({
   docker_image: string()
     .max(191)
     .regex(/^[\w#\.\/\- ]*\|?~?[\w\.\/\-:@ ]*$/),

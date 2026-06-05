@@ -3,13 +3,13 @@ import type { HttpClient } from '../../class/HttpClient.js';
 import { DatabaseClient } from './database/database.client.js';
 import {
   applicationServerIdSchema,
-  editApplicationServerConfigurationSchema,
-  editApplicationServerDetailsSchema,
-  editApplicationServerStartupSchema,
+  setApplicationServerConfigurationSchema,
+  setApplicationServerDetailsSchema,
+  setApplicationServerStartupSchema,
 } from './server.schemas.js';
 import type {
   ApplicationServerId,
-  EditApplicationServerPayload,
+  UpdateApplicationServerPayload,
 } from './server.types.js';
 import { DatabasesClient } from './databases/databases.client.js';
 import type {
@@ -53,11 +53,11 @@ export class ServerClient<Ids extends ApplicationServerId> {
     return serverObject.attributes;
   }
 
-  async edit({
+  async update({
     details,
     configuration,
     startup,
-  }: EditApplicationServerPayload): Promise<ApplicationServer> {
+  }: UpdateApplicationServerPayload): Promise<ApplicationServer> {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     const basePath = `/application/servers/${this.id}`;
     const updates: {
@@ -68,17 +68,17 @@ export class ServerClient<Ids extends ApplicationServerId> {
       {
         data: details,
         endpoint: 'details',
-        schema: editApplicationServerDetailsSchema,
+        schema: setApplicationServerDetailsSchema,
       },
       {
         data: configuration,
         endpoint: 'build',
-        schema: editApplicationServerConfigurationSchema,
+        schema: setApplicationServerConfigurationSchema,
       },
       {
         data: startup,
         endpoint: 'startup',
-        schema: editApplicationServerStartupSchema,
+        schema: setApplicationServerStartupSchema,
       },
     ];
 
@@ -87,7 +87,7 @@ export class ServerClient<Ids extends ApplicationServerId> {
       .map(({ data, endpoint, schema }) =>
         this.httpClient.request<
           ApplicationServerObject,
-          zInfer<typeof editApplicationServerDetailsSchema>
+          zInfer<typeof setApplicationServerDetailsSchema>
         >('PATCH', `${basePath}/${endpoint}`, schema.parse(data), {
           parseDates: true,
         }),

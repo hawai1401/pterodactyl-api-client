@@ -3,8 +3,8 @@ import type {
   Allocation,
   AllocationObject,
 } from '../allocations/allocations.types.js';
-import { allocationId, editAllocationSchema } from '../server.schemas.js';
-import type { EditAllocationPayload } from './allocation.types.js';
+import { allocationId, updateAllocationSchema } from '../server.schemas.js';
+import type { UpdateAllocationPayload } from './allocation.types.js';
 
 export class AllocationClient {
   readonly allocation: number;
@@ -25,14 +25,14 @@ export class AllocationClient {
     return allocationObject.attributes;
   }
 
-  async edit(payload: EditAllocationPayload): Promise<Allocation> {
+  async setNote(payload: UpdateAllocationPayload): Promise<Allocation> {
     const allocationObject = await this.httpClient.request<
       AllocationObject,
-      EditAllocationPayload
+      UpdateAllocationPayload
     >(
       'POST',
       `/client/servers/${this.server}/network/allocations/${this.allocation}`,
-      editAllocationSchema.parse(payload),
+      updateAllocationSchema.parse(payload),
     );
     return allocationObject.attributes;
   }

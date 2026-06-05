@@ -1,6 +1,6 @@
 import type { HttpClient } from '../../class/HttpClient.js';
 import { DatabaseClient } from './database/database.client.js';
-import type { ApplicationServerId, EditApplicationServerPayload } from './server.types.js';
+import type { ApplicationServerId, UpdateApplicationServerPayload } from './server.types.js';
 import { DatabasesClient } from './databases/databases.client.js';
 import type { ApplicationServer } from '../servers/servers.types.js';
 export declare class ServerClient<Ids extends ApplicationServerId> {
@@ -11,7 +11,7 @@ export declare class ServerClient<Ids extends ApplicationServerId> {
     constructor(httpClient: HttpClient, ids: Ids);
     database(database: number): DatabaseClient;
     fetch(): Promise<ApplicationServer>;
-    edit({ details, configuration, startup, }: EditApplicationServerPayload): Promise<ApplicationServer>;
+    update({ details, configuration, startup, }: UpdateApplicationServerPayload): Promise<ApplicationServer>;
     suspend(): Promise<void>;
     unsuspend(): Promise<void>;
     reinstall(): Promise<void>;

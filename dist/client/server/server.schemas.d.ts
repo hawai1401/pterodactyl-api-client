@@ -14,7 +14,7 @@ export declare const assignAllocationSchema: import("zod").ZodObject<{
     ip: import("zod").ZodIPv4;
     port: import("zod").ZodInt;
 }, import("zod/v4/core").$strip>;
-export declare const editAllocationSchema: import("zod").ZodObject<{
+export declare const updateAllocationSchema: import("zod").ZodObject<{
     notes: import("zod").ZodOptional<import("zod").ZodString>;
 }, import("zod/v4/core").$strip>;
 export declare const userServerCommandSchema: import("zod").ZodObject<{
@@ -91,7 +91,7 @@ export declare const setUserServerDetailsSchema: import("zod").ZodObject<{
     name: import("zod").ZodString;
     description: import("zod").ZodOptional<import("zod").ZodString>;
 }, import("zod/v4/core").$strip>;
-export declare const editImageSchema: import("zod").ZodObject<{
+export declare const setImageSchema: import("zod").ZodObject<{
     docker_image: import("zod").ZodString;
 }, import("zod/v4/core").$strip>;
 //# sourceMappingURL=server.schemas.d.ts.map

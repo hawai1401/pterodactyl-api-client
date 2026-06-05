@@ -18,7 +18,7 @@ export class NodeClient {
         const nodeObject = await this.httpClient.request('GET', `/application/nodes/${this.id}`, { parseDates: true });
         return nodeObject.attributes;
     }
-    async edit(payload) {
+    async update(payload) {
         const nodeObject = await this.httpClient.request('PATCH', `/application/nodes/${this.id}`, createNodeSchema.parse(payload), { parseDates: true });
         return nodeObject.attributes;
     }
