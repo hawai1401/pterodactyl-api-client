@@ -1,9 +1,12 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { Allocation } from '../server.types.js';
-import type { EditAllocationArgs } from '../allocation.types.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type {
+  Allocation,
+  AllocationObject,
+} from '../allocations/allocations.types.js';
 import { allocationId, editAllocationSchema } from '../server.schemas.js';
+import type { EditAllocationPayload } from './allocation.types.js';
 
-export default class AllocationClient {
+export class AllocationClient {
   readonly allocation: number;
 
   constructor(
@@ -14,23 +17,28 @@ export default class AllocationClient {
     this.allocation = allocationId.parse(allocation);
   }
 
-  setPrimary() {
-    return this.httpClient.request<Allocation>(
+  async setPrimary(): Promise<Allocation> {
+    const allocationObject = await this.httpClient.request<AllocationObject>(
       'POST',
       `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`,
     );
+    return allocationObject.attributes;
   }
 
-  edit(options: EditAllocationArgs = {}) {
-    return this.httpClient.request<Allocation, EditAllocationArgs>(
+  async edit(payload: EditAllocationPayload): Promise<Allocation> {
+    const allocationObject = await this.httpClient.request<
+      AllocationObject,
+      EditAllocationPayload
+    >(
       'POST',
       `/client/servers/${this.server}/network/allocations/${this.allocation}`,
-      editAllocationSchema.parse(options),
+      editAllocationSchema.parse(payload),
     );
+    return allocationObject.attributes;
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/client/servers/${this.server}/network/allocations/${this.allocation}`,
     );

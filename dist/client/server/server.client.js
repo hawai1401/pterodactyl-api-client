@@ -1,22 +1,22 @@
-import HttpClient from '../../class/HttpClient.js';
-import buildQueryParams from '../../utils/buildQueryParams.js';
-import AllocationClient from './allocation/allocation.client.js';
-import AllocationsClient from './allocations/allocations.client.js';
-import BackupClient from './backup/backup.client.js';
-import BackupsClient from './backups/backups.client.js';
-import ConsoleClient from './console/console.client.js';
-import DatabaseClient from './database/database.client.js';
-import DatabasesClient from './databases/databases.client.js';
-import ImageClient from './image/image.client.js';
-import PowerClient from './power/power.client.js';
-import RessourceClient from './ressource/ressource.client.js';
-import ScheduleClient from './schedule/schedule.client.js';
-import SchedulesClient from './schedules/schedules.client.js';
-import { renameServerSchema, userServerActivityEvent, userServerId, } from './server.schemas.js';
-import StartupClient from './startup/startup.client.js';
-import SubuserClient from './subuser/subuser.client.js';
-import SubusersClient from './subusers/subusers.client.js';
-export default class Servers {
+import { HttpClient } from '../../class/HttpClient.js';
+import { buildQueryParams } from '../../utils/buildQueryParams.js';
+import { AllocationClient } from './allocation/allocation.client.js';
+import { AllocationsClient } from './allocations/allocations.client.js';
+import { BackupClient } from './backup/backup.client.js';
+import { BackupsClient } from './backups/backups.client.js';
+import { ConsoleClient } from './console/console.client.js';
+import { DatabaseClient } from './database/database.client.js';
+import { DatabasesClient } from './databases/databases.client.js';
+import { ImageClient } from './image/image.client.js';
+import { PowerClient } from './power/power.client.js';
+import { ResourceClient } from './resource/resource.client.js';
+import { ScheduleClient } from './schedule/schedule.client.js';
+import { SchedulesClient } from './schedules/schedules.client.js';
+import { setUserServerDetailsSchema, userServerActivityEvent, userServerId, } from './server.schemas.js';
+import { StartupClient } from './startup/startup.client.js';
+import { SubuserClient } from './subuser/subuser.client.js';
+import { SubusersClient } from './subusers/subusers.client.js';
+export class UserServerClient {
     httpClient;
     panelUrl;
     allocations;
@@ -25,7 +25,7 @@ export default class Servers {
     databases;
     image;
     power;
-    ressource;
+    resource;
     schedules;
     startup;
     subusers;
@@ -40,29 +40,25 @@ export default class Servers {
         this.databases = new DatabasesClient(httpClient, this.id);
         this.image = new ImageClient(httpClient, this.id);
         this.power = new PowerClient(httpClient, this.id);
-        this.ressource = new RessourceClient(httpClient, this.id);
+        this.resource = new ResourceClient(httpClient, this.id);
         this.schedules = new SchedulesClient(httpClient, this.id);
         this.startup = new StartupClient(httpClient, this.id);
         this.subusers = new SubusersClient(httpClient, this.id);
     }
-    async activity({ page, per_page, filter, sort, } = {}) {
-        const event = userServerActivityEvent.optional().parse(filter?.event);
+    async fetchActivityLogs(options) {
+        const event = userServerActivityEvent
+            .optional()
+            .parse(options?.filter?.event);
         const queries = buildQueryParams({
-            page,
-            per_page,
+            ...options,
             filter: { event },
-            sort,
         });
-        const res = await this.httpClient.request('GET', `/client/servers/${this.id}/activity?${queries}`);
+        const activityObjectList = await this.httpClient.request('GET', `/client/servers/${this.id}/activity?${queries}`, {
+            parseDates: true,
+        });
         return {
-            ...res,
-            data: res.data.map((data) => ({
-                ...data,
-                attributes: {
-                    ...data.attributes,
-                    timestamp: new Date(data.attributes.timestamp),
-                },
-            })),
+            data: activityObjectList.data.map((activityObject) => activityObject.attributes),
+            pagination: activityObjectList.meta.pagination,
         };
     }
     allocation(allocation) {
@@ -80,11 +76,11 @@ export default class Servers {
     subuser(subuser) {
         return new SubuserClient(this.httpClient, this.id, subuser);
     }
-    info() {
-        return this.httpClient.request('GET', `/client/servers/${this.id}`);
+    fetch() {
+        return this.httpClient.request('GET', `/client/servers/${this.id}`, { parseDates: true });
     }
-    edit(options) {
-        return this.httpClient.request('POST', `/client/servers/${this.id}/settings/rename`, renameServerSchema.parse(options));
+    setDetails(payload) {
+        return this.httpClient.request('POST', `/client/servers/${this.id}/settings/rename`, setUserServerDetailsSchema.parse(payload));
     }
     reinstall() {
         return this.httpClient.request('POST', `/client/servers/${this.id}/settings/reinstall`);

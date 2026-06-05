@@ -1,18 +1,24 @@
-import buildQueryParams from '../../../utils/buildQueryParams.js';
+import { buildQueryParams } from '../../../utils/buildQueryParams.js';
 import { listAllocationsFilterSchema } from '../node.schemas.js';
-export default class AllocationClient {
+export class AllocationsClient {
     httpClient;
     node;
     constructor(httpClient, node) {
         this.httpClient = httpClient;
         this.node = node;
     }
-    list(options = {}) {
-        const filter = listAllocationsFilterSchema.optional().parse(options.filter);
+    async fetch(options) {
+        const filter = listAllocationsFilterSchema
+            .optional()
+            .parse(options?.filter);
         const queries = buildQueryParams({ ...options, filter });
-        return this.httpClient.request('GET', `/application/nodes/${this.node}/allocations?${queries}`);
+        const allocationObjectList = await this.httpClient.request('GET', `/application/nodes/${this.node}/allocations?${queries}`);
+        return {
+            data: allocationObjectList.data.map((allocationObject) => allocationObject.attributes),
+            pagination: allocationObjectList.meta.pagination,
+        };
     }
-    create(options) {
-        return this.httpClient.request('POST', `/application/nodes/${this.node}/allocations`, options);
+    create(payload) {
+        return this.httpClient.request('POST', `/application/nodes/${this.node}/allocations`, payload);
     }
 }

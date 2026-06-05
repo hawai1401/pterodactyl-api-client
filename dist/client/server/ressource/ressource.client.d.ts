@@ -1,6 +1,6 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import type { Stats } from './ressource.types.js';
-export default class RessourceClient {
+export declare class RessourceClient {
     private httpClient;
     readonly server: string;
     constructor(httpClient: HttpClient, server: string);

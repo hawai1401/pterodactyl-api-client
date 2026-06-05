@@ -1,5 +1,5 @@
-import type HttpClient from '../../../class/HttpClient.js';
-export default class PowerClient {
+import type { HttpClient } from '../../../class/HttpClient.js';
+export declare class PowerClient {
     private httpClient;
     readonly server: string;
     constructor(httpClient: HttpClient, server: string);

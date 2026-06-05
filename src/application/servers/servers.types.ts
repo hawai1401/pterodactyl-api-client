@@ -1,19 +1,37 @@
 import type {
-  BaseArgs,
+  BasePayload,
   EnvironmentVariable,
-  ListwithPagination,
+  PaginationFetchOptions,
+  Sort,
 } from '../../types.js';
 
-export interface BaseApplicationServer<T extends string | Date> {
+export interface FetchApplicationServersOptions extends PaginationFetchOptions {
+  filter?: {
+    uuid?: string | undefined;
+    uuidShort?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    image?: string | undefined;
+    external_id?: string | undefined;
+  };
+  sort?: {
+    id?: Sort | undefined;
+    uuid?: Sort | undefined;
+  };
+}
+
+export type Status = 'suspended' | 'installing' | null;
+
+export interface ApplicationServerObject<ServerStatus extends Status = Status> {
   object: 'server';
   attributes: {
     id: number;
-    external_id: null;
+    external_id: null | string;
     uuid: string;
     identifier: string;
     name: string;
     description: string;
-    suspended: boolean;
+    suspended: ServerStatus extends 'suspended' ? true : false;
     limits: {
       memory: number;
       swap: number;
@@ -37,38 +55,50 @@ export interface BaseApplicationServer<T extends string | Date> {
       startup_command: string;
       image: string;
       environment: Record<EnvironmentVariable, string | number>;
+      installed: ServerStatus extends 'installing' ? 0 : 1;
     };
-    updated_at: T;
-    created_at: T;
+    updated_at: Date;
+    created_at: Date;
   };
 }
-
-export type ApplicationServer<T extends string | Date> =
-  BaseApplicationServer<T> &
-    (
-      | {
-          attributes: {
-            status: 'suspended';
-            container: {
-              installed: 0;
-            };
-          };
-        }
-      | {
-          attributes: {
-            status: 'installing' | null;
-            container: {
-              installed: 1;
-            };
-          };
-        }
-    );
-
-export interface ApplicationServerList extends ListwithPagination {
-  data: ApplicationServer<string>[];
+export interface ApplicationServer<ServerStatus extends Status = Status> {
+  id: number;
+  externalId: null | string;
+  uuid: string;
+  identifier: string;
+  name: string;
+  description: string;
+  suspended: ServerStatus extends 'suspended' ? true : false;
+  limits: {
+    memory: number;
+    swap: number;
+    disk: number;
+    io: number;
+    cpu: number;
+    threads: string | null;
+    oomDisabled: boolean;
+  };
+  featureLimits: {
+    databases: number;
+    allocations: number;
+    backups: number;
+  };
+  user: number;
+  node: number;
+  allocation: number;
+  nest: number;
+  egg: number;
+  container: {
+    startupCommand: string;
+    image: string;
+    environment: Record<EnvironmentVariable, string | number>;
+    installed: ServerStatus extends 'installing' ? 0 : 1;
+  };
+  updatedAt: Date;
+  createdAt: Date;
 }
 
-export interface CreateServerArgs extends BaseArgs {
+export interface CreateServerPayload extends BasePayload {
   external_id?: string | undefined;
   name: string;
   description?: string | undefined;

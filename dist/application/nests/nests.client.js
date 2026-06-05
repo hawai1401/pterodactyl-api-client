@@ -1,20 +1,10 @@
-export default class NestsClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
+import { BaseClient } from '../../class/BaseClient.js';
+export class NestsClient extends BaseClient {
     async list() {
-        const res = await this.httpClient.request('GET', '/application/nests');
+        const nestObjectList = await this.httpClient.request('GET', '/application/nests', { parseDates: true });
         return {
-            ...res,
-            data: res.data.map((nest) => ({
-                ...nest,
-                attributes: {
-                    ...nest.attributes,
-                    created_at: new Date(nest.attributes.created_at),
-                    updated_at: new Date(nest.attributes.updated_at),
-                },
-            })),
+            data: nestObjectList.data.map((nestObject) => nestObject.attributes),
+            pagination: nestObjectList.meta.pagination,
         };
     }
 }

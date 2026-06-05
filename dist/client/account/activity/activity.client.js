@@ -1,28 +1,17 @@
-import buildQueryParams from '../../../utils/buildQueryParams.js';
+import { buildQueryParams } from '../../../utils/buildQueryParams.js';
 import { accountActivityEvent } from '../account.schemas.js';
-export default class ActivityClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
-    async list({ page, per_page, filter, sort, } = {}) {
-        const event = accountActivityEvent.optional().parse(filter?.event);
+import { BaseClient } from '../../../class/BaseClient.js';
+export class ActivityClient extends BaseClient {
+    async fetch(options) {
+        const event = accountActivityEvent.optional().parse(options?.filter?.event);
         const queries = buildQueryParams({
-            page,
-            per_page,
+            ...options,
             filter: { event },
-            sort,
         });
-        const res = await this.httpClient.request('GET', `/client/account/activity?${queries}`);
+        const accountActivityListObject = await this.httpClient.request('GET', `/client/account/activity?${queries}`, { parseDates: true });
         return {
-            ...res,
-            data: res.data.map((activity) => ({
-                ...activity,
-                attributes: {
-                    ...activity.attributes,
-                    timestamp: new Date(activity.attributes.timestamp),
-                },
-            })),
+            data: accountActivityListObject.data.map((activityObject) => activityObject.attributes),
+            pagination: accountActivityListObject.meta.pagination,
         };
     }
 }

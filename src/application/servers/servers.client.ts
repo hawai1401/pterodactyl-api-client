@@ -1,81 +1,35 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
 import {
   createServerSchema,
   listServersFilterSchema,
 } from './servers.schemas.js';
 import type {
   ApplicationServer,
-  ApplicationServerList,
-  CreateServerArgs,
+  ApplicationServerObject,
+  CreateServerPayload,
+  FetchApplicationServersOptions,
 } from './servers.types.js';
-import type { BaseListArgs, Sort } from '../../types.js';
-import buildQueryParams from '../../utils/buildQueryParams.js';
+import type { ObjectListWithPagination } from '../../types.js';
+import { buildQueryParams } from '../../utils/buildQueryParams.js';
+import { BaseClient } from '../../class/BaseClient.js';
 
-export default class ServersClient {
-  constructor(private httpClient: HttpClient) {}
-
-  async list(
-    options: {
-      filter?:
-        | {
-            uuid?: string | undefined;
-            uuidShort?: string | undefined;
-            name?: string | undefined;
-            description?: string | undefined;
-            image?: string | undefined;
-            external_id?: string | undefined;
-          }
-        | undefined;
-      sort?:
-        | {
-            id?: Sort | undefined;
-            uuid?: Sort | undefined;
-          }
-        | undefined;
-    } & BaseListArgs = {},
-  ) {
-    const filter = listServersFilterSchema.optional().parse(options.filter);
-    const queries = buildQueryParams<
-      {
-        uuid?: string | undefined;
-        uuidShort?: string | undefined;
-        name?: string | undefined;
-        description?: string | undefined;
-        image?: string | undefined;
-        external_id?: string | undefined;
-      },
-      { id?: Sort | undefined; uuid?: Sort | undefined }
-    >({ ...options, filter });
-    const res = await this.httpClient.request<ApplicationServerList>(
-      'GET',
-      `/application/servers?${queries}`,
-    );
-    return {
-      ...res,
-      data: res.data.map((server) => ({
-        ...server,
-        attributes: {
-          ...server.attributes,
-          created_at: new Date(server.attributes.created_at),
-          updated_at: new Date(server.attributes.updated_at),
-        },
-      })),
-    };
+export class ServersClient extends BaseClient {
+  async fetch(options?: FetchApplicationServersOptions) {
+    const filter = listServersFilterSchema.optional().parse(options?.filter);
+    const queries = buildQueryParams({ ...options, filter });
+    const res = await this.httpClient.request<
+      ObjectListWithPagination<ApplicationServerObject>
+    >('GET', `/application/servers?${queries}`, { parseDates: true });
+    return res;
   }
 
-  async create(options: CreateServerArgs) {
-    const res = await this.httpClient.request<
-      ApplicationServer<string>,
-      z.infer<typeof createServerSchema>
-    >('POST', `/application/servers`, createServerSchema.parse(options));
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+  async create(payload: CreateServerPayload): Promise<ApplicationServer> {
+    const serverObject = await this.httpClient.request<
+      ApplicationServerObject,
+      zInfer<typeof createServerSchema>
+    >('POST', `/application/servers`, createServerSchema.parse(payload), {
+      parseDates: true,
+    });
+    return serverObject.attributes;
   }
 }

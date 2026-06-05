@@ -1,10 +1,7 @@
-import { editEmailSchema } from '../account.schemas.js';
-export default class EmailClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
-    edit(options) {
-        return this.httpClient.request('PUT', '/client/account/email', editEmailSchema.parse(options));
+import { setEmailSchema } from '../account.schemas.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+export class EmailClient extends BaseClient {
+    set(payload) {
+        return this.httpClient.request('PUT', '/client/account/email', setEmailSchema.parse(payload));
     }
 }

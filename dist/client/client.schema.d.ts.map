@@ -1,1 +1,1 @@
-{"version":3,"file":"client.schema.d.ts","sourceRoot":"","sources":["../../src/client/client.schema.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,MAAM,KAAK,CAAC;AAGpB,eAAO,MAAM,sBAAsB;;;;;mBAKjC,CAAC"}
+{"version":3,"file":"client.schema.d.ts","sourceRoot":"","sources":["../../src/client/client.schema.ts"],"names":[],"mappings":"AAGA,eAAO,MAAM,sBAAsB;;;;;gCAKjC,CAAC"}

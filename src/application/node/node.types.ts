@@ -1,12 +1,12 @@
-import type { IP } from '../../types.js';
+import type { IPv4 } from '../../types.js';
 
-export interface NodeConfiguration {
+export interface NodeConfigurationData {
   debug: boolean;
   uuid: string;
   token_id: string;
   token: string;
   api: {
-    host: IP;
+    host: IPv4;
     port: number;
     ssl: {
       enabled: boolean;
@@ -22,5 +22,29 @@ export interface NodeConfiguration {
     };
   };
   allowed_mounts: [];
+  remote: string;
+}
+export interface NodeConfiguration {
+  debug: boolean;
+  uuid: string;
+  tokenId: string;
+  token: string;
+  api: {
+    host: IPv4;
+    port: number;
+    ssl: {
+      enabled: boolean;
+      cert: string;
+      key: string;
+    };
+    uploadLimit: number;
+  };
+  system: {
+    data: string;
+    sftp: {
+      bindPort: number;
+    };
+  };
+  allowedMounts: never[];
   remote: string;
 }

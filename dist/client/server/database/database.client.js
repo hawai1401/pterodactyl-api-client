@@ -1,6 +1,6 @@
 import { userServerDatabaseId } from '../server.schemas.js';
-import PasswordClient from './password/password.client.js';
-export default class DatabaseClient {
+import { UserServerDatabaseClient } from './password/password.client.js';
+export class DatabaseClient {
     httpClient;
     server;
     password;
@@ -8,7 +8,7 @@ export default class DatabaseClient {
     constructor(httpClient, server, database) {
         this.httpClient = httpClient;
         this.server = server;
-        this.password = new PasswordClient(httpClient, server, database);
+        this.password = new UserServerDatabaseClient(httpClient, server, database);
         this.database = userServerDatabaseId.parse(database);
     }
     delete() {

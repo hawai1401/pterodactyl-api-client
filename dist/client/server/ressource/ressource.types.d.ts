@@ -1,5 +1,5 @@
 import type { State } from '../server.types.js';
-export interface Stats {
+export interface StatsObject {
     object: 'stats';
     attributes: {
         current_state: State;
@@ -13,6 +13,19 @@ export interface Stats {
             network_tx_bytes: number;
             uptime: number;
         };
+    };
+}
+export interface Stats {
+    currentState: State;
+    isSuspended: boolean;
+    resources: {
+        memoryBytes: number;
+        memoryLimitBytes: number;
+        cpuAbsolute: number;
+        diskBytes: number;
+        networkRxBytes: number;
+        networkTxBytes: number;
+        uptime: number;
     };
 }
 //# sourceMappingURL=ressource.types.d.ts.map

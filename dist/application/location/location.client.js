@@ -1,33 +1,18 @@
-import z from 'zod';
-import { editLocationSchema, locationId } from './location.schemas.js';
-export default class LocationClient {
+import { updateLocationSchema, locationId } from './location.schemas.js';
+export class LocationClient {
     httpClient;
     id;
     constructor(httpClient, id) {
         this.httpClient = httpClient;
         this.id = locationId.parse(id);
     }
-    async info() {
-        const res = await this.httpClient.request('GET', `/application/locations/${this.id}`);
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    async fetch() {
+        const locationObject = await this.httpClient.request('GET', `/application/locations/${this.id}`, { parseDates: true });
+        return locationObject.attributes;
     }
-    async edit(options) {
-        const res = await this.httpClient.request('PATCH', `/application/locations/${this.id}`, editLocationSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    async update(payload) {
+        const locationObject = await this.httpClient.request('PATCH', `/application/locations/${this.id}`, updateLocationSchema.parse(payload), { parseDates: true });
+        return locationObject.attributes;
     }
     delete() {
         return this.httpClient.request('DELETE', `/application/locations/${this.id}`);

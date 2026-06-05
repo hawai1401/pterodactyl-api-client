@@ -1,16 +1,24 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { BaseListArgs, IP } from '../../../types.js';
-import type { ApplicationAllocationList, ApplicationAllocationListWithDate, CreateApplicationAllocationArgs } from './allocations.types.js';
-export default class AllocationClient {
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { Paginated } from '../../../types.js';
+import type { CreateApplicationAllocationPayload, ApplicationAllocation, FetchAllocationsOptions } from './allocations.types.js';
+export declare class AllocationsClient {
     private httpClient;
     readonly node: number;
     constructor(httpClient: HttpClient, node: number);
-    list(options?: {
-        filter?: {
-            ip?: IP | undefined;
-            port?: string | number | undefined;
-        } | undefined;
-    } & BaseListArgs): Promise<ApplicationAllocationListWithDate>;
-    create(options: CreateApplicationAllocationArgs): Promise<ApplicationAllocationList>;
+    fetch(options?: FetchAllocationsOptions): Promise<Paginated<ApplicationAllocation>>;
+    create(payload: CreateApplicationAllocationPayload): Promise<{
+        object: "list";
+        data: {
+            object: "allocation";
+            attributes: {
+                id: number;
+                ip: `${number}.${number}.${number}.${number}`;
+                alias: string | null;
+                port: number;
+                notes: string | null;
+                assigned: boolean;
+            };
+        }[];
+    }>;
 }
 //# sourceMappingURL=allocations.client.d.ts.map

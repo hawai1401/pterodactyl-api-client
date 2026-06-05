@@ -1,13 +1,17 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
-import { nodeId } from './node.schemas.js';
-import type { CreateNodeArgs, Node } from '../nodes/nodes.types.js';
+import type { infer as zInfer } from 'zod';
+import type { HttpClient } from '../../class/HttpClient.js';
+import { allocationId, nodeId } from './node.schemas.js';
+import type {
+  CreateNodePayload,
+  Node,
+  NodeObject,
+} from '../nodes/nodes.types.js';
 import { createNodeSchema } from '../nodes/nodes.schemas.js';
-import type { NodeConfiguration } from './node.types.js';
-import AllocationsClient from './allocations/allocations.client.js';
-import AllocationClient from './allocation/allocation.client.js';
+import type { NodeConfiguration, NodeConfigurationData } from './node.types.js';
+import { AllocationsClient } from './allocations/allocations.client.js';
+import { AllocationClient } from './allocation/allocation.client.js';
 
-export default class NodeClient {
+export class NodeClient {
   public allocations: AllocationsClient;
   readonly id: number;
 
@@ -20,52 +24,44 @@ export default class NodeClient {
   }
 
   allocation(id: number) {
-    return new AllocationClient(this.httpClient, this.id, id);
+    return new AllocationClient(
+      this.httpClient,
+      this.id,
+      allocationId.parse(id),
+    );
   }
 
-  async info() {
-    const res = await this.httpClient.request<Node<string>>(
+  async fetch(): Promise<Node> {
+    const nodeObject = await this.httpClient.request<NodeObject>(
       'GET',
       `/application/nodes/${this.id}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return nodeObject.attributes;
   }
 
-  async edit(options: CreateNodeArgs) {
-    const res = await this.httpClient.request<
-      Node<string>,
-      z.infer<typeof createNodeSchema>
+  async edit(payload: CreateNodePayload): Promise<Node> {
+    const nodeObject = await this.httpClient.request<
+      NodeObject,
+      zInfer<typeof createNodeSchema>
     >(
       'PATCH',
       `/application/nodes/${this.id}`,
-      createNodeSchema.parse(options),
+      createNodeSchema.parse(payload),
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return nodeObject.attributes;
   }
 
-  configuration() {
-    return this.httpClient.request<NodeConfiguration>(
+  configuration(): Promise<NodeConfiguration> {
+    return this.httpClient.request<NodeConfigurationData>(
       'GET',
       `/application/nodes/${this.id}/configuration`,
     );
   }
 
-  delete() {
-    return this.httpClient.request<NodeConfiguration>(
+  delete(): Promise<NodeConfiguration> {
+    return this.httpClient.request<NodeConfigurationData>(
       'DELETE',
       `/application/nodes/${this.id}`,
     );

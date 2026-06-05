@@ -1,9 +1,10 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
-import { editLocationSchema, locationId } from './location.schemas.js';
-import type { EditLocationArgs, Location } from './location.types.js';
+import type { HttpClient } from '../../class/HttpClient.js';
+import { updateLocationSchema, locationId } from './location.schemas.js';
+import type { UpdateLocationPayload } from './location.types.js';
+import type { Location, LocationObject } from '../locations/locations.types.js';
+import type { infer as zInfer } from 'zod';
 
-export default class LocationClient {
+export class LocationClient {
   readonly id: number;
 
   constructor(
@@ -13,42 +14,30 @@ export default class LocationClient {
     this.id = locationId.parse(id);
   }
 
-  async info() {
-    const res = await this.httpClient.request<Location<string>>(
+  async fetch(): Promise<Location> {
+    const locationObject = await this.httpClient.request<LocationObject>(
       'GET',
       `/application/locations/${this.id}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return locationObject.attributes;
   }
 
-  async edit(options: EditLocationArgs) {
-    const res = await this.httpClient.request<
-      Location<string>,
-      z.infer<typeof editLocationSchema>
+  async update(payload: UpdateLocationPayload): Promise<Location> {
+    const locationObject = await this.httpClient.request<
+      LocationObject,
+      zInfer<typeof updateLocationSchema>
     >(
       'PATCH',
       `/application/locations/${this.id}`,
-      editLocationSchema.parse(options),
+      updateLocationSchema.parse(payload),
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return locationObject.attributes;
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/application/locations/${this.id}`,
     );

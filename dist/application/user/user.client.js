@@ -1,31 +1,31 @@
-import z from 'zod';
 import { userIdSchema } from './user.schemas.js';
 import { createUserSchema } from '../users/users.schemas.js';
-export default class UserClient {
+export class UserClient {
     httpClient;
     id;
     external_id;
-    constructor(httpClient, args) {
+    constructor(httpClient, ids) {
         this.httpClient = httpClient;
-        const { id, external_id } = userIdSchema.parse(args);
+        const { id, external_id } = userIdSchema.parse(ids);
         this.id = id;
         this.external_id = external_id;
     }
-    async info({ includeServers, } = {}) {
-        const res = await this.httpClient.request('GET', `/application/users/${this.id ?? `external/${this.external_id}`}${includeServers ? '?include=servers' : ''}`);
+    async fetch(options) {
+        const userObject = await this.httpClient.request('GET', `/application/users/${this.id ?? `external/${this.external_id}`}${options?.includeServers ? '?include=servers' : ''}`, { parseDates: true });
+        if (!options?.includeServers)
+            return userObject
+                .attributes;
+        const { relationships, ...attributes } = userObject.attributes;
         return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
+            ...attributes,
+            servers: relationships.servers.data.map((serverObject) => serverObject.attributes),
         };
     }
-    edit(args) {
+    async edit(payload) {
         if (!this.id)
             throw new Error("L'id de l'utilisateur est requis !");
-        return this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(args));
+        const userObject = await this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(payload), { parseDates: true });
+        return userObject.attributes;
     }
     delete() {
         if (!this.id)

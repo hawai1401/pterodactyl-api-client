@@ -1,15 +1,15 @@
-import type { BaseArgs, EnvironmentVariable } from '../../types.js';
+import type { BasePayload, EnvironmentVariable } from '../../types.js';
 export interface ApplicationServerId {
     id?: number | undefined;
     external_id?: string | undefined;
 }
-export interface EditApplicationServerDetailsArgs extends BaseArgs {
+export interface EditApplicationServerDetailsPayload extends BasePayload {
     name: string;
     user: number;
     external_id?: string | undefined;
     description?: string | undefined;
 }
-export interface EditApplicationServerConfigurationArgs extends BaseArgs {
+export interface EditApplicationServerConfigurationPayload extends BasePayload {
     allocation: number;
     oom_disabled?: boolean | undefined;
     limits: {
@@ -28,16 +28,16 @@ export interface EditApplicationServerConfigurationArgs extends BaseArgs {
     add_allocations?: number[] | undefined;
     remove_allocations?: number[] | undefined;
 }
-export interface EditApplicationServerStartupArgs extends BaseArgs {
+export interface EditApplicationServerStartupPayload extends BasePayload {
     startup: string;
     environment: Record<EnvironmentVariable, string>;
     egg: number;
     image: string;
     skip_scripts: boolean;
 }
-export interface EditApplicationServerArgs extends BaseArgs {
-    details?: EditApplicationServerDetailsArgs | undefined;
-    configuration?: EditApplicationServerConfigurationArgs | undefined;
-    startup?: EditApplicationServerStartupArgs | undefined;
+export interface EditApplicationServerPayload extends BasePayload {
+    details?: EditApplicationServerDetailsPayload | undefined;
+    configuration?: EditApplicationServerConfigurationPayload | undefined;
+    startup?: EditApplicationServerStartupPayload | undefined;
 }
 //# sourceMappingURL=server.types.d.ts.map

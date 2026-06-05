@@ -1,9 +1,9 @@
-export class PterodactylAPIError<T> extends Error {
+export class PterodactylAPIError<Body> extends Error {
   constructor(
     readonly status: number,
     readonly message: string,
     readonly path: string,
-    readonly body?: T | null,
+    readonly body?: Body | null,
   ) {
     super(message);
   }

@@ -1,0 +1,1 @@
+{"version":3,"file":"backup.types.d.ts","sourceRoot":"","sources":["../../../../src/client/server/backup/backup.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AAErD,MAAM,WAAW,oBAAqB,SAAQ,WAAW;IACvD,QAAQ,CAAC,EAAE,OAAO,GAAG,SAAS,CAAC;CAChC;AAED,MAAM,WAAW,kBAAkB;IACjC,MAAM,EAAE,YAAY,CAAC;IACrB,UAAU,EAAE;QACV,GAAG,EAAE,MAAM,CAAC;KACb,CAAC;CACH"}

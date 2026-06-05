@@ -1,16 +1,7 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { BaseListArgs, Sort } from '../../../types.js';
-import type { AuthEvent, UserActivityList, UserEvent } from './activity.types.js';
-export default class ActivityClient {
-    private httpClient;
-    constructor(httpClient: HttpClient);
-    list<T extends UserEvent | AuthEvent>({ page, per_page, filter, sort, }?: (BaseListArgs & {
-        filter?: {
-            event?: T | undefined;
-        } | undefined;
-        sort?: {
-            timestamp?: Sort | undefined;
-        } | undefined;
-    }) | undefined): Promise<UserActivityList<Date, T>>;
+import type { Paginated } from '../../../types.js';
+import type { AccountActivity, UserEvent, FetchActivityOptions } from './activity.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+export declare class ActivityClient extends BaseClient {
+    fetch<Event extends UserEvent>(options?: FetchActivityOptions<Event>): Promise<Paginated<AccountActivity<Event>>>;
 }
 //# sourceMappingURL=activity.client.d.ts.map

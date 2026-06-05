@@ -1,18 +1,17 @@
-import z from 'zod';
-export declare const createUserSchema: z.ZodObject<{
-    email: z.ZodEmail;
-    username: z.ZodString;
-    first_name: z.ZodString;
-    last_name: z.ZodString;
-    password: z.ZodOptional<z.ZodString>;
-    language: z.ZodOptional<z.ZodString>;
-    root_admin: z.ZodOptional<z.ZodBoolean>;
-    external_id: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
-export declare const listUsersFilterSchema: z.ZodObject<{
-    uuid: z.ZodOptional<z.ZodString>;
-    username: z.ZodOptional<z.ZodString>;
-    email: z.ZodOptional<z.ZodString>;
-    external_id: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
+export declare const createUserSchema: import("zod").ZodObject<{
+    email: import("zod").ZodEmail;
+    username: import("zod").ZodString;
+    first_name: import("zod").ZodString;
+    last_name: import("zod").ZodString;
+    password: import("zod").ZodOptional<import("zod").ZodString>;
+    language: import("zod").ZodOptional<import("zod").ZodString>;
+    root_admin: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
+export declare const listUsersFilterSchema: import("zod").ZodObject<{
+    uuid: import("zod").ZodOptional<import("zod").ZodString>;
+    username: import("zod").ZodOptional<import("zod").ZodString>;
+    email: import("zod").ZodOptional<import("zod").ZodString>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
 //# sourceMappingURL=users.schemas.d.ts.map

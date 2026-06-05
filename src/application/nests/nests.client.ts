@@ -1,24 +1,16 @@
-import type HttpClient from '../../class/HttpClient.js';
-import type { NestList } from './nests.types.js';
+import { BaseClient } from '../../class/BaseClient.js';
+import type { ObjectListWithPagination, Paginated } from '../../types.js';
+import type { Nest, NestObject } from './nests.types.js';
 
-export default class NestsClient {
-  constructor(private httpClient: HttpClient) {}
+export class NestsClient extends BaseClient {
+  async list(): Promise<Paginated<Nest>> {
+    const nestObjectList = await this.httpClient.request<
+      ObjectListWithPagination<NestObject>
+    >('GET', '/application/nests', { parseDates: true });
 
-  async list() {
-    const res = await this.httpClient.request<NestList>(
-      'GET',
-      '/application/nests',
-    );
     return {
-      ...res,
-      data: res.data.map((nest) => ({
-        ...nest,
-        attributes: {
-          ...nest.attributes,
-          created_at: new Date(nest.attributes.created_at),
-          updated_at: new Date(nest.attributes.updated_at),
-        },
-      })),
+      data: nestObjectList.data.map((nestObject) => nestObject.attributes),
+      pagination: nestObjectList.meta.pagination,
     };
   }
 }

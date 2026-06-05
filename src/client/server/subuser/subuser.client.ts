@@ -1,8 +1,12 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EditSubuserArgs, Subuser } from '../subuser.types.js';
-import { editSubuserSchema, userServerSubuserId } from '../server.schemas.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { SetSubuserPermissionsPayload } from './subuser.types.js';
+import type { Subuser, SubuserObject } from '../subusers/subusers.types.js';
+import {
+  setSubuserPermissionsSchema,
+  userServerSubuserId,
+} from '../server.schemas.js';
 
-export default class SubuserClient {
+export class SubuserClient {
   readonly subuser: string;
 
   constructor(
@@ -13,37 +17,32 @@ export default class SubuserClient {
     this.subuser = userServerSubuserId.parse(subuser);
   }
 
-  async info() {
-    const res = await this.httpClient.request<Subuser<string>>(
+  async fetch(): Promise<Subuser> {
+    const subuserObject = await this.httpClient.request<SubuserObject>(
       'GET',
       `/client/servers/${this.server}/users/${this.subuser}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-      },
-    };
+    return subuserObject.attributes;
   }
 
-  async edit(options: EditSubuserArgs) {
-    const res = await this.httpClient.request<Subuser<string>, EditSubuserArgs>(
+  async setPermissions(
+    payload: SetSubuserPermissionsPayload,
+  ): Promise<Subuser> {
+    const res = await this.httpClient.request<
+      SubuserObject,
+      SetSubuserPermissionsPayload
+    >(
       'POST',
       `/client/servers/${this.server}/users/${this.subuser}`,
-      editSubuserSchema.parse(options),
+      setSubuserPermissionsSchema.parse(payload),
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-      },
-    };
+    return res.attributes;
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/client/servers/${this.server}/users/${this.subuser}`,
     );

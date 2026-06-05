@@ -1,10 +1,13 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { applicationServerDatabaseId } from '../server.schemas.js';
-import type { ApplicationDatabase } from '../databases/databases.types.js';
-import PasswordClient from './password/password.client.js';
+import type {
+  ApplicationDatabase,
+  ApplicationDatabaseObject,
+} from '../databases/databases.types.js';
+import { ApplicationServerDatabaseClient } from './password/password.client.js';
 
-export default class DatabaseClient {
-  public password: PasswordClient;
+export class DatabaseClient {
+  public password: ApplicationServerDatabaseClient;
   readonly id: number;
 
   constructor(
@@ -13,26 +16,25 @@ export default class DatabaseClient {
     database: number,
   ) {
     this.id = applicationServerDatabaseId.parse(database);
-    this.password = new PasswordClient(httpClient, server, this.id);
+    this.password = new ApplicationServerDatabaseClient(
+      httpClient,
+      server,
+      this.id,
+    );
   }
 
-  async info() {
-    const res = await this.httpClient.request<ApplicationDatabase<string>>(
-      'GET',
-      `/application/servers/${this.server}/databases/${this.id}`,
-    );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+  async fetch(): Promise<ApplicationDatabase> {
+    const databaseObject =
+      await this.httpClient.request<ApplicationDatabaseObject>(
+        'GET',
+        `/application/servers/${this.server}/databases/${this.id}`,
+        { parseDates: true },
+      );
+    return databaseObject.attributes;
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/application/servers/${this.server}/databases/${this.id}`,
     );

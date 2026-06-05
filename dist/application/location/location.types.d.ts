@@ -1,15 +1,5 @@
-import type { BaseArgs } from '../../types.js';
-export interface Location<T extends Date | string> {
-    object: 'location';
-    attributes: {
-        id: number;
-        short: string;
-        long: string;
-        updated_at: T;
-        created_at: T;
-    };
-}
-export interface EditLocationArgs extends BaseArgs {
+import type { BasePayload } from '../../types.js';
+export interface UpdateLocationPayload extends BasePayload {
     short?: string | undefined;
     long?: string | undefined;
 }

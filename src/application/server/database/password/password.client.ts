@@ -1,6 +1,6 @@
-import type HttpClient from '../../../../class/HttpClient.js';
+import type { HttpClient } from '../../../../class/HttpClient.js';
 
-export default class PasswordClient {
+export class ApplicationServerDatabaseClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: number,
@@ -8,7 +8,7 @@ export default class PasswordClient {
   ) {}
 
   reset() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'POST',
       `/application/servers/${this.server}/databases/${this.database}/reset-password`,
     );

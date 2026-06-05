@@ -1,49 +1,32 @@
-import z from 'zod';
 import { createUserSchema, listUsersFilterSchema } from './users.schemas.js';
-import buildQueryParams from '../../utils/buildQueryParams.js';
-export default class UsersClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
-    }
-    async list(options = {}) {
-        const filter = listUsersFilterSchema.optional().parse(options.filter);
+import { buildQueryParams } from '../../utils/buildQueryParams.js';
+import { BaseClient } from '../../class/BaseClient.js';
+export class UsersClient extends BaseClient {
+    async fetch(options) {
+        const filter = listUsersFilterSchema.optional().parse(options?.filter);
         const queries = buildQueryParams({
-            page: options.page,
-            per_page: options.per_page,
-            sort: options.sort,
+            ...options,
             filter,
         });
-        const res = await this.httpClient.request('GET', `/application/users?${queries}${options.includeServers ? '&include=servers' : ''}`);
+        const userObjectList = await this.httpClient.request('GET', `/application/users?${queries}${options?.includeServers ? '&include=servers' : ''}`, { parseDates: true });
         return {
-            ...res,
-            data: res.data.map((user) => ({
-                ...user,
-                attributes: {
-                    ...user.attributes,
-                    created_at: new Date(user.attributes.created_at),
-                    updated_at: new Date(user.attributes.updated_at),
-                    relationships: options.includeServers
-                        ? {
-                            ...user.attributes
-                                .relationships,
-                            servers: {
-                                ...user.attributes
-                                    .relationships.servers,
-                                ...user.attributes.relationships.servers.data.map((server) => ({
-                                    ...server,
-                                    attributes: {
-                                        ...server.attributes,
-                                    },
-                                })),
-                            },
-                        }
-                        : undefined,
-                },
-            })),
+            data: userObjectList.data.map((userObject) => {
+                if (!options?.includeServers)
+                    return userObject
+                        .attributes;
+                const { relationships, ...attributes } = userObject.attributes;
+                return {
+                    ...attributes,
+                    servers: relationships.servers.data.map((serverObject) => serverObject.attributes),
+                };
+            }),
+            pagination: userObjectList.meta.pagination,
         };
     }
-    create(args) {
-        return this.httpClient.request('POST', '/application/users', createUserSchema.parse(args));
+    async create(payload) {
+        const userObject = await this.httpClient.request('POST', '/application/users', createUserSchema.parse(payload), {
+            parseDates: true,
+        });
+        return userObject.attributes;
     }
 }

@@ -1,87 +1,52 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
-import type {
-  CreateScheduleArgs,
-  Schedule,
-  ScheduleList,
-} from '../schedule.types.js';
+import type { infer as zInfer } from 'zod';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { createScheduleSchema } from '../server.schemas.js';
+import type { ObjectList } from '../../../types.js';
+import type {
+  CreateSchedulePayload,
+  Schedule,
+  ScheduleObject,
+} from './schedules.types.js';
 
-export default class SchedulesClient {
+export class SchedulesClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  async list() {
-    const res = await this.httpClient.request<ScheduleList>(
-      'GET',
-      `/client/servers/${this.server}/schedules`,
-    );
-    return {
-      ...res,
-      data: res.data.map((schedule) => ({
-        ...schedule,
-        attributes: {
-          ...schedule.attributes,
-          last_run_at: schedule.attributes.last_run_at
-            ? new Date(schedule.attributes.last_run_at)
-            : null,
-          next_run_at: new Date(schedule.attributes.next_run_at),
-          created_at: new Date(schedule.attributes.created_at),
-          updated_at: new Date(schedule.attributes.updated_at),
-          relationships: {
-            tasks: {
-              ...schedule.attributes.relationships.tasks,
-              data: schedule.attributes.relationships.tasks.data.map(
-                (task) => ({
-                  ...task,
-                  attributes: {
-                    ...task.attributes,
-                    created_at: new Date(task.attributes.created_at),
-                    updated_at: new Date(task.attributes.updated_at),
-                  },
-                }),
-              ),
-            },
-          },
-        },
-      })),
-    };
+  async fetch(): Promise<Schedule[]> {
+    const scheduleObjectList = await this.httpClient.request<
+      ObjectList<ScheduleObject>
+    >('GET', `/client/servers/${this.server}/schedules`, { parseDates: true });
+    return scheduleObjectList.data.map((scheduleObject) => {
+      const { relationships, ...scheduleAttributes } =
+        scheduleObject.attributes;
+      return {
+        ...scheduleAttributes,
+        tasks: relationships.tasks.data.map(
+          (taskObject) => taskObject.attributes,
+        ),
+      };
+    });
   }
 
-  async create(options: CreateScheduleArgs) {
-    const res = await this.httpClient.request<
-      Schedule<string>,
-      z.infer<typeof createScheduleSchema>
+  async create(payload: CreateSchedulePayload): Promise<Schedule> {
+    const scheduleObject = await this.httpClient.request<
+      ScheduleObject,
+      zInfer<typeof createScheduleSchema>
     >(
       'POST',
       `/client/servers/${this.server}/schedules`,
-      createScheduleSchema.parse(options),
+      createScheduleSchema.parse(payload),
+      { parseDates: true },
     );
+
+    const { relationships, ...scheduleAttributes } = scheduleObject.attributes;
     return {
-      ...res,
-      attributes: {
-        last_run_at: res.attributes.last_run_at
-          ? new Date(res.attributes.last_run_at)
-          : null,
-        next_run_at: new Date(res.attributes.next_run_at),
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-        relationships: {
-          tasks: {
-            ...res.attributes.relationships.tasks,
-            data: res.attributes.relationships.tasks.data.map((task) => ({
-              ...task,
-              attributes: {
-                ...task.attributes,
-                created_at: new Date(task.attributes.created_at),
-                updated_at: new Date(task.attributes.updated_at),
-              },
-            })),
-          },
-        },
-      },
+      ...scheduleAttributes,
+      tasks: relationships.tasks.data.map(
+        (taskObject) => taskObject.attributes,
+      ),
     };
   }
 }

@@ -1,6 +1,6 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
-import DatabaseClient from './database/database.client.js';
+import type { infer as zInfer, ZodObject } from 'zod';
+import type { HttpClient } from '../../class/HttpClient.js';
+import { DatabaseClient } from './database/database.client.js';
 import {
   applicationServerIdSchema,
   editApplicationServerConfigurationSchema,
@@ -9,26 +9,34 @@ import {
 } from './server.schemas.js';
 import type {
   ApplicationServerId,
-  EditApplicationServerArgs,
+  EditApplicationServerPayload,
 } from './server.types.js';
-import DatabasesClient from './databases/databases.client.js';
-import type { ApplicationServer } from '../servers/servers.types.js';
+import { DatabasesClient } from './databases/databases.client.js';
+import type {
+  ApplicationServer,
+  ApplicationServerObject,
+} from '../servers/servers.types.js';
 
-export default class ServerClient {
-  public databases: DatabasesClient;
+export class ServerClient<Ids extends ApplicationServerId> {
+  declare public databases: Ids['id'] extends number ? DatabasesClient : never;
 
   readonly id: number | undefined;
   readonly external_id: string | undefined;
 
   constructor(
     private httpClient: HttpClient,
-    args: ApplicationServerId,
+    ids: Ids,
   ) {
-    this.databases = new DatabasesClient(httpClient);
-    const { id, external_id } = applicationServerIdSchema.parse(args);
+    const { id, external_id } = applicationServerIdSchema.parse(ids);
 
     this.id = id;
     this.external_id = external_id;
+
+    if (id)
+      this.databases = new DatabasesClient(
+        httpClient,
+        id,
+      ) as Ids['id'] extends number ? DatabasesClient : never;
   }
 
   database(database: number) {
@@ -36,77 +44,66 @@ export default class ServerClient {
     return new DatabaseClient(this.httpClient, this.id, database);
   }
 
-  async info() {
-    const res = await this.httpClient.request<ApplicationServer<string>>(
+  async fetch(): Promise<ApplicationServer> {
+    const serverObject = await this.httpClient.request<ApplicationServerObject>(
       'GET',
       `/application/servers/${this.id ?? `external/${this.external_id}`}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return serverObject.attributes;
   }
 
-  async edit({ details, configuration, startup }: EditApplicationServerArgs) {
+  async edit({
+    details,
+    configuration,
+    startup,
+  }: EditApplicationServerPayload): Promise<ApplicationServer> {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
     const basePath = `/application/servers/${this.id}`;
-    const requests: Promise<ApplicationServer<string>>[] = [];
-    if (details)
-      requests.push(
+    const updates: {
+      data: object | undefined;
+      endpoint: string;
+      schema: ZodObject;
+    }[] = [
+      {
+        data: details,
+        endpoint: 'details',
+        schema: editApplicationServerDetailsSchema,
+      },
+      {
+        data: configuration,
+        endpoint: 'build',
+        schema: editApplicationServerConfigurationSchema,
+      },
+      {
+        data: startup,
+        endpoint: 'startup',
+        schema: editApplicationServerStartupSchema,
+      },
+    ];
+
+    const requests = updates
+      .filter(({ data }) => !!data)
+      .map(({ data, endpoint, schema }) =>
         this.httpClient.request<
-          ApplicationServer<string>,
-          z.infer<typeof editApplicationServerDetailsSchema>
-        >(
-          'PATCH',
-          `${basePath}/details`,
-          editApplicationServerDetailsSchema.parse(details),
-        ),
-      );
-    if (configuration)
-      requests.push(
-        this.httpClient.request<
-          ApplicationServer<string>,
-          z.infer<typeof editApplicationServerConfigurationSchema>
-        >(
-          'PATCH',
-          `${basePath}/build`,
-          editApplicationServerConfigurationSchema.parse(configuration),
-        ),
-      );
-    if (startup)
-      requests.push(
-        this.httpClient.request<
-          ApplicationServer<string>,
-          z.infer<typeof editApplicationServerStartupSchema>
-        >(
-          'PATCH',
-          `${basePath}/startup`,
-          editApplicationServerStartupSchema.parse(startup),
-        ),
+          ApplicationServerObject,
+          zInfer<typeof editApplicationServerDetailsSchema>
+        >('PATCH', `${basePath}/${endpoint}`, schema.parse(data), {
+          parseDates: true,
+        }),
       );
 
     if (requests.length === 0)
       throw new Error('Aucunes modifications spécifiées !');
 
-    const res = await Promise.all(requests);
+    const [serverObject] = await Promise.all(requests);
 
-    return {
-      ...res[0]!,
-      attributes: {
-        ...res[0]!.attributes,
-        created_at: new Date(res[0]!.attributes.created_at),
-        updated_at: new Date(res[0]!.attributes.updated_at),
-      },
-    };
+    return serverObject!.attributes;
   }
 
   suspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'POST',
       `/application/servers/${this.id}/suspend`,
     );
@@ -114,7 +111,7 @@ export default class ServerClient {
 
   unsuspend() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'POST',
       `/application/servers/${this.id}/unsuspend`,
     );
@@ -122,7 +119,7 @@ export default class ServerClient {
 
   reinstall() {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'POST',
       `/application/servers/${this.id}/reinstall`,
     );
@@ -130,7 +127,7 @@ export default class ServerClient {
 
   delete(force?: boolean | undefined) {
     if (!this.id) throw new Error("L'id du serveur est nécessaire !");
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/application/servers/${this.id}${force ? '?force=true' : ''}`,
     );

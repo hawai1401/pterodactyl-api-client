@@ -1,67 +1,42 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
 import {
   createLocationSchema,
   listLocationsFilterSchema,
 } from './locations.schemas.js';
-import type { CreateLocationArgs, LocationList } from './locations.types.js';
-import type { Location } from '../location/location.types.js';
-import type { BaseListArgs, Sort } from '../../types.js';
-import buildQueryParams from '../../utils/buildQueryParams.js';
+import type {
+  CreateLocationPayload,
+  FetchLocationsOptions,
+  Location,
+  LocationObject,
+} from './locations.types.js';
+import { type ObjectListWithPagination, type Paginated } from '../../types.js';
+import { buildQueryParams } from '../../utils/buildQueryParams.js';
+import { BaseClient } from '../../class/BaseClient.js';
 
-export default class LocationsClient {
-  constructor(private httpClient: HttpClient) {}
+export class LocationsClient extends BaseClient {
+  async fetch(options?: FetchLocationsOptions): Promise<Paginated<Location>> {
+    const filter = listLocationsFilterSchema.optional().parse(options?.filter);
+    const queries = buildQueryParams({ ...options, filter });
 
-  async list(
-    options: {
-      filter?: {
-        short?: string | undefined;
-        long?: string | undefined;
-      };
-      sort?: {
-        id?: Sort | undefined;
-      };
-    } & BaseListArgs = {},
-  ) {
-    const filter = listLocationsFilterSchema.optional().parse(options.filter);
-    const queries = buildQueryParams<
-      {
-        short?: string | undefined;
-        long?: string | undefined;
-      },
-      {
-        id?: Sort | undefined;
-      }
-    >({ ...options, filter });
-    const res = await this.httpClient.request<LocationList>(
-      'GET',
-      `/application/locations?${queries}`,
-    );
+    const LocationObjectList = await this.httpClient.request<
+      ObjectListWithPagination<LocationObject>
+    >('GET', `/application/locations?${queries}`, { parseDates: true });
+
     return {
-      ...res,
-      data: res.data.map((location) => ({
-        ...location,
-        attributes: {
-          ...location.attributes,
-          created_at: new Date(location.attributes.created_at),
-          updated_at: new Date(location.attributes.updated_at),
-        },
-      })),
+      data: LocationObjectList.data.map(
+        (locationObject) => locationObject.attributes,
+      ),
+      pagination: LocationObjectList.meta.pagination,
     };
   }
 
-  async create(options: CreateLocationArgs) {
-    const res = await this.httpClient.request<
-      Location<string>,
-      z.infer<typeof createLocationSchema>
-    >('POST', `/application/locations`, createLocationSchema.parse(options));
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+  async create(payload: CreateLocationPayload): Promise<Location> {
+    const locationObject = await this.httpClient.request<
+      LocationObject,
+      zInfer<typeof createLocationSchema>
+    >('POST', `/application/locations`, createLocationSchema.parse(payload), {
+      parseDates: true,
+    });
+    return locationObject.attributes;
   }
 }

@@ -1,8 +1,12 @@
-import type { BaseArgs, method } from '../types.js';
-export default class HttpClient {
+import type { BasePayload, FetchMethod } from '../types.js';
+import { type CamelCasedProperties } from '../utils/camelCase.js';
+export type HttpClientOptions = {
+    parseDates?: boolean;
+};
+export declare class HttpClient {
     private baseURL;
     private apiKey;
     constructor(baseURL: URL, apiKey: string);
-    request<T, U extends BaseArgs | undefined = undefined, V extends method = method>(method: V, path: string, body?: V extends 'GET' ? null : V extends 'DELETE' ? null : U): Promise<T>;
+    request<T extends object | void = void, Body extends BasePayload | undefined = undefined, Method extends FetchMethod = FetchMethod>(method: Method, path: string, bodyOrOptions?: Method extends 'GET' | 'DELETE' ? HttpClientOptions : Body, options?: Method extends 'GET' | 'DELETE' ? never : HttpClientOptions): Promise<T extends void ? void : CamelCasedProperties<T>>;
 }
 //# sourceMappingURL=HttpClient.d.ts.map

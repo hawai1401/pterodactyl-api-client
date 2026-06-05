@@ -1,63 +1,31 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
-import type { BaseListArgs, Sort } from '../../../types.js';
-import buildQueryParams from '../../../utils/buildQueryParams.js';
+import type { ObjectListWithPagination, Paginated } from '../../../types.js';
+import { buildQueryParams } from '../../../utils/buildQueryParams.js';
 import { accountActivityEvent } from '../account.schemas.js';
 import type {
-  AuthEvent,
-  UserActivityList,
+  AccountActivity,
+  AccountActivityObject,
   UserEvent,
+  FetchActivityOptions,
 } from './activity.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
 
-export default class ActivityClient {
-  constructor(private httpClient: HttpClient) {}
-
-  async list<T extends UserEvent | AuthEvent>({
-    page,
-    per_page,
-    filter,
-    sort,
-  }:
-    | (BaseListArgs & {
-        filter?:
-          | {
-              event?: T | undefined;
-            }
-          | undefined;
-        sort?:
-          | {
-              timestamp?: Sort | undefined;
-            }
-          | undefined;
-      })
-    | undefined = {}): Promise<UserActivityList<Date, T>> {
-    const event = accountActivityEvent.optional().parse(filter?.event);
-    const queries = buildQueryParams<
-      {
-        event?: z.infer<typeof accountActivityEvent> | undefined;
-      },
-      {
-        timestamp?: Sort | undefined;
-      }
-    >({
-      page,
-      per_page,
+export class ActivityClient extends BaseClient {
+  async fetch<Event extends UserEvent>(
+    options?: FetchActivityOptions<Event>,
+  ): Promise<Paginated<AccountActivity<Event>>> {
+    const event = accountActivityEvent.optional().parse(options?.filter?.event);
+    const queries = buildQueryParams({
+      ...options,
       filter: { event },
-      sort,
     });
-    const res = await this.httpClient.request<UserActivityList<string, T>>(
-      'GET',
-      `/client/account/activity?${queries}`,
-    );
+    const accountActivityListObject = await this.httpClient.request<
+      ObjectListWithPagination<AccountActivityObject<Event>>
+    >('GET', `/client/account/activity?${queries}`, { parseDates: true });
     return {
-      ...res,
-      data: res.data.map((activity) => ({
-        ...activity,
-        attributes: {
-          ...activity.attributes,
-          timestamp: new Date(activity.attributes.timestamp),
-        },
-      })),
+      data: accountActivityListObject.data.map(
+        (activityObject) => activityObject.attributes as AccountActivity<Event>,
+      ),
+      pagination: accountActivityListObject.meta.pagination,
     };
   }
 }

@@ -1,5 +1,5 @@
-import type { BaseArgs } from '../../../types.js';
+import type { BasePayload } from '../../../types.js';
 
-export interface EditImageArgs extends BaseArgs {
+export interface SetImagePayload extends BasePayload {
   docker_image: string;
 }

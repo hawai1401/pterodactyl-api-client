@@ -1,21 +1,13 @@
-import type HttpClient from '../../class/HttpClient.js';
-import type { CreateUserArgs, User, UserAttributes, UserWithServersAttributes } from '../users/users.types.js';
-import type { UserId } from './user.types.js';
-export default class UserClient {
+import type { HttpClient } from '../../class/HttpClient.js';
+import type { CreateUserPayload, User } from '../users/users.types.js';
+import type { FetchUserOptions, UserId } from './user.types.js';
+export declare class UserClient {
     private httpClient;
     readonly id: number | undefined;
     readonly external_id: string | undefined;
-    constructor(httpClient: HttpClient, args: UserId);
-    info<T extends boolean | undefined>({ includeServers, }?: {
-        includeServers?: T;
-    }): Promise<{
-        attributes: (T extends true ? UserWithServersAttributes : UserAttributes<string>) & {
-            created_at: Date;
-            updated_at: Date;
-        };
-        object: "user";
-    }>;
-    edit(args: CreateUserArgs): Promise<User<UserAttributes<string>>>;
+    constructor(httpClient: HttpClient, ids: UserId);
+    fetch<IncludeServers extends boolean>(options?: FetchUserOptions<IncludeServers>): Promise<User<IncludeServers extends true ? IncludeServers : false>>;
+    edit(payload: CreateUserPayload): Promise<User>;
     delete(): Promise<void>;
 }
 //# sourceMappingURL=user.client.d.ts.map

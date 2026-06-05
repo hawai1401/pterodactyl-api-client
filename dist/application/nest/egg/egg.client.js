@@ -1,22 +1,15 @@
 import { nestEggId } from '../nest.schemas.js';
-export default class EggClient {
+export class EggClient {
     httpClient;
     nest;
-    egg;
-    constructor(httpClient, nest, egg) {
+    id;
+    constructor(httpClient, nest, id) {
         this.httpClient = httpClient;
         this.nest = nest;
-        this.egg = nestEggId.parse(egg);
+        this.id = nestEggId.parse(id);
     }
-    async info() {
-        const res = await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.egg}`);
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    async fetch() {
+        const eggObject = await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.id}`, { parseDates: true });
+        return eggObject.attributes;
     }
 }

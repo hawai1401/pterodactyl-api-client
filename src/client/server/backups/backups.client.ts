@@ -1,48 +1,44 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { createBackupSchema } from '../server.schemas.js';
-import type { Backup, BackupList, CreateBackupArgs } from '../backup.types.js';
+import type {
+  BackupObject,
+  BackupObjectList,
+  CreateBackupPayload as CreateBackupPayload,
+  Backup,
+  BackupList,
+} from './backups.types.js';
 
-export default class BackupsClient {
+export class BackupsClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  async list() {
-    const res = await this.httpClient.request<BackupList>(
+  async fetch(): Promise<BackupList> {
+    const backupObjectList = await this.httpClient.request<BackupObjectList>(
       'GET',
       `/client/servers/${this.server}/backups`,
+      { parseDates: true },
     );
     return {
-      ...res,
-      data: res.data.map((backup) => ({
-        ...backup,
-        attributes: {
-          ...backup.attributes,
-          created_at: new Date(backup.attributes.created_at),
-          completed_at: backup.attributes.completed_at
-            ? new Date(backup.attributes.completed_at)
-            : null,
-        },
-      })),
+      data: backupObjectList.data.map(
+        (backupObject) => backupObject.attributes,
+      ),
+      pagination: backupObjectList.meta.pagination,
+      count: backupObjectList.meta.backupCount,
     };
   }
 
-  async create(options: CreateBackupArgs) {
-    const res = await this.httpClient.request<Backup<string>, CreateBackupArgs>(
+  async create(payload?: CreateBackupPayload): Promise<Backup> {
+    const backupObject = await this.httpClient.request<
+      BackupObject,
+      CreateBackupPayload
+    >(
       'POST',
       `/client/servers/${this.server}/backups`,
-      createBackupSchema.parse(options),
+      createBackupSchema.optional().parse(payload),
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        completed_at: res.attributes.completed_at
-          ? new Date(res.attributes.completed_at)
-          : null,
-      },
-    };
+    return backupObject.attributes;
   }
 }

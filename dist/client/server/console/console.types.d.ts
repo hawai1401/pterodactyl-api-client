@@ -1,6 +1,5 @@
-import type { BaseArgs } from '../../../types.js';
-export interface SendConsoleCommandArgs extends BaseArgs {
+import type { BasePayload } from '../../../types.js';
+export interface SendConsoleCommandPayload extends BasePayload {
     command: string;
 }
-export * from './websocket/websocket.console.types.js';
 //# sourceMappingURL=console.types.d.ts.map

@@ -1,6 +1,20 @@
-import type { BaseArgs, ListwithPagination } from '../../types.js';
+import type { BasePayload, PaginationFetchOptions, Sort } from '../../types.js';
 export type Scheme = 'https' | 'http';
-export interface Node<T extends string | Date> {
+export interface FetchNodesOptions extends PaginationFetchOptions {
+    filter?: {
+        uuid?: string | undefined;
+        name?: string | undefined;
+        fqdn?: string | undefined;
+        daemon_token_id?: string | undefined;
+    };
+    sort?: {
+        id?: Sort | undefined;
+        uuid?: Sort | undefined;
+        memory?: Sort | undefined;
+        disk?: Sort | undefined;
+    };
+}
+export interface NodeObject {
     object: 'node';
     attributes: {
         id: number;
@@ -21,18 +35,41 @@ export interface Node<T extends string | Date> {
         daemon_listen: number;
         daemon_sftp: number;
         daemon_base: string;
-        created_at: T;
-        updated_at: T;
+        created_at: Date;
+        updated_at: Date;
         allocated_resources: {
             memory: number;
             disk: number;
         };
     };
 }
-export interface NodeList extends ListwithPagination {
-    data: Node<string>[];
+export interface Node {
+    id: number;
+    uuid: string;
+    public: boolean;
+    name: string;
+    description: string;
+    locationId: number;
+    fqdn: string;
+    scheme: Scheme;
+    behindProxy: boolean;
+    maintenanceMode: boolean;
+    memory: number;
+    memoryOverallocate: number;
+    disk: number;
+    diskOverallocate: number;
+    uploadSize: number;
+    daemonListen: number;
+    daemonSftp: number;
+    daemonBase: string;
+    createdAt: Date;
+    updatedAt: Date;
+    allocatedResources: {
+        memory: number;
+        disk: number;
+    };
 }
-export interface CreateNodeArgs extends BaseArgs {
+export interface CreateNodePayload extends BasePayload {
     name: string;
     description?: string | undefined;
     location_id: number;

@@ -1,42 +1,8 @@
-import type HttpClient from '../../class/HttpClient.js';
-import type { CreateLocationArgs } from './locations.types.js';
-import type { BaseListArgs, Sort } from '../../types.js';
-export default class LocationsClient {
-    private httpClient;
-    constructor(httpClient: HttpClient);
-    list(options?: {
-        filter?: {
-            short?: string | undefined;
-            long?: string | undefined;
-        };
-        sort?: {
-            id?: Sort | undefined;
-        };
-    } & BaseListArgs): Promise<{
-        data: {
-            attributes: {
-                created_at: Date;
-                updated_at: Date;
-                id: number;
-                short: string;
-                long: string;
-            };
-            object: "location";
-        }[];
-        meta: {
-            pagination: import("../../types.js").Pagination;
-        };
-        object: "list";
-    }>;
-    create(options: CreateLocationArgs): Promise<{
-        attributes: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
-            short: string;
-            long: string;
-        };
-        object: "location";
-    }>;
+import type { CreateLocationPayload, FetchLocationsOptions, Location } from './locations.types.js';
+import { type Paginated } from '../../types.js';
+import { BaseClient } from '../../class/BaseClient.js';
+export declare class LocationsClient extends BaseClient {
+    fetch(options?: FetchLocationsOptions): Promise<Paginated<Location>>;
+    create(payload: CreateLocationPayload): Promise<Location>;
 }
 //# sourceMappingURL=locations.client.d.ts.map

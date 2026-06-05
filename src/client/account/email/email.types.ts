@@ -1,5 +1,5 @@
-import type { EditAcountArgs } from '../account.types.js';
+import type { BaseEditAccountPayload } from '../account.types.js';
 
-export interface EditEmailArgs extends EditAcountArgs {
+export interface SetEmailPayload extends BaseEditAccountPayload {
   email: string;
 }

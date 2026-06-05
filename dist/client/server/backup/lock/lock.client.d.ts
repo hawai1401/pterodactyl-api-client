@@ -1,5 +1,5 @@
-import type HttpClient from '../../../../class/HttpClient.js';
-export default class LockClient {
+import type { HttpClient } from '../../../../class/HttpClient.js';
+export declare class LockClient {
     private httpClient;
     readonly server: string;
     readonly backup: string;

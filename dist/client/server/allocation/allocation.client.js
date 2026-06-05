@@ -1,5 +1,5 @@
 import { allocationId, editAllocationSchema } from '../server.schemas.js';
-export default class AllocationClient {
+export class AllocationClient {
     httpClient;
     server;
     allocation;
@@ -8,11 +8,13 @@ export default class AllocationClient {
         this.server = server;
         this.allocation = allocationId.parse(allocation);
     }
-    setPrimary() {
-        return this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`);
+    async setPrimary() {
+        const allocationObject = await this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}/primary`);
+        return allocationObject.attributes;
     }
-    edit(options = {}) {
-        return this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}`, editAllocationSchema.parse(options));
+    async edit(payload) {
+        const allocationObject = await this.httpClient.request('POST', `/client/servers/${this.server}/network/allocations/${this.allocation}`, editAllocationSchema.parse(payload));
+        return allocationObject.attributes;
     }
     delete() {
         return this.httpClient.request('DELETE', `/client/servers/${this.server}/network/allocations/${this.allocation}`);

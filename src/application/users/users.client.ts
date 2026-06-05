@@ -1,96 +1,68 @@
-import z from 'zod';
-import type HttpClient from '../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
 import { createUserSchema, listUsersFilterSchema } from './users.schemas.js';
 import type {
-  CreateUserArgs,
+  CreateUserPayload,
+  FetchUsersOptions,
   User,
-  UserAttributes,
-  UserList,
-  UserWithServersAttributes,
+  UserObject,
 } from './users.types.js';
-import type { BaseListArgs, Sort } from '../../types.js';
-import buildQueryParams from '../../utils/buildQueryParams.js';
+import type { ObjectListWithPagination, Paginated } from '../../types.js';
+import { buildQueryParams } from '../../utils/buildQueryParams.js';
+import type { CamelCasedProperties } from '../../utils/camelCase.js';
+import { BaseClient } from '../../class/BaseClient.js';
 
-export default class UsersClient {
-  constructor(private httpClient: HttpClient) {}
-
-  async list<T extends boolean | undefined>(
-    options: {
-      includeServers?: T | undefined;
-      filter?:
-        | {
-            uuid?: string | undefined;
-            username?: string | undefined;
-            email?: string | undefined;
-            external_id?: string | undefined;
-          }
-        | undefined;
-      sort?:
-        | {
-            id?: Sort | undefined;
-            uuid?: Sort | undefined;
-          }
-        | undefined;
-    } & BaseListArgs = {},
-  ) {
-    const filter = listUsersFilterSchema.optional().parse(options.filter);
-    const queries = buildQueryParams<
-      {
-        uuid?: string | undefined;
-        username?: string | undefined;
-        email?: string | undefined;
-        external_id?: string | undefined;
-      },
-      { id?: Sort | undefined; uuid?: Sort | undefined }
-    >({
-      page: options.page,
-      per_page: options.per_page,
-      sort: options.sort,
+export class UsersClient extends BaseClient {
+  async fetch<IncludeServers extends boolean>(
+    options?: FetchUsersOptions<IncludeServers>,
+  ): Promise<
+    Paginated<User<IncludeServers extends true ? IncludeServers : false>>
+  > {
+    const filter = listUsersFilterSchema.optional().parse(options?.filter);
+    const queries = buildQueryParams({
+      ...options,
       filter,
     });
-    const res = await this.httpClient.request<
-      UserList<
-        T extends true ? UserWithServersAttributes : UserAttributes<string>
+
+    const userObjectList = await this.httpClient.request<
+      ObjectListWithPagination<
+        UserObject<IncludeServers extends true ? IncludeServers : false>
       >
     >(
       'GET',
-      `/application/users?${queries}${options.includeServers ? '&include=servers' : ''}`,
+      `/application/users?${queries}${options?.includeServers ? '&include=servers' : ''}`,
+      { parseDates: true },
     );
+
     return {
-      ...res,
-      data: res.data.map((user) => ({
-        ...user,
-        attributes: {
-          ...user.attributes,
-          created_at: new Date(user.attributes.created_at),
-          updated_at: new Date(user.attributes.updated_at),
-          relationships: options.includeServers
-            ? {
-                ...(user as User<UserWithServersAttributes>).attributes
-                  .relationships,
-                servers: {
-                  ...(user as User<UserWithServersAttributes>).attributes
-                    .relationships.servers,
-                  ...(
-                    user as User<UserWithServersAttributes>
-                  ).attributes.relationships.servers.data.map((server) => ({
-                    ...server,
-                    attributes: {
-                      ...server.attributes,
-                    },
-                  })),
-                },
-              }
-            : undefined,
-        },
-      })),
+      data: userObjectList.data.map((userObject) => {
+        if (!options?.includeServers)
+          return (userObject as CamelCasedProperties<UserObject<false>>)
+            .attributes as User<
+            IncludeServers extends true ? IncludeServers : false
+          >;
+
+        const { relationships, ...attributes } = (
+          userObject as CamelCasedProperties<UserObject<true>>
+        ).attributes;
+
+        return {
+          ...attributes,
+          servers: relationships.servers.data.map(
+            (serverObject) => serverObject.attributes,
+          ),
+        } as User<IncludeServers extends true ? IncludeServers : false>;
+      }),
+      pagination: userObjectList.meta.pagination,
     };
   }
 
-  create(args: CreateUserArgs) {
-    return this.httpClient.request<
-      User<UserAttributes<string>>,
-      z.infer<typeof createUserSchema>
-    >('POST', '/application/users', createUserSchema.parse(args));
+  async create(payload: CreateUserPayload): Promise<User> {
+    const userObject = await this.httpClient.request<
+      UserObject,
+      zInfer<typeof createUserSchema>
+    >('POST', '/application/users', createUserSchema.parse(payload), {
+      parseDates: true,
+    });
+    return userObject.attributes;
   }
 }

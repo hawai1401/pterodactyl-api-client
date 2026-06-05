@@ -1,33 +1,40 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { DatabaseWithPassword } from '../database.types.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type {
+  CreateDatabasePayload,
+  Database,
+  DatabaseObject,
+} from './databases.types.js';
 import { createDatabaseSchema } from '../server.schemas.js';
-import type { CreateDatabaseArgs, DatabaseList } from '../database.types.js';
+import type { ObjectList } from '../../../types.js';
 
-export default class DatabasesClient {
+export class DatabasesClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  list() {
-    return this.httpClient.request<DatabaseList>(
-      'GET',
-      `/client/servers/${this.server}/databases`,
+  async fetch(): Promise<Database[]> {
+    const databaseObjectList = await this.httpClient.request<
+      ObjectList<DatabaseObject>
+    >('GET', `/client/servers/${this.server}/databases`);
+    return databaseObjectList.data.map(
+      (databaseObject) => databaseObject.attributes,
     );
   }
 
-  async create(options: CreateDatabaseArgs) {
-    const res = await this.httpClient.request<
-      DatabaseWithPassword,
-      CreateDatabaseArgs
+  async create(payload: CreateDatabasePayload): Promise<Database<true>> {
+    const databaseObject = await this.httpClient.request<
+      DatabaseObject<true>,
+      CreateDatabasePayload
     >(
       'POST',
       `/client/servers/${this.server}/databases`,
-      createDatabaseSchema.parse(options),
+      createDatabaseSchema.parse(payload),
     );
     return {
-      ...res,
-      password: res.attributes.relationships.password.attributes.password,
+      ...databaseObject.attributes,
+      password:
+        databaseObject.attributes.relationships.password.attributes.password,
     };
   }
 }

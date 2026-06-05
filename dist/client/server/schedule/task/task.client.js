@@ -1,5 +1,5 @@
-import { createTaskSchema, userServerScheduleTaskId, } from '../../server.schemas.js';
-export default class TaskClient {
+import { createTaskSchema, userServerTaskId } from '../../server.schemas.js';
+export class TaskClient {
     httpClient;
     server;
     schedule;
@@ -8,18 +8,11 @@ export default class TaskClient {
         this.httpClient = httpClient;
         this.server = server;
         this.schedule = schedule;
-        this.task = userServerScheduleTaskId.parse(task);
+        this.task = userServerTaskId.parse(task);
     }
-    async edit(options) {
-        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`, createTaskSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    async edit(payload) {
+        const taskObject = await this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`, createTaskSchema.parse(payload), { parseDates: true });
+        return taskObject.attributes;
     }
     delete() {
         return this.httpClient.request('DELETE', `/client/servers/${this.server}/schedules/${this.schedule}/tasks/${this.task}`);

@@ -1,8 +1,8 @@
 import type { Sort } from '../types.js';
-export default function buildQueryParams<T extends Record<string, string | number | undefined> = never, U extends Record<string, Sort | undefined> = never>(params: {
+export declare function buildQueryParams({ page, per_page, filter, sort, }: {
     page?: number | string | undefined;
     per_page?: number | string | undefined;
-    filter?: T | undefined;
-    sort?: U | undefined;
+    filter?: Record<string, string | number | undefined> | undefined;
+    sort?: Record<string, Sort | undefined> | undefined;
 }): string;
 //# sourceMappingURL=buildQueryParams.d.ts.map

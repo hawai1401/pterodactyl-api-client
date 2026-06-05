@@ -1,30 +1,24 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { Egg, EggObject } from '../eggs/eggs.types.js';
 import { nestEggId } from '../nest.schemas.js';
-import type { Egg } from './egg.types.js';
 
-export default class EggClient {
-  readonly egg: number;
+export class EggClient {
+  readonly id: number;
 
   constructor(
     private httpClient: HttpClient,
     readonly nest: number,
-    egg: number,
+    id: number,
   ) {
-    this.egg = nestEggId.parse(egg);
+    this.id = nestEggId.parse(id);
   }
 
-  async info() {
-    const res = await this.httpClient.request<Egg<string>>(
+  async fetch(): Promise<Egg> {
+    const eggObject = await this.httpClient.request<EggObject>(
       'GET',
-      `/application/nests/${this.nest}/eggs/${this.egg}`,
+      `/application/nests/${this.nest}/eggs/${this.id}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        updated_at: new Date(res.attributes.updated_at),
-      },
-    };
+    return eggObject.attributes;
   }
 }

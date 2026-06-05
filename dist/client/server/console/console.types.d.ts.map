@@ -1,1 +1,1 @@
-{"version":3,"file":"console.types.d.ts","sourceRoot":"","sources":["../../../../src/client/server/console/console.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,MAAM,mBAAmB,CAAC;AAElD,MAAM,WAAW,sBAAuB,SAAQ,QAAQ;IACtD,OAAO,EAAE,MAAM,CAAC;CACjB;AAED,cAAc,wCAAwC,CAAC"}
+{"version":3,"file":"console.types.d.ts","sourceRoot":"","sources":["../../../../src/client/server/console/console.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AAErD,MAAM,WAAW,yBAA0B,SAAQ,WAAW;IAC5D,OAAO,EAAE,MAAM,CAAC;CACjB"}

@@ -1,26 +1,16 @@
-import { paginationSchema, sort } from '../schemas.js';
-export default function buildQueryParams(params) {
+import { paginationSchema, sortLiteral } from '../schemas.js';
+export function buildQueryParams({ page, per_page, filter, sort, }) {
     const queryParts = [];
-    // Handle filters
-    if (params.filter) {
-        for (const [key, value] of Object.entries(params.filter)) {
-            if (value)
-                queryParts.push(`filter[${key}]=${value}`);
-        }
-    }
-    // Handle sorting
-    if (params.sort) {
-        for (const [key, direction] of Object.entries(params.sort)) {
-            const parsedDirection = sort.parse(direction);
-            const prefix = parsedDirection === 'descending' ? '-' : '';
-            queryParts.push(`sort=${prefix}${key}`);
-        }
-    }
+    if (filter)
+        for (const [key, value] of Object.entries(filter).filter(([, value]) => !!value))
+            queryParts.push(`filter[${key}]=${value}`);
+    if (sort)
+        for (const [key, direction] of Object.entries(sort).filter(([, value]) => !!value))
+            queryParts.push(`sort=${sortLiteral.parse(direction) === 'descending' ? '-' : ''}${key}`);
     const parsedPaginationParams = paginationSchema.parse({
-        page: params.page,
-        per_page: params.per_page,
+        page,
+        per_page,
     });
-    // Handle pagination
     if (parsedPaginationParams.page && parsedPaginationParams.page > 1)
         queryParts.push(`page=${parsedPaginationParams.page}`);
     if (parsedPaginationParams.per_page && parsedPaginationParams.per_page !== 50)

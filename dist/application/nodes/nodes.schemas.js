@@ -1,26 +1,26 @@
-import z from 'zod';
-import { descriptionSchema, idSchema, nameSchema } from '../../schemas.js';
-export const createNodeSchema = z.object({
+import { boolean, int, literal, object, string } from 'zod';
+import { descriptionSchema, idSchema, nameSchema, uuidSchema, } from '../../schemas.js';
+export const createNodeSchema = object({
     name: nameSchema,
     description: descriptionSchema,
     location_id: idSchema,
-    fqdn: z.string().min(1).max(191),
-    scheme: z.literal(['https', 'http']),
-    behind_proxy: z.boolean().optional(),
-    public: z.boolean().optional(),
-    daemon_base: z.string().optional(),
-    daemon_sftp: z.int().positive(),
-    daemon_listen: z.int().positive(),
-    memory: z.int().positive(),
-    memory_overallocate: z.int().positive(),
-    disk: z.int().positive(),
-    disk_overallocate: z.int().positive(),
-    upload_size: z.int().positive().optional(),
-    maintenance_mode: z.boolean().optional(),
+    fqdn: string().min(1).max(191),
+    scheme: literal(['https', 'http']),
+    behind_proxy: boolean().optional(),
+    public: boolean().optional(),
+    daemon_base: string().optional(),
+    daemon_sftp: int().positive(),
+    daemon_listen: int().positive(),
+    memory: int().positive(),
+    memory_overallocate: int().positive(),
+    disk: int().positive(),
+    disk_overallocate: int().positive(),
+    upload_size: int().positive().optional(),
+    maintenance_mode: boolean().optional(),
 });
-export const listNodesFilterSchema = z.object({
-    uuid: z.string().uuid().optional(),
-    name: z.string().optional(),
-    fqdn: z.string().optional(),
-    daemon_token_id: z.string().optional(),
+export const listNodesFilterSchema = object({
+    uuid: uuidSchema.optional(),
+    name: string().optional(),
+    fqdn: string().optional(),
+    daemon_token_id: string().optional(),
 });

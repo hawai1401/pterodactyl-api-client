@@ -1,8 +1,9 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { allocationId } from '../node.schemas.js';
 
-export default class AllocationClient {
+export class AllocationClient {
   readonly id: number;
+
   constructor(
     private httpClient: HttpClient,
     readonly node: number,
@@ -12,7 +13,7 @@ export default class AllocationClient {
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/application/nodes/${this.node}/allocations/${this.id}`,
     );

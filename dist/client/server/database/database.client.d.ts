@@ -1,9 +1,9 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import PasswordClient from './password/password.client.js';
-export default class DatabaseClient {
+import type { HttpClient } from '../../../class/HttpClient.js';
+import { UserServerDatabaseClient } from './password/password.client.js';
+export declare class DatabaseClient {
     private httpClient;
     readonly server: string;
-    password: PasswordClient;
+    password: UserServerDatabaseClient;
     readonly database: string;
     constructor(httpClient: HttpClient, server: string, database: string);
     delete(): Promise<void>;

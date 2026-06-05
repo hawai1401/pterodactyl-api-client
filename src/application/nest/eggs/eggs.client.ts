@@ -1,24 +1,19 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EggList } from './eggs.types.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { ObjectList } from '../../../types.js';
+import type { Egg, EggObject } from './eggs.types.js';
 
-export default class EggsClient {
+export class EggsClient {
   constructor(
     private httpClient: HttpClient,
     readonly nest: number,
   ) {}
 
-  async list() {
-    const res = await this.httpClient.request<EggList>(
+  async fetch(): Promise<Egg[]> {
+    const res = await this.httpClient.request<ObjectList<EggObject>>(
       'GET',
       `/application/nests/${this.nest}/eggs`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      data: res.data.map((egg) => ({
-        ...egg.attributes,
-        created_at: new Date(egg.attributes.created_at),
-        updated_at: new Date(egg.attributes.updated_at),
-      })),
-    };
+    return res.data.map((eggObject) => eggObject.attributes);
   }
 }

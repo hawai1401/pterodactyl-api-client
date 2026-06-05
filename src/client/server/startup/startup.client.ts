@@ -1,26 +1,51 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EggVariable } from '../server.types.js';
-import type { EditEggVariable, EggVariableList } from './startup.types.js';
-import { editVariableSchema } from '../server.schemas.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type {
+  SetEnvironmentVariablePayload,
+  EggVariableObjectList,
+  EggVariableObject,
+  EggVariable,
+  StartupConfig,
+} from './startup.types.js';
+import { setEnvironmentVariableSchema } from '../server.schemas.js';
+import type { infer as zInfer } from 'zod';
 
-export default class StartupClient {
+export class StartupClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  info() {
-    return this.httpClient.request<EggVariableList>(
-      'GET',
-      `/client/servers/${this.server}/settings/startup`,
-    );
+  async fetch(): Promise<StartupConfig> {
+    const eggVariableObjectList =
+      await this.httpClient.request<EggVariableObjectList>(
+        'GET',
+        `/client/servers/${this.server}/settings/startup`,
+      );
+
+    const { startupCommand, rawStartupCommand, dockerImages } =
+      eggVariableObjectList.meta;
+
+    return {
+      data: eggVariableObjectList.data.map(
+        (eggVariableObject) => eggVariableObject.attributes,
+      ),
+      startupCommand,
+      rawStartupCommand,
+      dockerImages,
+    };
   }
 
-  edit(options: EditEggVariable) {
-    return this.httpClient.request<EggVariable, EditEggVariable>(
+  async setEnvironmentVariable(
+    payload: SetEnvironmentVariablePayload,
+  ): Promise<EggVariable> {
+    const eggVariableObject = await this.httpClient.request<
+      EggVariableObject,
+      zInfer<typeof setEnvironmentVariableSchema>
+    >(
       'PUT',
       `/client/servers/${this.server}/settings/startup`,
-      editVariableSchema.parse(options),
+      setEnvironmentVariableSchema.parse(payload),
     );
+    return eggVariableObject.attributes;
   }
 }

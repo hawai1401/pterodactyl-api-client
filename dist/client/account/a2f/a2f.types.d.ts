@@ -1,18 +1,23 @@
 import type { Tuple } from '../../../types.js';
-import type { EditAcountArgs } from '../account.types.js';
-export interface EnableA2fArgs extends EditAcountArgs {
+import type { BaseEditAccountPayload } from '../account.types.js';
+export interface EnableA2fPayload extends BaseEditAccountPayload {
     code: string | number;
 }
-export interface A2FData {
+export type RecoveryTokens = Tuple<string, 8>;
+export interface RecoveryTokensObject {
+    object: 'recovery_tokens';
+    attributes: {
+        tokens: RecoveryTokens;
+    };
+}
+export interface A2fData {
     data: {
         image_url_data: string;
         secret: string;
     };
 }
-export interface RecoveryTokens {
-    object: 'recovery_tokens';
-    attributes: {
-        tokens: Tuple<string, 8>;
-    };
+export interface A2fCredentials {
+    imageUrlData: string;
+    secret: string;
 }
 //# sourceMappingURL=a2f.types.d.ts.map

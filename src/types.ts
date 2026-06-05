@@ -1,12 +1,12 @@
-export type method = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+export type FetchMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
-export type role = 'user' | 'admin';
+export type AccountRole = 'user' | 'admin';
 
-export type BaseArgs = Record<string, unknown>;
+export type BasePayload = Record<string, unknown>;
 
-export type IP = `${number}.${number}.${number}.${number}`;
+export type IPv4 = `${number}.${number}.${number}.${number}`;
 
-export interface Pagination {
+export interface ApiPagination {
   total: number;
   count: number;
   per_page: number;
@@ -25,17 +25,32 @@ export type Tuple<T, N extends number> = N extends N
     : _TupleOf<T, N, []>
   : never;
 
-export interface List {
+export interface ObjectList<T extends { object: string }> {
   object: 'list';
+  data: T[];
 }
 
-export interface ListwithPagination extends List {
+export interface ObjectListWithPagination<
+  T extends { object: string },
+> extends ObjectList<T> {
   meta: {
-    pagination: Pagination;
+    pagination: ApiPagination;
   };
 }
+export interface Pagination {
+  total: number;
+  count: number;
+  perPage: number;
+  currentPage: number;
+  totalPages: number;
+  links: Record<string, string>;
+}
+export interface Paginated<T> {
+  data: T[];
+  pagination: Pagination;
+}
 
-export interface BaseListArgs {
+export interface PaginationFetchOptions {
   page?: number | undefined;
   per_page?: number | undefined;
 }
