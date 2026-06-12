@@ -7,5 +7,4 @@ export * from './nodes/index.js';
 export * from './server/index.js';
 export * from './servers/index.js';
 export * from './user/index.js';
-export * from './users/index.js';
 export * from './application.client.js';

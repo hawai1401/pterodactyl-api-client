@@ -1,4 +1,4 @@
-export class PterodactylAPIError<Body> extends Error {
+export class PterodactylApiError<Body> extends Error {
   constructor(
     readonly status: number,
     readonly message: string,

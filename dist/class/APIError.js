@@ -1,4 +1,4 @@
-export class PterodactylAPIError extends Error {
+export class PterodactylApiError extends Error {
     status;
     message;
     path;

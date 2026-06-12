@@ -1,6 +1,6 @@
 import type { BasePayload, FetchMethod } from '../types.js';
 import { toCamelCase, type CamelCasedProperties } from '../utils/camelCase.js';
-import { PterodactylAPIError } from './APIError.js';
+import { PterodactylApiError } from './ApiError.js';
 
 export type HttpClientOptions = { parseDates?: boolean };
 
@@ -32,7 +32,7 @@ export class HttpClient {
     });
 
     if (!response.ok)
-      throw new PterodactylAPIError<Body>(
+      throw new PterodactylApiError<Body>(
         response.status,
         await response.text(),
         path,

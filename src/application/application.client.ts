@@ -6,16 +6,14 @@ import { NestsClient } from './nests/nests.client.js';
 import { NodeClient } from './node/node.client.js';
 import { NodesClient } from './nodes/nodes.client.js';
 import { ServerClient } from './server/server.client.js';
-import { UserClient } from './user/user.client.js';
-import { UsersClient } from './users/users.client.js';
 import { ServersClient } from './servers/servers.client.js';
-import type { UserId } from './user/user.types.js';
 import type { ApplicationServerId } from './server/server.types.js';
+import { ApplicationUserManager } from './user/user.manager.js';
 
 export class ApplicationAPI {
   private httpClient: HttpClient;
   readonly panelUrl: URL;
-  public users: UsersClient;
+  public users: ApplicationUserManager;
   public servers: ServersClient;
   public locations: LocationsClient;
   public nodes: NodesClient;
@@ -24,7 +22,7 @@ export class ApplicationAPI {
   constructor({ apiKey, panelUrl }: { apiKey: string; panelUrl: URL }) {
     this.panelUrl = panelUrl;
     this.httpClient = new HttpClient(panelUrl, apiKey);
-    this.users = new UsersClient(this.httpClient);
+    this.users = new ApplicationUserManager(this.httpClient);
     this.servers = new ServersClient(this.httpClient);
     this.locations = new LocationsClient(this.httpClient);
     this.nodes = new NodesClient(this.httpClient);
@@ -45,9 +43,5 @@ export class ApplicationAPI {
 
   server<Ids extends ApplicationServerId>(id: Ids) {
     return new ServerClient<Ids>(this.httpClient, id);
-  }
-
-  user(id: UserId) {
-    return new UserClient(this.httpClient, id);
   }
 }

@@ -50,6 +50,17 @@ export interface Paginated<T> {
   pagination: Pagination;
 }
 
+export type Filters<T extends string> = {
+  [P in T]?: string | undefined;
+};
+export type Sorts<T extends string> = {
+  [P in T]?: Sort | undefined;
+};
+
+export interface BaseFetchOptions {
+  force?: boolean | undefined;
+  cache?: boolean | undefined;
+}
 export interface PaginationFetchOptions {
   page?: number | undefined;
   per_page?: number | undefined;
@@ -58,3 +69,12 @@ export interface PaginationFetchOptions {
 export type EnvironmentVariable = Uppercase<string>;
 
 export type Sort = 'ascending' | 'descending';
+
+export type MethodKeys<T> = {
+  [K in keyof T]: T[K] extends Function ? K : never; // eslint-disable-line @typescript-eslint/no-unsafe-function-type
+}[keyof T];
+
+export type DataKeys<T> = Exclude<keyof T, MethodKeys<T>>;
+
+export type NonMethodPartial<T> = Pick<T, MethodKeys<T>> &
+  Partial<Pick<T, DataKeys<T>>>;

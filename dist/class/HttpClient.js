@@ -1,5 +1,5 @@
 import { toCamelCase } from '../utils/camelCase.js';
-import { PterodactylAPIError } from './APIError.js';
+import { PterodactylApiError } from './ApiError.js';
 export class HttpClient {
     baseURL;
     apiKey;
@@ -19,7 +19,7 @@ export class HttpClient {
             body: hasBody ? JSON.stringify(bodyOrOptions) : null,
         });
         if (!response.ok)
-            throw new PterodactylAPIError(response.status, await response.text(), path, hasBody ? bodyOrOptions : null);
+            throw new PterodactylApiError(response.status, await response.text(), path, hasBody ? bodyOrOptions : null);
         if (response.status === 204 || method === 'DELETE') {
             return undefined;
         }
