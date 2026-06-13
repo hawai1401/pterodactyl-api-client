@@ -1,42 +1,31 @@
-import { ApplicationAPI } from './application/index.js';
-import { ClientAPI } from './client/index.js';
+import { ApplicationAPI } from './application/application.client.js';
+import { ClientAPI } from './client/client.class.js';
 import { clientSchema } from './schemas.js';
-import type { role } from './types.js';
+import type { AccountRole, CacheTtlOptions } from './types.js';
 
-export default class PterodactylAPIClient<T extends role> {
+export class PterodactylAPIClient<T extends AccountRole> {
   private apiKey: string;
   readonly panelUrl: URL;
   readonly role: T;
   public user: ClientAPI;
+  declare public admin: T extends 'admin' ? ApplicationAPI : never;
 
-  constructor(options: { apiKey: string; panelUrl: string; role: T }) {
-    const { apiKey, panelUrl, role } = clientSchema.parse(options) as {
-      apiKey: string;
-      panelUrl: string;
-      role: T;
-    };
+  constructor(options: {
+    apiKey: string;
+    panelUrl: string;
+    role: T;
+    cacheTtl?: CacheTtlOptions;
+  }) {
+    this.panelUrl = new URL(clientSchema.parse(options).panelUrl);
+    this.role = clientSchema.parse(options).role as T;
+    this.apiKey = clientSchema.parse(options).apiKey;
 
-    this.panelUrl = new URL(panelUrl);
-    this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey });
-    this.role = role;
-    this.apiKey = apiKey;
-  }
-
-  get admin(): T extends 'admin' ? ApplicationAPI : never {
+    this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey: this.apiKey });
     if (this.role === 'admin')
-      // @ts-expect-error Works well
-      return new ApplicationAPI({
+      this.admin = new ApplicationAPI({
         panelUrl: this.panelUrl,
         apiKey: this.apiKey,
-      });
-    // @ts-expect-error Works well
-    return;
-  }
-
-  /**
-   * @deprecated Client is now typed, typescript will no longer throw errors if the role is admin
-   */
-  isAdmin(): this is { admin: ApplicationAPI } {
-    return this.admin !== undefined;
+        cache: clientSchema.parse(options).cache as CacheTtlOptions,
+      }) as T extends 'admin' ? ApplicationAPI : never;
   }
 }

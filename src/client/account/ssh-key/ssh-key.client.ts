@@ -1,52 +1,37 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
 import { createSshKeySchema, deleteSshKeySchema } from '../account.schemas.js';
 import type {
-  CreateSshKeyArgs,
-  DeleteSshKeyArgs,
+  CreateSshKeyPayload,
+  DeleteSshKeyPayload,
   SshKey,
-  SshKeysRaw,
+  SshKeyObject,
 } from './ssh-key.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+import type { ObjectList } from '../../../types.js';
 
-export default class SshKeyClient {
-  constructor(private httpClient: HttpClient) {}
-
-  async list() {
-    const res = await this.httpClient.request<SshKeysRaw>(
-      'GET',
-      '/client/account/ssh-keys',
-    );
-    return {
-      ...res,
-      data: res.data.map((sshKey) => ({
-        ...sshKey,
-        attributes: {
-          ...sshKey.attributes,
-          created_at: new Date(sshKey.attributes.created_at),
-        },
-      })),
-    };
+export class SshKeyClient extends BaseClient {
+  async fetch(): Promise<SshKey[]> {
+    const sshKeyObjectList = await this.httpClient.request<
+      ObjectList<SshKeyObject>
+    >('GET', '/client/account/ssh-keys', { parseDates: true });
+    return sshKeyObjectList.data.map((sshKeyObject) => sshKeyObject.attributes);
   }
 
-  async create(options: CreateSshKeyArgs) {
-    const res = await this.httpClient.request<
-      SshKey<string>,
-      z.infer<typeof createSshKeySchema>
-    >('POST', '/client/account/ssh-keys', createSshKeySchema.parse(options));
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-      },
-    };
+  async create(payload: CreateSshKeyPayload): Promise<SshKey> {
+    const sshKey = await this.httpClient.request<
+      SshKeyObject,
+      zInfer<typeof createSshKeySchema>
+    >('POST', '/client/account/ssh-keys', createSshKeySchema.parse(payload), {
+      parseDates: true,
+    });
+    return sshKey.attributes;
   }
 
-  delete(options: DeleteSshKeyArgs) {
-    return this.httpClient.request<void, z.infer<typeof deleteSshKeySchema>>(
+  delete(payload: DeleteSshKeyPayload) {
+    return this.httpClient.request<void, zInfer<typeof deleteSshKeySchema>>(
       'POST',
       `/client/account/ssh-keys/remove`,
-      deleteSshKeySchema.parse(options),
+      deleteSshKeySchema.parse(payload),
     );
   }
 }

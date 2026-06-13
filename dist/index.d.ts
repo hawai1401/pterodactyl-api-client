@@ -1,6 +1,4 @@
-export { default as PterodactylAPIClient } from './class.js';
-export { PterodactylAPIError } from './class/APIError.js';
-export { default as HttpClient } from './class/HttpClient.js';
+export * from './class/index.js';
+export * from './class.js';
 export * from './types.js';
-export { default as buildQueryParams } from './utils/buildQueryParams.js';
 //# sourceMappingURL=index.d.ts.map

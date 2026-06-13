@@ -1,65 +1,108 @@
-import z from 'zod';
-import { idSchema, nameSchema } from '../../schemas.js';
+import { array, boolean, int, object, record, string } from 'zod';
+import {
+  descriptionSchema,
+  idSchema,
+  nameSchema,
+  uuidSchema,
+} from '../../schemas.js';
 
 export const applicationServerId = idSchema;
 export const applicationServerExternalId = nameSchema;
 export const applicationServerDatabaseId = idSchema;
 
-export const applicationServerIdSchema = z
-  .object({
-    id: applicationServerId.optional(),
-    external_id: applicationServerExternalId.optional(),
-  })
-  .refine((data) => data.id || data.external_id, {
-    message:
-      "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
-  });
-
-export const editApplicationServerDetailsSchema = z.object({
-  name: z.string().min(1).max(191),
-  user: z.int().positive(),
+export const applicationServerIdSchema = object({
+  id: applicationServerId.optional(),
   external_id: applicationServerExternalId.optional(),
-  description: z.string().optional(),
+}).refine((data) => data.id || data.external_id, {
+  message:
+    "Vous devez spécifier au moins un des 2 paramètres de recherche d'un serveur !",
 });
 
-export const editApplicationServerConfigurationSchema = z.object({
-  allocation: z.int().positive(),
-  oom_disabled: z.boolean().optional(),
-  limits: z.object({
-    memory: z.int().min(0),
-    swap: z.int().min(-1),
-    disk: z.int().min(0),
-    io: z.int().positive().min(10).max(1000),
-    threads: z
-      .string()
+export const setApplicationServerDetailsSchema = object({
+  name: string().min(1).max(191),
+  user: int().positive(),
+  external_id: applicationServerExternalId.optional(),
+  description: string().optional(),
+});
+
+export const setApplicationServerConfigurationSchema = object({
+  allocation: int().positive(),
+  oom_disabled: boolean().optional(),
+  limits: object({
+    memory: int().min(0),
+    swap: int().min(-1),
+    disk: int().min(0),
+    io: int().positive().min(10).max(1000),
+    threads: string()
       .regex(/^[0-9-,]+$/)
       .optional(),
-    cpu: z.int().min(0),
+    cpu: int().min(0),
   }),
-  feature_limits: z
-    .object({
-      databases: z.int().min(0),
-      backups: z.int().min(0),
-      allocations: z.int().min(0).optional(),
-    })
-    .optional(),
-  add_allocations: z.int().positive().array().optional(),
-  remove_allocations: z.int().positive().array().optional(),
+  feature_limits: object({
+    databases: int().min(0),
+    backups: int().min(0),
+    allocations: int().min(0).optional(),
+  }).optional(),
+  add_allocations: int().positive().array().optional(),
+  remove_allocations: int().positive().array().optional(),
 });
 
-export const editApplicationServerStartupSchema = z.object({
-  startup: z.string(),
-  environment: z.record(z.string().uppercase(), z.string()),
-  egg: z.int().positive(),
-  image: z
-    .string()
+export const setApplicationServerStartupSchema = object({
+  startup: string(),
+  environment: record(string().uppercase(), string()),
+  egg: int().positive(),
+  image: string()
     .max(191)
     .regex(/^~?[\w\.\/\-:@ ]*$/),
-  skip_scripts: z.boolean(),
+  skip_scripts: boolean(),
 });
 
-export const createApplicationDatabaseSchema = z.object({
-  database: z.string().min(1).max(48),
-  remote: z.string().regex(/^[0-9%.]{1,15}$/),
-  host: z.int().positive(),
+export const createApplicationDatabaseSchema = object({
+  database: string().min(1).max(48),
+  remote: string().regex(/^[0-9%.]{1,15}$/),
+  host: int().positive(),
+});
+
+export const createServerSchema = object({
+  external_id: nameSchema.optional(),
+  name: nameSchema,
+  description: descriptionSchema,
+  user: idSchema,
+  egg: idSchema,
+  docker_image: string()
+    .max(191)
+    .regex(/^~?[\w\.\/\-:@ ]*$/),
+  startup: string(),
+  environment: record(string().uppercase(), string()),
+  skip_scripts: boolean().optional(),
+  oom_disabled: boolean().optional(),
+  limits: object({
+    memory: int().min(0),
+    swap: int().min(-1),
+    disk: int().min(0),
+    io: int().positive().min(10).max(1000),
+    threads: string()
+      .regex(/^[0-9-,]+$/)
+      .optional(),
+    cpu: int().min(0),
+  }),
+  feature_limits: object({
+    databases: int().min(0),
+    backups: int().min(0),
+    allocations: int().min(0).optional(),
+  }),
+  allocation: object({
+    default: int().positive(),
+    additional: array(int().positive()).optional(),
+  }),
+  start_on_completion: boolean().optional(),
+});
+
+export const listServersFilterSchema = object({
+  uuid: uuidSchema.optional(),
+  uuidShort: string().length(8).optional(),
+  name: string().optional(),
+  description: string().optional(),
+  image: string().optional(),
+  external_id: string().optional(),
 });

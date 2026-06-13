@@ -1,7 +1,7 @@
-import type HttpClient from '../../../../class/HttpClient.js';
-import type { DatabaseWithPassword } from '../../database.types.js';
+import type { HttpClient } from '../../../../class/HttpClient.js';
+import type { DatabaseObject } from '../../databases/databases.types.js';
 
-export default class PasswordClient {
+export class UserServerDatabaseClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
@@ -9,13 +9,14 @@ export default class PasswordClient {
   ) {}
 
   async rotate() {
-    const res = await this.httpClient.request<DatabaseWithPassword>(
+    const databaseObject = await this.httpClient.request<DatabaseObject<true>>(
       'POST',
       `/client/servers/${this.server}/databases/${this.database}/rotate-password`,
     );
     return {
-      ...res,
-      password: res.attributes.relationships.password.attributes.password,
+      ...databaseObject,
+      password:
+        databaseObject.attributes.relationships.password.attributes.password,
     };
   }
 }

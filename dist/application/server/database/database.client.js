@@ -1,6 +1,6 @@
 import { applicationServerDatabaseId } from '../server.schemas.js';
-import PasswordClient from './password/password.client.js';
-export default class DatabaseClient {
+import { ApplicationServerDatabaseClient } from './password/password.client.js';
+export class DatabaseClient {
     httpClient;
     server;
     password;
@@ -9,18 +9,11 @@ export default class DatabaseClient {
         this.httpClient = httpClient;
         this.server = server;
         this.id = applicationServerDatabaseId.parse(database);
-        this.password = new PasswordClient(httpClient, server, this.id);
+        this.password = new ApplicationServerDatabaseClient(httpClient, server, this.id);
     }
-    async info() {
-        const res = await this.httpClient.request('GET', `/application/servers/${this.server}/databases/${this.id}`);
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-            },
-        };
+    async fetch() {
+        const databaseObject = await this.httpClient.request('GET', `/application/servers/${this.server}/databases/${this.id}`, { parseDates: true });
+        return databaseObject.attributes;
     }
     delete() {
         return this.httpClient.request('DELETE', `/application/servers/${this.server}/databases/${this.id}`);

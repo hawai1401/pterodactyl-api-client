@@ -1,5 +1,5 @@
 import { allocationId } from '../node.schemas.js';
-export default class AllocationClient {
+export class AllocationClient {
     httpClient;
     node;
     id;

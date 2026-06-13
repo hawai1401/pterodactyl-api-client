@@ -1,8 +1,6 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EditEmailArgs } from './email.types.js';
-export default class EmailClient {
-    private httpClient;
-    constructor(httpClient: HttpClient);
-    edit(options: EditEmailArgs): Promise<void>;
+import type { SetEmailPayload } from './email.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+export declare class EmailClient extends BaseClient {
+    set(payload: SetEmailPayload): Promise<void>;
 }
 //# sourceMappingURL=email.client.d.ts.map

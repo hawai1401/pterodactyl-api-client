@@ -1,7 +1,7 @@
 import { createScheduleSchema, userServerScheduleId, } from '../server.schemas.js';
-import TaskClient from './task/task.client.js';
-import TasksClient from './tasks/tasks.client.js';
-export default class ScheduleClient {
+import { TaskClient } from './task/task.client.js';
+import { TasksClient } from './tasks/tasks.client.js';
+export class ScheduleClient {
     httpClient;
     server;
     tasks;
@@ -15,35 +15,16 @@ export default class ScheduleClient {
     task(task) {
         return new TaskClient(this.httpClient, this.server, this.schedule, task);
     }
-    async info() {
-        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/schedules/${this.schedule}`);
+    async fetch() {
+        const scheduleObject = await this.httpClient.request('GET', `/client/servers/${this.server}/schedules/${this.schedule}`, { parseDates: true });
+        const { relationships, ...attributes } = scheduleObject.attributes;
         return {
-            ...res,
-            attributes: {
-                last_run_at: res.attributes.last_run_at
-                    ? new Date(res.attributes.last_run_at)
-                    : null,
-                next_run_at: new Date(res.attributes.next_run_at),
-                created_at: new Date(res.attributes.created_at),
-                updated_at: new Date(res.attributes.updated_at),
-                relationships: {
-                    tasks: {
-                        ...res.attributes.relationships.tasks,
-                        data: res.attributes.relationships.tasks.data.map((task) => ({
-                            ...task,
-                            attributes: {
-                                ...task.attributes,
-                                created_at: new Date(task.attributes.created_at),
-                                updated_at: new Date(task.attributes.updated_at),
-                            },
-                        })),
-                    },
-                },
-            },
+            ...attributes,
+            tasks: relationships.tasks.data.map((taskObject) => taskObject.attributes),
         };
     }
-    edit(options) {
-        return this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}`, createScheduleSchema.parse(options));
+    update(payload) {
+        return this.httpClient.request('POST', `/client/servers/${this.server}/schedules/${this.schedule}`, createScheduleSchema.parse(payload));
     }
     delete() {
         return this.httpClient.request('DELETE', `/client/servers/${this.server}/schedules/${this.schedule}`);

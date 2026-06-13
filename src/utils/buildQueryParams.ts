@@ -1,39 +1,38 @@
-import { paginationSchema, sort } from '../schemas.js';
+import { paginationSchema, sortLiteral } from '../schemas.js';
 import type { Sort } from '../types.js';
 
-export default function buildQueryParams<
-  T extends Record<string, string | number | undefined> = never,
-  U extends Record<string, Sort | undefined> = never,
->(params: {
+export function buildQueryParams({
+  page,
+  per_page,
+  filter,
+  sort,
+}: {
   page?: number | string | undefined;
   per_page?: number | string | undefined;
-  filter?: T | undefined;
-  sort?: U | undefined;
+  filter?: Record<string, string | number | undefined> | undefined;
+  sort?: Record<string, Sort | undefined> | undefined;
 }): string {
   const queryParts: string[] = [];
 
-  // Handle filters
-  if (params.filter) {
-    for (const [key, value] of Object.entries(params.filter)) {
-      if (value) queryParts.push(`filter[${key}]=${value}`);
-    }
-  }
+  if (filter)
+    for (const [key, value] of Object.entries(filter).filter(
+      ([, value]) => !!value,
+    ))
+      queryParts.push(`filter[${key}]=${value}`);
 
-  // Handle sorting
-  if (params.sort) {
-    for (const [key, direction] of Object.entries(params.sort)) {
-      const parsedDirection = sort.parse(direction);
-      const prefix = parsedDirection === 'descending' ? '-' : '';
-      queryParts.push(`sort=${prefix}${key}`);
-    }
-  }
+  if (sort)
+    for (const [key, direction] of Object.entries(sort).filter(
+      ([, value]) => !!value,
+    ))
+      queryParts.push(
+        `sort=${sortLiteral.parse(direction) === 'descending' ? '-' : ''}${key}`,
+      );
 
   const parsedPaginationParams = paginationSchema.parse({
-    page: params.page,
-    per_page: params.per_page,
+    page,
+    per_page,
   });
 
-  // Handle pagination
   if (parsedPaginationParams.page && parsedPaginationParams.page > 1)
     queryParts.push(`page=${parsedPaginationParams.page}`);
 

@@ -1,11 +1,11 @@
-import z from 'zod';
-export const passwordSchema = z.object({
-    password: z.string().min(8),
+import { coerce, email, ipv4, literal, object, string } from 'zod';
+export const passwordSchema = object({
+    password: string().min(8),
 });
 export const a2fSchema = passwordSchema.extend({
-    code: z.coerce.string().length(6),
+    code: coerce.string().length(6),
 });
-export const accountActivityEvent = z.literal([
+export const accountActivityEvent = literal([
     'user:api-key.create',
     'user:api-key.delete',
     'user:ssh-key.create',
@@ -18,29 +18,28 @@ export const accountActivityEvent = z.literal([
     'auth:fail',
     'auth:checkpoint',
 ]);
-export const createApiKeySchema = z.object({
-    description: z.string(),
-    allowed_ips: z.ipv4().array().max(50).optional(),
+export const createApiKeySchema = object({
+    description: string(),
+    allowed_ips: ipv4().array().max(50).optional(),
 });
-export const deleteApiKeySchema = z.object({
-    identifier: z.string(),
+export const deleteApiKeySchema = object({
+    identifier: string(),
 });
-export const editEmailSchema = passwordSchema.extend({
-    email: z.email().min(1).max(191),
+export const setEmailSchema = passwordSchema.extend({
+    email: email().min(1).max(191),
 });
-export const editPasswordSchema = passwordSchema.extend({
-    current_password: z.string().min(8),
-    password_confirmation: z.string().min(8),
+export const setPasswordSchema = passwordSchema.extend({
+    current_password: string().min(8),
+    password_confirmation: string().min(8),
 });
 const SSH_KEY_REGEX = /^(ssh-ed25519|ssh-rsa|ecdsa-sha2-nistp(256|384|521)) [A-Za-z0-9+/=]+(?: .+)?$/;
-export const createSshKeySchema = z.object({
-    name: z.string(),
-    public_key: z
-        .string()
+export const createSshKeySchema = object({
+    name: string(),
+    public_key: string()
         .min(50)
         .max(5000)
         .regex(SSH_KEY_REGEX, 'Invalid SSH public key format'),
 });
-export const deleteSshKeySchema = z.object({
-    fingerprint: z.string(),
+export const deleteSshKeySchema = object({
+    fingerprint: string(),
 });

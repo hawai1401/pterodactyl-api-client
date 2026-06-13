@@ -1,15 +1,23 @@
-import { editVariableSchema } from '../server.schemas.js';
-export default class StartupClient {
+import { setEnvironmentVariableSchema } from '../server.schemas.js';
+export class StartupClient {
     httpClient;
     server;
     constructor(httpClient, server) {
         this.httpClient = httpClient;
         this.server = server;
     }
-    info() {
-        return this.httpClient.request('GET', `/client/servers/${this.server}/settings/startup`);
+    async fetch() {
+        const eggVariableObjectList = await this.httpClient.request('GET', `/client/servers/${this.server}/settings/startup`);
+        const { startupCommand, rawStartupCommand, dockerImages } = eggVariableObjectList.meta;
+        return {
+            data: eggVariableObjectList.data.map((eggVariableObject) => eggVariableObject.attributes),
+            startupCommand,
+            rawStartupCommand,
+            dockerImages,
+        };
     }
-    edit(options) {
-        return this.httpClient.request('PUT', `/client/servers/${this.server}/settings/startup`, editVariableSchema.parse(options));
+    async setEnvironmentVariable(payload) {
+        const eggVariableObject = await this.httpClient.request('PUT', `/client/servers/${this.server}/settings/startup`, setEnvironmentVariableSchema.parse(payload));
+        return eggVariableObject.attributes;
     }
 }

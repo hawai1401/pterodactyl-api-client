@@ -1,5 +1,5 @@
-import { editSubuserSchema, userServerSubuserId } from '../server.schemas.js';
-export default class SubuserClient {
+import { setSubuserPermissionsSchema, userServerSubuserId, } from '../server.schemas.js';
+export class SubuserClient {
     httpClient;
     server;
     subuser;
@@ -8,25 +8,13 @@ export default class SubuserClient {
         this.server = server;
         this.subuser = userServerSubuserId.parse(subuser);
     }
-    async info() {
-        const res = await this.httpClient.request('GET', `/client/servers/${this.server}/users/${this.subuser}`);
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-            },
-        };
+    async fetch() {
+        const subuserObject = await this.httpClient.request('GET', `/client/servers/${this.server}/users/${this.subuser}`, { parseDates: true });
+        return subuserObject.attributes;
     }
-    async edit(options) {
-        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/users/${this.subuser}`, editSubuserSchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-            },
-        };
+    async setPermissions(payload) {
+        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/users/${this.subuser}`, setSubuserPermissionsSchema.parse(payload), { parseDates: true });
+        return res.attributes;
     }
     delete() {
         return this.httpClient.request('DELETE', `/client/servers/${this.server}/users/${this.subuser}`);

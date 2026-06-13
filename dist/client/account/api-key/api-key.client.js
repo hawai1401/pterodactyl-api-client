@@ -1,32 +1,20 @@
 import { createApiKeySchema, deleteApiKeySchema } from '../account.schemas.js';
-export default class ApiKeyClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
+import { BaseClient } from '../../../class/BaseClient.js';
+export class ApiKeyClient extends BaseClient {
+    async fetch() {
+        const apiKeyObjectList = await this.httpClient.request('GET', '/client/account/api-keys', { parseDates: true });
+        return apiKeyObjectList.data.map((apiKeyObject) => apiKeyObject.attributes);
     }
-    async list() {
-        const res = await this.httpClient.request('GET', '/client/account/api-keys');
+    async create(payload) {
+        const createdApiKeyObject = await this.httpClient.request('POST', '/client/account/api-keys', createApiKeySchema.parse(payload), {
+            parseDates: true,
+        });
         return {
-            ...res,
-            data: res.data.map((apiKey) => ({
-                ...apiKey,
-                attributes: {
-                    ...apiKey.attributes,
-                    last_used_at: new Date(apiKey.attributes.last_used_at),
-                    created_at: new Date(apiKey.attributes.created_at),
-                },
-            })),
+            ...createdApiKeyObject.attributes,
+            key: `${createdApiKeyObject.attributes.identifier}${createdApiKeyObject.meta.secretToken}`,
         };
     }
-    async create(options) {
-        const res = await this.httpClient.request('POST', '/client/account/api-keys', createApiKeySchema.parse(options));
-        return {
-            ...res,
-            api_key: `${res.attributes.identifier}${res.meta.secret_token}`,
-        };
-    }
-    delete(options) {
-        const { identifier } = deleteApiKeySchema.parse(options);
-        return this.httpClient.request('DELETE', `/client/account/api-keys/${identifier}`);
+    delete(payload) {
+        return this.httpClient.request('DELETE', `/client/account/api-keys/${deleteApiKeySchema.parse(payload).identifier}`);
     }
 }

@@ -1,33 +1,17 @@
 import { createSshKeySchema, deleteSshKeySchema } from '../account.schemas.js';
-export default class SshKeyClient {
-    httpClient;
-    constructor(httpClient) {
-        this.httpClient = httpClient;
+import { BaseClient } from '../../../class/BaseClient.js';
+export class SshKeyClient extends BaseClient {
+    async fetch() {
+        const sshKeyObjectList = await this.httpClient.request('GET', '/client/account/ssh-keys', { parseDates: true });
+        return sshKeyObjectList.data.map((sshKeyObject) => sshKeyObject.attributes);
     }
-    async list() {
-        const res = await this.httpClient.request('GET', '/client/account/ssh-keys');
-        return {
-            ...res,
-            data: res.data.map((sshKey) => ({
-                ...sshKey,
-                attributes: {
-                    ...sshKey.attributes,
-                    created_at: new Date(sshKey.attributes.created_at),
-                },
-            })),
-        };
+    async create(payload) {
+        const sshKey = await this.httpClient.request('POST', '/client/account/ssh-keys', createSshKeySchema.parse(payload), {
+            parseDates: true,
+        });
+        return sshKey.attributes;
     }
-    async create(options) {
-        const res = await this.httpClient.request('POST', '/client/account/ssh-keys', createSshKeySchema.parse(options));
-        return {
-            ...res,
-            attributes: {
-                ...res.attributes,
-                created_at: new Date(res.attributes.created_at),
-            },
-        };
-    }
-    delete(options) {
-        return this.httpClient.request('POST', `/client/account/ssh-keys/remove`, deleteSshKeySchema.parse(options));
+    delete(payload) {
+        return this.httpClient.request('POST', `/client/account/ssh-keys/remove`, deleteSshKeySchema.parse(payload));
     }
 }

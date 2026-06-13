@@ -1,25 +1,13 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import PasswordClient from './password/password.client.js';
-export default class DatabaseClient {
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { ApplicationDatabase } from '../databases/databases.types.js';
+import { ApplicationServerDatabaseClient } from './password/password.client.js';
+export declare class DatabaseClient {
     private httpClient;
     readonly server: number;
-    password: PasswordClient;
+    password: ApplicationServerDatabaseClient;
     readonly id: number;
     constructor(httpClient: HttpClient, server: number, database: number);
-    info(): Promise<{
-        attributes: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
-            server: number;
-            host: number;
-            database: string;
-            username: string;
-            remote: string | import("../../../types.js").IP | "%";
-            max_connections: number;
-        };
-        object: "server_database";
-    }>;
+    fetch(): Promise<ApplicationDatabase>;
     delete(): Promise<void>;
 }
 //# sourceMappingURL=database.client.d.ts.map

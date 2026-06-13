@@ -1,8 +1,7 @@
-import z from 'zod';
-export declare const userServerFilterSchema: z.ZodObject<{
-    uuid: z.ZodOptional<z.ZodUUID>;
-    name: z.ZodOptional<z.ZodString>;
-    description: z.ZodOptional<z.ZodString>;
-    external_id: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
+export declare const userServerFilterSchema: import("zod").ZodObject<{
+    uuid: import("zod").ZodOptional<import("zod").ZodUUID>;
+    name: import("zod").ZodOptional<import("zod").ZodString>;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
 //# sourceMappingURL=client.schema.d.ts.map

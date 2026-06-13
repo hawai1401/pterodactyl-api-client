@@ -1,4 +1,6 @@
-export interface Egg<T extends string | Date> {
+export type EggId = number;
+
+export interface EggObject {
   object: 'egg';
   attributes: {
     id: number;
@@ -8,16 +10,10 @@ export interface Egg<T extends string | Date> {
     author: string;
     description: string;
     docker_image: string;
-    docker_images: {
-      [key: string]: string;
-    };
+    docker_images: Record<string, string>;
     config: {
-      files: {
-        [key: string]: unknown;
-      };
-      startup: {
-        [key: string]: unknown;
-      };
+      files: Record<string, unknown>;
+      startup: Record<string, unknown>;
       stop: string;
       logs: unknown;
       file_denylist: unknown;
@@ -31,7 +27,36 @@ export interface Egg<T extends string | Date> {
       container: string;
       extends: null;
     };
-    created_at: T;
-    updated_at: T;
+    created_at: Date;
+    updated_at: Date;
   };
+}
+
+export interface BaseEgg {
+  id: number;
+  uuid: string;
+  name: string;
+  nest: number;
+  author: string;
+  description: string;
+  dockerImage: string;
+  dockerImages: Record<string, string>;
+  config: {
+    files: Record<string, unknown>;
+    startup: Record<string, unknown>;
+    stop: string;
+    logs: unknown;
+    fileDenylist: unknown;
+    extends: null;
+  };
+  startup: string;
+  script: {
+    privileged: boolean;
+    install: string;
+    entry: string;
+    container: string;
+    extends: null;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }

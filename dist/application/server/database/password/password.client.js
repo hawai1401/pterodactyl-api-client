@@ -1,4 +1,4 @@
-export default class PasswordClient {
+export class ApplicationServerDatabaseClient {
     httpClient;
     server;
     database;

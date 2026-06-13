@@ -1,0 +1,1 @@
+{"version":3,"file":"subuser.types.d.ts","sourceRoot":"","sources":["../../../../src/client/server/subuser/subuser.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AACrD,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,oBAAoB,CAAC;AAE5D,MAAM,WAAW,4BAA6B,SAAQ,WAAW;IAC/D,WAAW,EAAE,iBAAiB,EAAE,CAAC;CAClC"}

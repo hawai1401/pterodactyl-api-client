@@ -15,81 +15,27 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.cjs"
+    },
     "./client": {
       "types": "./dist/client/index.d.ts",
       "import": "./dist/client/index.js",
       "require": "./dist/client/index.cjs"
     },
-    "./client/account": {
-      "types": "./dist/client/account/index.d.ts",
-      "import": "./dist/client/account/index.js",
-      "require": "./dist/client/account/index.cjs"
-    },
-    "./client/server": {
-      "types": "./dist/client/server/index.d.ts",
-      "import": "./dist/client/server/index.js",
-      "require": "./dist/client/server/index.cjs"
-    },
     "./application": {
       "types": "./dist/application/index.d.ts",
       "import": "./dist/application/index.js",
       "require": "./dist/application/index.cjs"
-    },
-    "./application/user": {
-      "types": "./dist/application/user/index.d.ts",
-      "import": "./dist/application/user/index.js",
-      "require": "./dist/application/user/index.cjs"
-    },
-    "./application/users": {
-      "types": "./dist/application/users/index.d.ts",
-      "import": "./dist/application/users/index.js",
-      "require": "./dist/application/users/index.cjs"
-    },
-    "./application/location": {
-      "types": "./dist/application/location/index.d.ts",
-      "import": "./dist/application/location/index.js",
-      "req,uire": "./dist/application/location/index.cjs"
-    },
-    "./application/locations": {
-      "types": "./dist/application/locations/index.d.ts",
-      "import": "./dist/application/locations/index.js",
-      "req,uire": "./dist/application/locations/index.cjs"
-    },
-    "./application/node": {
-      "types": "./dist/application/node/index.d.ts",
-      "import": "./dist/application/node/index.js",
-      "require": "./dist/application/node/index.cjs"
-    },
-    "./application/nodes": {
-      "types": "./dist/application/nodes/index.d.ts",
-      "import": "./dist/application/nodes/index.js",
-      "require": "./dist/application/nodes/index.cjs"
-    },
-    "./application/server": {
-      "types": "./dist/application/server/index.d.ts",
-      "import": "./dist/application/server/index.js",
-      "require": "./dist/application/server/index.cjs"
-    },
-    "./application/servers": {
-      "types": "./dist/application/servers/index.d.ts",
-      "import": "./dist/application/servers/index.js",
-      "require": "./dist/application/servers/index.cjs"
-    },
-    "./application/nest": {
-      "types": "./dist/application/nest/index.d.ts",
-      "import": "./dist/application/nest/index.js",
-      "require": "./dist/application/nest/index.cjs"
-    },
-    "./application/nests": {
-      "types": "./dist/application/nests/index.d.ts",
-      "import": "./dist/application/nests/index.js",
-      "require": "./dist/application/nests/index.cjs"
     }
   },
   "scripts": {
-    "build": "eslint && tsc && node script/postbuild.js",
+    "build": "tsc && node script/postbuild.js",
     "lint": "eslint --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "keywords": [
     "pterodactyl",
@@ -112,18 +58,19 @@
   "author": "hawai1401 <hawai1401@ik.me> (https://hawai1401.fr)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.39.2",
-    "@types/node": "^25.0.9",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.9.1",
     "@types/ws": "^8.18.1",
-    "eslint": "^9.39.2",
+    "eslint": "^10.4.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.3.0",
-    "typescript-eslint": "^8.54.0"
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.7.0",
+    "typescript-eslint": "^8.60.0"
   },
   "dependencies": {
-    "jiti": "^2.6.1",
-    "ws": "^8.19.0",
-    "zod": "^4.3.6"
+    "ws": "^8.21.0",
+    "zod": "^4.4.3"
   }
 }

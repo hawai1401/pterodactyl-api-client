@@ -1,16 +1,14 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EditPasswordArgs } from './password.types.js';
-import { editPasswordSchema } from '../account.schemas.js';
+import type { infer as zInfer } from 'zod';
+import type { SetPasswordPayload } from './password.types.js';
+import { setPasswordSchema } from '../account.schemas.js';
+import { BaseClient } from '../../../class/BaseClient.js';
 
-export default class PasswordClient {
-  constructor(private httpClient: HttpClient) {}
-
-  edit(options: EditPasswordArgs) {
-    return this.httpClient.request<void, z.infer<typeof editPasswordSchema>>(
+export class PasswordClient extends BaseClient {
+  set(payload: SetPasswordPayload) {
+    return this.httpClient.request<void, zInfer<typeof setPasswordSchema>>(
       'PUT',
       '/client/account/password',
-      editPasswordSchema.parse(options),
+      setPasswordSchema.parse(payload),
     );
   }
 }

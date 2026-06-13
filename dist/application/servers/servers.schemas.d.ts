@@ -1,40 +1,39 @@
-import z from 'zod';
-export declare const createServerSchema: z.ZodObject<{
-    external_id: z.ZodOptional<z.ZodString>;
-    name: z.ZodString;
-    description: z.ZodOptional<z.ZodString>;
-    user: z.ZodInt;
-    egg: z.ZodInt;
-    docker_image: z.ZodString;
-    startup: z.ZodString;
-    environment: z.ZodRecord<z.ZodString, z.ZodString>;
-    skip_scripts: z.ZodOptional<z.ZodBoolean>;
-    oom_disabled: z.ZodOptional<z.ZodBoolean>;
-    limits: z.ZodObject<{
-        memory: z.ZodInt;
-        swap: z.ZodInt;
-        disk: z.ZodInt;
-        io: z.ZodInt;
-        threads: z.ZodOptional<z.ZodString>;
-        cpu: z.ZodInt;
-    }, z.z.core.$strip>;
-    feature_limits: z.ZodObject<{
-        databases: z.ZodInt;
-        backups: z.ZodInt;
-        allocations: z.ZodOptional<z.ZodInt>;
-    }, z.z.core.$strip>;
-    allocation: z.ZodObject<{
-        default: z.ZodInt;
-        additional: z.ZodOptional<z.ZodArray<z.ZodInt>>;
-    }, z.z.core.$strip>;
-    start_on_completion: z.ZodOptional<z.ZodBoolean>;
-}, z.z.core.$strip>;
-export declare const listServersFilterSchema: z.ZodObject<{
-    uuid: z.ZodOptional<z.ZodUUID>;
-    uuidShort: z.ZodOptional<z.ZodString>;
-    name: z.ZodOptional<z.ZodString>;
-    description: z.ZodOptional<z.ZodString>;
-    image: z.ZodOptional<z.ZodString>;
-    external_id: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
+export declare const createServerSchema: import("zod").ZodObject<{
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+    name: import("zod").ZodString;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+    user: import("zod").ZodInt;
+    egg: import("zod").ZodInt;
+    docker_image: import("zod").ZodString;
+    startup: import("zod").ZodString;
+    environment: import("zod").ZodRecord<import("zod").ZodString, import("zod").ZodString>;
+    skip_scripts: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    oom_disabled: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    limits: import("zod").ZodObject<{
+        memory: import("zod").ZodInt;
+        swap: import("zod").ZodInt;
+        disk: import("zod").ZodInt;
+        io: import("zod").ZodInt;
+        threads: import("zod").ZodOptional<import("zod").ZodString>;
+        cpu: import("zod").ZodInt;
+    }, import("zod/v4/core").$strip>;
+    feature_limits: import("zod").ZodObject<{
+        databases: import("zod").ZodInt;
+        backups: import("zod").ZodInt;
+        allocations: import("zod").ZodOptional<import("zod").ZodInt>;
+    }, import("zod/v4/core").$strip>;
+    allocation: import("zod").ZodObject<{
+        default: import("zod").ZodInt;
+        additional: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
+    }, import("zod/v4/core").$strip>;
+    start_on_completion: import("zod").ZodOptional<import("zod").ZodBoolean>;
+}, import("zod/v4/core").$strip>;
+export declare const listServersFilterSchema: import("zod").ZodObject<{
+    uuid: import("zod").ZodOptional<import("zod").ZodUUID>;
+    uuidShort: import("zod").ZodOptional<import("zod").ZodString>;
+    name: import("zod").ZodOptional<import("zod").ZodString>;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+    image: import("zod").ZodOptional<import("zod").ZodString>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
 //# sourceMappingURL=servers.schemas.d.ts.map

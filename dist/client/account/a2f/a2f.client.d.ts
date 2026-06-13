@@ -1,11 +1,9 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { EditAcountArgs } from '../account.types.js';
-import type { A2FData, EnableA2fArgs, RecoveryTokens } from './a2f.types.js';
-export default class A2fClient {
-    private httpClient;
-    constructor(httpClient: HttpClient);
-    enable(options: EnableA2fArgs): Promise<RecoveryTokens>;
-    disable(options: EditAcountArgs): Promise<void>;
-    qrCode(): Promise<A2FData>;
+import type { BaseUpdateAccountPayload } from '../account.types.js';
+import type { A2fCredentials, EnableA2fPayload, RecoveryTokens } from './a2f.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+export declare class A2fClient extends BaseClient {
+    enable(payload: EnableA2fPayload): Promise<RecoveryTokens>;
+    disable(payload: BaseUpdateAccountPayload): Promise<void>;
+    getCredentials(): Promise<A2fCredentials>;
 }
 //# sourceMappingURL=a2f.client.d.ts.map

@@ -1,13 +1,13 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { restoreBackupSchema, userServerBackupId } from '../server.schemas.js';
+import type { Backup, BackupObject } from '../backups/backups.types.js';
+import { LockClient } from './lock/lock.client.js';
 import type {
-  Backup,
-  DownloadBackupUrl,
-  RestoreBackupArgs,
-} from '../backup.types.js';
-import LockClient from './lock/lock.client.js';
+  DownloadBackupData,
+  RestoreBackupPayload,
+} from './backup.types.js';
 
-export default class BackupClient {
+export class BackupClient {
   readonly backup: string;
   public lock: LockClient;
 
@@ -20,42 +20,36 @@ export default class BackupClient {
     this.lock = new LockClient(httpClient, server, backup);
   }
 
-  async info() {
-    const res = await this.httpClient.request<Backup<string>>(
+  async info(): Promise<Backup> {
+    const backupObject = await this.httpClient.request<BackupObject>(
       'GET',
       `/client/servers/${this.server}/backups/${this.backup}`,
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-        completed_at: res.attributes.completed_at
-          ? new Date(res.attributes.completed_at)
-          : null,
-      },
-    };
+    return backupObject.attributes;
   }
 
-  download() {
-    return this.httpClient.request<DownloadBackupUrl>(
-      'GET',
-      `/client/servers/${this.server}/backups/${this.backup}/download`,
-    );
+  async getDownloadUrl(): Promise<string> {
+    const downloadBackupData =
+      await this.httpClient.request<DownloadBackupData>(
+        'GET',
+        `/client/servers/${this.server}/backups/${this.backup}/download`,
+      );
+    return downloadBackupData.attributes.url;
   }
 
   delete() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'DELETE',
       `/client/servers/${this.server}/backups/${this.backup}`,
     );
   }
 
-  restore(options: RestoreBackupArgs = {}) {
-    return this.httpClient.request<void, RestoreBackupArgs>(
+  restore(payload?: RestoreBackupPayload) {
+    return this.httpClient.request<void, RestoreBackupPayload>(
       'POST',
       `/client/servers/${this.server}/backups/${this.backup}/restore`,
-      restoreBackupSchema.parse(options),
+      restoreBackupSchema.optional().parse(payload),
     );
   }
 }

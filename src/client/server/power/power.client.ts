@@ -1,14 +1,14 @@
-import type HttpClient from '../../../class/HttpClient.js';
-import type { PowerArgs } from './power.types.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
+import type { PowerPayload } from './power.types.js';
 
-export default class PowerClient {
+export class PowerClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
   start() {
-    return this.httpClient.request<void, PowerArgs>(
+    return this.httpClient.request<void, PowerPayload>(
       'POST',
       `/client/servers/${this.server}/power`,
       {
@@ -18,7 +18,7 @@ export default class PowerClient {
   }
 
   stop() {
-    return this.httpClient.request<void, PowerArgs>(
+    return this.httpClient.request<void, PowerPayload>(
       'POST',
       `/client/servers/${this.server}/power`,
       {
@@ -28,7 +28,7 @@ export default class PowerClient {
   }
 
   restart() {
-    return this.httpClient.request<void, PowerArgs>(
+    return this.httpClient.request<void, PowerPayload>(
       'POST',
       `/client/servers/${this.server}/power`,
       {
@@ -38,7 +38,7 @@ export default class PowerClient {
   }
 
   kill() {
-    return this.httpClient.request<void, PowerArgs>(
+    return this.httpClient.request<void, PowerPayload>(
       'POST',
       `/client/servers/${this.server}/power`,
       {

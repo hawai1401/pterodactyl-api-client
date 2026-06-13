@@ -1,19 +1,20 @@
 import { createDatabaseSchema } from '../server.schemas.js';
-export default class DatabasesClient {
+export class DatabasesClient {
     httpClient;
     server;
     constructor(httpClient, server) {
         this.httpClient = httpClient;
         this.server = server;
     }
-    list() {
-        return this.httpClient.request('GET', `/client/servers/${this.server}/databases`);
+    async fetch() {
+        const databaseObjectList = await this.httpClient.request('GET', `/client/servers/${this.server}/databases`);
+        return databaseObjectList.data.map((databaseObject) => databaseObject.attributes);
     }
-    async create(options) {
-        const res = await this.httpClient.request('POST', `/client/servers/${this.server}/databases`, createDatabaseSchema.parse(options));
+    async create(payload) {
+        const databaseObject = await this.httpClient.request('POST', `/client/servers/${this.server}/databases`, createDatabaseSchema.parse(payload));
         return {
-            ...res,
-            password: res.attributes.relationships.password.attributes.password,
+            ...databaseObject.attributes,
+            password: databaseObject.attributes.relationships.password.attributes.password,
         };
     }
 }

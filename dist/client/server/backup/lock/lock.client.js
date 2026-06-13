@@ -1,4 +1,4 @@
-export default class LockClient {
+export class LockClient {
     httpClient;
     server;
     backup;

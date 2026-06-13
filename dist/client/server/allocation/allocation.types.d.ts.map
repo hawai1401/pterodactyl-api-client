@@ -1,0 +1,1 @@
+{"version":3,"file":"allocation.types.d.ts","sourceRoot":"","sources":["../../../../src/client/server/allocation/allocation.types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,mBAAmB,CAAC;AAErD,MAAM,WAAW,uBAAwB,SAAQ,WAAW;IAC1D,KAAK,CAAC,EAAE,MAAM,GAAG,SAAS,CAAC;CAC5B"}

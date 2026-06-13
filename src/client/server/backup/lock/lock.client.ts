@@ -1,6 +1,6 @@
-import type HttpClient from '../../../../class/HttpClient.js';
+import type { HttpClient } from '../../../../class/HttpClient.js';
 
-export default class LockClient {
+export class LockClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
@@ -8,7 +8,7 @@ export default class LockClient {
   ) {}
 
   toggle() {
-    return this.httpClient.request<void>(
+    return this.httpClient.request(
       'POST',
       `/client/servers/${this.server}/backups/${this.backup}/lock`,
     );

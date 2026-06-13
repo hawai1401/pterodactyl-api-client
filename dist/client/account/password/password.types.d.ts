@@ -1,7 +1,7 @@
-import type { BaseArgs } from '../../../types.js';
-export interface EditPasswordArgs extends BaseArgs {
+import type { BasePayload } from '../../../types.js';
+import type { BaseUpdateAccountPayload } from '../account.types.js';
+export interface SetPasswordPayload extends BasePayload, BaseUpdateAccountPayload {
     current_password: string;
-    password: string;
     password_confirmation: string;
 }
 //# sourceMappingURL=password.types.d.ts.map

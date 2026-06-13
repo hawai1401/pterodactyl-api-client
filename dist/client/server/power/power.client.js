@@ -1,4 +1,4 @@
-export default class PowerClient {
+export class PowerClient {
     httpClient;
     server;
     constructor(httpClient, server) {

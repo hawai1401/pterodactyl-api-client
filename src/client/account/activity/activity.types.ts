@@ -1,54 +1,67 @@
-import type { IP, ListwithPagination } from '../../../types.js';
+import type { PaginationFetchOptions, IPv4, Sort } from '../../../types.js';
 
-export interface listActivityArgs {
-  page?: number | undefined;
-  per_page?: number | undefined;
-  event?: UserEvent | AuthEvent | undefined;
+export interface FetchActivityOptions<
+  Event extends UserEvent,
+> extends PaginationFetchOptions {
+  filter?: {
+    event?: Event | undefined;
+  };
+  sort?: {
+    timestamp?: Sort | undefined;
+  };
 }
 
-export type UserApiKeyEvent = 'user:api-key.create' | 'user:api-key.delete';
-export type UserSshKeyEvent = 'user:ssh-key.create' | 'user:ssh-key.delete';
-export type UserAccountEvent =
-  | 'user:account.email-changed'
-  | 'user:account.password-changed';
-export type UserTwoFactorEvent =
-  | 'user:two-factor.create'
-  | 'user:two-factor.delete';
-
+export type CreateDelete = 'create' | 'delete';
+export type AccountApiKeyEvent = `api-key.${CreateDelete}`;
+export type AccountSshKeyEvent = `ssh-key.${CreateDelete}`;
+export type AccountEvent = 'account.email-changed' | 'account.password-changed';
+export type AccountTwoFactorEvent = `two-factor.${CreateDelete}`;
+export type AccountAuthEvent = 'success' | 'fail' | 'checkpoint' | 'token';
 export type UserEvent =
-  | UserApiKeyEvent
-  | UserSshKeyEvent
-  | UserAccountEvent
-  | UserTwoFactorEvent;
+  | `user:${
+      | AccountApiKeyEvent
+      | AccountSshKeyEvent
+      | AccountEvent
+      | AccountTwoFactorEvent}`
+  | `auth:${AccountAuthEvent}`;
 
-export type AuthEvent = 'auth:success' | 'auth:fail' | 'auth:checkpoint';
+export type AccountActivityProperties<Event extends UserEvent> =
+  (Event extends AccountApiKeyEvent ? { identifier: string } : never) &
+    (Event extends AccountSshKeyEvent ? { fingerprint: string } : never) &
+    (Event extends 'user:account.email-changed'
+      ? { old: string; new: string }
+      : never) &
+    (Event extends AccountAuthEvent
+      ? {
+          useragent: string;
+          ip: Event extends 'auth:success' ? IPv4 : '[hidden]';
+        }
+      : never) &
+    (Event extends 'auth:fail' ? { username: null } : never);
 
-export interface UserActivityList<
-  U,
-  T extends UserEvent | AuthEvent,
-> extends ListwithPagination {
-  data: UserActivityEvent<U, T>[];
-}
-
-type UserActivityProperties<U extends UserEvent | AuthEvent> =
-  (U extends UserApiKeyEvent ? { identifier: string } : never) &
-    (U extends UserSshKeyEvent ? { fingerprint: string } : never) &
-    (U extends 'user:email-changed' ? { old: string; new: string } : never);
-
-export interface UserActivityEvent<
-  T,
-  U extends UserEvent | AuthEvent = UserEvent | AuthEvent,
-> {
+export interface AccountActivityObject<Event extends UserEvent = UserEvent> {
   object: 'activity_log';
   attributes: {
     id: string;
     batch: null;
-    event: U;
+    event: Event;
     is_api: boolean;
-    ip: IP;
+    ip: IPv4;
     description: null;
-    properties: UserActivityProperties<U>;
+    properties: AccountActivityProperties<Event>;
     has_additional_metadata: boolean;
-    timestamp: T;
+    timestamp: Date;
   };
+}
+
+export interface AccountActivity<Event extends UserEvent = UserEvent> {
+  id: string;
+  batch: null;
+  event: Event;
+  isApi: boolean;
+  ip: IPv4;
+  description: null;
+  properties: AccountActivityProperties<Event>;
+  hasAdditionalMetadata: boolean;
+  timestamp: Date;
 }

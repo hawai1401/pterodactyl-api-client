@@ -1,46 +1,83 @@
-import z from 'zod';
-export declare const applicationServerId: z.ZodInt;
-export declare const applicationServerExternalId: z.ZodString;
-export declare const applicationServerDatabaseId: z.ZodInt;
-export declare const applicationServerIdSchema: z.ZodObject<{
-    id: z.ZodOptional<z.ZodInt>;
-    external_id: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
-export declare const editApplicationServerDetailsSchema: z.ZodObject<{
-    name: z.ZodString;
-    user: z.ZodInt;
-    external_id: z.ZodOptional<z.ZodString>;
-    description: z.ZodOptional<z.ZodString>;
-}, z.z.core.$strip>;
-export declare const editApplicationServerConfigurationSchema: z.ZodObject<{
-    allocation: z.ZodInt;
-    oom_disabled: z.ZodOptional<z.ZodBoolean>;
-    limits: z.ZodObject<{
-        memory: z.ZodInt;
-        swap: z.ZodInt;
-        disk: z.ZodInt;
-        io: z.ZodInt;
-        threads: z.ZodOptional<z.ZodString>;
-        cpu: z.ZodInt;
-    }, z.z.core.$strip>;
-    feature_limits: z.ZodOptional<z.ZodObject<{
-        databases: z.ZodInt;
-        backups: z.ZodInt;
-        allocations: z.ZodOptional<z.ZodInt>;
-    }, z.z.core.$strip>>;
-    add_allocations: z.ZodOptional<z.ZodArray<z.ZodInt>>;
-    remove_allocations: z.ZodOptional<z.ZodArray<z.ZodInt>>;
-}, z.z.core.$strip>;
-export declare const editApplicationServerStartupSchema: z.ZodObject<{
-    startup: z.ZodString;
-    environment: z.ZodRecord<z.ZodString, z.ZodString>;
-    egg: z.ZodInt;
-    image: z.ZodString;
-    skip_scripts: z.ZodBoolean;
-}, z.z.core.$strip>;
-export declare const createApplicationDatabaseSchema: z.ZodObject<{
-    database: z.ZodString;
-    remote: z.ZodString;
-    host: z.ZodInt;
-}, z.z.core.$strip>;
+export declare const applicationServerId: import("zod").ZodInt;
+export declare const applicationServerExternalId: import("zod").ZodString;
+export declare const applicationServerDatabaseId: import("zod").ZodInt;
+export declare const applicationServerIdSchema: import("zod").ZodObject<{
+    id: import("zod").ZodOptional<import("zod").ZodInt>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
+export declare const setApplicationServerDetailsSchema: import("zod").ZodObject<{
+    name: import("zod").ZodString;
+    user: import("zod").ZodInt;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
+export declare const setApplicationServerConfigurationSchema: import("zod").ZodObject<{
+    allocation: import("zod").ZodInt;
+    oom_disabled: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    limits: import("zod").ZodObject<{
+        memory: import("zod").ZodInt;
+        swap: import("zod").ZodInt;
+        disk: import("zod").ZodInt;
+        io: import("zod").ZodInt;
+        threads: import("zod").ZodOptional<import("zod").ZodString>;
+        cpu: import("zod").ZodInt;
+    }, import("zod/v4/core").$strip>;
+    feature_limits: import("zod").ZodOptional<import("zod").ZodObject<{
+        databases: import("zod").ZodInt;
+        backups: import("zod").ZodInt;
+        allocations: import("zod").ZodOptional<import("zod").ZodInt>;
+    }, import("zod/v4/core").$strip>>;
+    add_allocations: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
+    remove_allocations: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
+}, import("zod/v4/core").$strip>;
+export declare const setApplicationServerStartupSchema: import("zod").ZodObject<{
+    startup: import("zod").ZodString;
+    environment: import("zod").ZodRecord<import("zod").ZodString, import("zod").ZodString>;
+    egg: import("zod").ZodInt;
+    image: import("zod").ZodString;
+    skip_scripts: import("zod").ZodBoolean;
+}, import("zod/v4/core").$strip>;
+export declare const createApplicationDatabaseSchema: import("zod").ZodObject<{
+    database: import("zod").ZodString;
+    remote: import("zod").ZodString;
+    host: import("zod").ZodInt;
+}, import("zod/v4/core").$strip>;
+export declare const createServerSchema: import("zod").ZodObject<{
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+    name: import("zod").ZodString;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+    user: import("zod").ZodInt;
+    egg: import("zod").ZodInt;
+    docker_image: import("zod").ZodString;
+    startup: import("zod").ZodString;
+    environment: import("zod").ZodRecord<import("zod").ZodString, import("zod").ZodString>;
+    skip_scripts: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    oom_disabled: import("zod").ZodOptional<import("zod").ZodBoolean>;
+    limits: import("zod").ZodObject<{
+        memory: import("zod").ZodInt;
+        swap: import("zod").ZodInt;
+        disk: import("zod").ZodInt;
+        io: import("zod").ZodInt;
+        threads: import("zod").ZodOptional<import("zod").ZodString>;
+        cpu: import("zod").ZodInt;
+    }, import("zod/v4/core").$strip>;
+    feature_limits: import("zod").ZodObject<{
+        databases: import("zod").ZodInt;
+        backups: import("zod").ZodInt;
+        allocations: import("zod").ZodOptional<import("zod").ZodInt>;
+    }, import("zod/v4/core").$strip>;
+    allocation: import("zod").ZodObject<{
+        default: import("zod").ZodInt;
+        additional: import("zod").ZodOptional<import("zod").ZodArray<import("zod").ZodInt>>;
+    }, import("zod/v4/core").$strip>;
+    start_on_completion: import("zod").ZodOptional<import("zod").ZodBoolean>;
+}, import("zod/v4/core").$strip>;
+export declare const listServersFilterSchema: import("zod").ZodObject<{
+    uuid: import("zod").ZodOptional<import("zod").ZodUUID>;
+    uuidShort: import("zod").ZodOptional<import("zod").ZodString>;
+    name: import("zod").ZodOptional<import("zod").ZodString>;
+    description: import("zod").ZodOptional<import("zod").ZodString>;
+    image: import("zod").ZodOptional<import("zod").ZodString>;
+    external_id: import("zod").ZodOptional<import("zod").ZodString>;
+}, import("zod/v4/core").$strip>;
 //# sourceMappingURL=server.schemas.d.ts.map

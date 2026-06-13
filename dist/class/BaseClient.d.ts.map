@@ -1,0 +1,1 @@
+{"version":3,"file":"BaseClient.d.ts","sourceRoot":"","sources":["../../src/class/BaseClient.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,UAAU,EAAE,MAAM,iBAAiB,CAAC;AAElD,8BAAsB,UAAU;IAClB,SAAS,CAAC,UAAU,EAAE,UAAU;gBAAtB,UAAU,EAAE,UAAU;CAC7C"}

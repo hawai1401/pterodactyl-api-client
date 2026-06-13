@@ -1,49 +1,37 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import type {
-  CreateSubuserArgs,
+  CreateSubuserPayload,
   Subuser,
-  SubuserList,
-} from '../subuser.types.js';
+  SubuserObject,
+} from './subusers.types.js';
 import { createSubuserSchema } from '../server.schemas.js';
+import type { ObjectList } from '../../../types.js';
 
-export default class SubusersClient {
+export class SubusersClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  async list() {
-    const res = await this.httpClient.request<SubuserList>(
-      'GET',
-      `/client/servers/${this.server}/users`,
+  async fetch(): Promise<Subuser[]> {
+    const subuserObjectList = await this.httpClient.request<
+      ObjectList<SubuserObject>
+    >('GET', `/client/servers/${this.server}/users`, { parseDates: true });
+    return subuserObjectList.data.map(
+      (subuserObject) => subuserObject.attributes,
     );
-    return {
-      ...res,
-      data: res.data.map((subuser) => ({
-        ...subuser,
-        attributes: {
-          ...subuser.attributes,
-          created_at: new Date(subuser.attributes.created_at),
-        },
-      })),
-    };
   }
 
-  async create(options: CreateSubuserArgs) {
-    const res = await this.httpClient.request<
-      Subuser<string>,
-      CreateSubuserArgs
+  async create(payload: CreateSubuserPayload): Promise<Subuser> {
+    const subuserObject = await this.httpClient.request<
+      SubuserObject,
+      CreateSubuserPayload
     >(
       'POST',
       `/client/servers/${this.server}/users`,
-      createSubuserSchema.parse(options),
+      createSubuserSchema.parse(payload),
+      { parseDates: true },
     );
-    return {
-      ...res,
-      attributes: {
-        ...res.attributes,
-        created_at: new Date(res.attributes.created_at),
-      },
-    };
+    return subuserObject.attributes;
   }
 }

@@ -1,32 +1,21 @@
-import { ApplicationAPI } from './application/index.js';
-import { ClientAPI } from './client/index.js';
+import { ApplicationAPI } from './application/application.client.js';
+import { ClientAPI } from './client/client.class.js';
 import { clientSchema } from './schemas.js';
-export default class PterodactylAPIClient {
+export class PterodactylAPIClient {
     apiKey;
     panelUrl;
     role;
     user;
     constructor(options) {
-        const { apiKey, panelUrl, role } = clientSchema.parse(options);
-        this.panelUrl = new URL(panelUrl);
-        this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey });
-        this.role = role;
-        this.apiKey = apiKey;
-    }
-    get admin() {
+        this.panelUrl = new URL(clientSchema.parse(options).panelUrl);
+        this.role = clientSchema.parse(options).role;
+        this.apiKey = clientSchema.parse(options).apiKey;
+        this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey: this.apiKey });
         if (this.role === 'admin')
-            // @ts-expect-error Works well
-            return new ApplicationAPI({
+            this.admin = new ApplicationAPI({
                 panelUrl: this.panelUrl,
                 apiKey: this.apiKey,
+                cache: clientSchema.parse(options).cache,
             });
-        // @ts-expect-error Works well
-        return;
-    }
-    /**
-     * @deprecated Client is now typed, typescript will no longer throw errors if the role is admin
-     */
-    isAdmin() {
-        return this.admin !== undefined;
     }
 }

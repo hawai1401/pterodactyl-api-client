@@ -1,85 +1,50 @@
-import type HttpClient from '../../class/HttpClient.js';
-import type { CreateNodeArgs } from './nodes.types.js';
-import type { BaseListArgs, Sort } from '../../types.js';
-export default class NodesClient {
-    private httpClient;
-    constructor(httpClient: HttpClient);
-    list(options?: {
-        filter?: {
-            uuid?: string | undefined;
-            name?: string | undefined;
-            fqdn?: string | undefined;
-            daemon_token_id?: string | undefined;
-        } | undefined;
-        sort?: {
-            id?: Sort | undefined;
-            uuid?: Sort | undefined;
-            memory?: Sort | undefined;
-            disk?: Sort | undefined;
-        } | undefined;
-    } & BaseListArgs): Promise<{
+import type { CreateNodePayload, FetchNodesOptions, Node } from './nodes.types.js';
+import { BaseClient } from '../../class/BaseClient.js';
+export declare class NodesClient extends BaseClient {
+    fetch(options?: FetchNodesOptions): Promise<{
+        meta: {
+            pagination: {
+                total: number;
+                count: number;
+                perPage: number;
+                currentPage: number;
+                totalPages: number;
+                links: {
+                    [x: Lowercase<string>]: string;
+                };
+            };
+        };
+        object: "list";
         data: {
+            object: "node";
             attributes: {
-                created_at: Date;
-                updated_at: Date;
                 id: number;
                 uuid: string;
                 public: boolean;
                 name: string;
                 description: string;
-                location_id: number;
+                locationId: number;
                 fqdn: string;
                 scheme: import("./nodes.types.js").Scheme;
-                behind_proxy: boolean;
-                maintenance_mode: boolean;
+                behindProxy: boolean;
+                maintenanceMode: boolean;
                 memory: number;
-                memory_overallocate: number;
+                memoryOverallocate: number;
                 disk: number;
-                disk_overallocate: number;
-                upload_size: number;
-                daemon_listen: number;
-                daemon_sftp: number;
-                daemon_base: string;
-                allocated_resources: {
+                diskOverallocate: number;
+                uploadSize: number;
+                daemonListen: number;
+                daemonSftp: number;
+                daemonBase: string;
+                createdAt: Date;
+                updatedAt: Date;
+                allocatedResources: {
                     memory: number;
                     disk: number;
                 };
             };
-            object: "node";
         }[];
-        meta: {
-            pagination: import("../../types.js").Pagination;
-        };
-        object: "list";
     }>;
-    create(options: CreateNodeArgs): Promise<{
-        attributes: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
-            uuid: string;
-            public: boolean;
-            name: string;
-            description: string;
-            location_id: number;
-            fqdn: string;
-            scheme: import("./nodes.types.js").Scheme;
-            behind_proxy: boolean;
-            maintenance_mode: boolean;
-            memory: number;
-            memory_overallocate: number;
-            disk: number;
-            disk_overallocate: number;
-            upload_size: number;
-            daemon_listen: number;
-            daemon_sftp: number;
-            daemon_base: string;
-            allocated_resources: {
-                memory: number;
-                disk: number;
-            };
-        };
-        object: "node";
-    }>;
+    create(payload: CreateNodePayload): Promise<Node>;
 }
 //# sourceMappingURL=nodes.client.d.ts.map

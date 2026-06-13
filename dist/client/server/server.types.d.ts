@@ -1,37 +1,26 @@
-import type { BaseArgs, IP, ListwithPagination, Tuple } from '../../types.js';
-import type { AllocationList } from './allocation.types.js';
-import type { EggVariableList } from './startup/startup.types.js';
-export type ServerPermissions = ServerControlPermissions | FileManagementPermissions | BackupPermissions | NetworkAllocationPermissions | DatabsePermissions | SchedulePermissions | UserManagementPermissions | StartupPermissions | AdminPermissions | '*';
-export type ServerControlPermissions = 'control.console' | 'control.start' | 'control.stop' | 'control.restart' | 'control.kill';
-export type FileManagementPermissions = 'file.create' | 'file.read' | 'file.update' | 'file.delete' | 'file.archive' | 'file.sftp';
-export type BackupPermissions = 'backup.create' | 'backup.read' | 'backup.delete' | 'backup.download' | 'backup.restore';
-export type NetworkAllocationPermissions = 'allocation.read' | 'allocation.create' | 'allocation.update' | 'allocation.delete';
-export type DatabsePermissions = 'database.read' | 'database.create' | 'database.update' | 'database.delete';
-export type SchedulePermissions = 'schedule.read' | 'schedule.create' | 'schedule.update' | 'schedule.delete';
-export type UserManagementPermissions = 'user.read' | 'user.create' | 'user.update' | 'user.delete';
-export type StartupPermissions = 'startup.read' | 'startup.update';
-export type AdminPermissions = 'admin.websocket.errors' | 'admin.websocket.install' | 'admin.websocket.transfer';
-export interface Allocation {
-    object: 'allocation';
-    attributes: {
-        id: number;
-        ip: IP;
-        ip_alias: null | string;
-        port: number;
-        notes: null | string;
-        is_default: boolean;
+import type { BasePayload, IPv4, ObjectList, ObjectListWithPagination, PaginationFetchOptions, Sort, Tuple } from '../../types.js';
+import type { CamelCasedProperties } from '../../utils/camelCase.js';
+import type { CreateDelete } from '../account/index.js';
+import type { AllocationObject } from './allocations/allocations.types.js';
+import type { EggVariableObjectList } from './startup/startup.types.js';
+export type CreateUpdateDelete = CreateDelete | 'update';
+export type CreateReadUpdateDelete = CreateUpdateDelete | 'read';
+export type ServerControlPermissions = `control.${'console' | 'start' | 'stop' | 'restart' | 'kill'}`;
+export type FileManagementPermissions = `file.${CreateUpdateDelete | 'read' | 'archive' | 'sftp'}`;
+export type BackupPermissions = `backup.${CreateDelete | 'read' | 'download' | 'restore'}`;
+export type NetworkAllocationPermissions = `allocation.${CreateReadUpdateDelete}`;
+export type DatabasePermissions = `database.${CreateReadUpdateDelete}`;
+export type SchedulePermissions = `schedule.${CreateReadUpdateDelete}`;
+export type UserManagementPermissions = `user.${CreateReadUpdateDelete}`;
+export type StartupPermissions = `startup.${'read' | 'update'}`;
+export type AdminPermissions = `admin.websocket.${'errors' | 'install' | 'transfer'}`;
+export type ServerPermissions = ServerControlPermissions | FileManagementPermissions | BackupPermissions | NetworkAllocationPermissions | DatabasePermissions | SchedulePermissions | UserManagementPermissions | StartupPermissions | AdminPermissions | '*';
+export interface FetchUserServerActivityLogsOptions<Event extends ServerEvent> extends PaginationFetchOptions {
+    filter?: {
+        event?: Event | undefined;
     };
-}
-export interface EggVariable {
-    object: 'egg_variable';
-    attributes: {
-        name: string;
-        description: string;
-        env_variable: Uppercase<string>;
-        default_value: string;
-        server_value: string;
-        is_editable: boolean;
-        rules: string;
+    sort?: {
+        timestamp?: Sort | undefined;
     };
 }
 export interface BaseUserServer {
@@ -69,8 +58,8 @@ export interface BaseUserServer {
         };
         is_transferring: boolean;
         relationships: {
-            allocations: AllocationList;
-            variables: EggVariableList;
+            allocations: ObjectList<AllocationObject>;
+            variables: EggVariableObjectList;
         };
     };
 }
@@ -99,31 +88,31 @@ export type UserServerWithDetails = UserServer & {
         user_permissions: ServerPermissions[];
     };
 };
-export interface UserServerList extends ListwithPagination {
+export interface UserServerList extends ObjectListWithPagination<UserServer> {
     data: UserServer[];
 }
 export type State = 'running' | 'starting' | 'stopping' | 'offline';
 export type Signal = 'start' | 'stop' | 'restart' | 'kill';
-export interface EditServerArgs extends BaseArgs {
+export interface SetUserServerDetailsPayload extends BasePayload {
     name: string;
     description?: string | undefined;
 }
 export type TaskAction = 'command' | 'power' | 'backup';
-export type ServerFileEvent = 'server:file.read' | 'server:file.download' | 'server:file.write' | 'server:file.copy' | 'server:file.rename' | 'server:file.compress' | 'server:file.decompress' | 'server:file.delete' | 'server:file.create-directory' | 'server:file.pull';
-export type ServerConsoleEvent = 'server:console.command';
-export type ServerSettingsEvent = 'server:settings.rename' | 'server:settings.description';
-export type ServerReinstallEvent = 'server:reinstall';
-export type ServerStartupEvent = 'server:startup.image' | 'server:startup.edit';
-export type ServerDatabaseEvent = 'server:database.create' | 'server:database.rotate-password' | 'server:database.delete';
-export type ServerScheduleEvent = 'server:schedule.create' | 'server:schedule.update' | 'server:schedule.execute' | 'server:schedule.delete';
-export type ServerSubuserEvent = 'server:subuser.create' | 'server:subuser.update' | 'server:subuser.delete';
-export type ServerAllocationEvent = 'server:allocation.notes' | 'server:allocation.primary' | 'server:allocation.create' | 'server:allocation.delete';
-export type ServerTaskEvent = 'server:task.create' | 'server:task.update' | 'server:task.delete';
-export type ServerBackupEvent = 'server:backup.start' | 'server:backup.unlock' | 'server:backup.lock' | 'server:backup.delete' | 'server:backup.download' | 'server:backup.restore' | 'server:backup.restore-complete';
-export type ServerEvent = ServerFileEvent | ServerConsoleEvent | ServerSettingsEvent | ServerReinstallEvent | ServerStartupEvent | ServerDatabaseEvent | ServerScheduleEvent | ServerSubuserEvent | ServerAllocationEvent | ServerTaskEvent | ServerBackupEvent;
-export interface OldNew {
-    old: string;
-    new: string;
+export type ServerFileEvent = `file.${'read' | 'download' | 'write' | 'copy' | 'rename' | 'compress' | 'decompress' | 'delete' | 'create-directory' | 'pull'}`;
+export type ServerConsoleEvent = 'console.command';
+export type ServerSettingsEvent = `settings.${'rename' | 'description'}`;
+export type ServerReinstallEvent = 'reinstall';
+export type ServerStartupEvent = `startup.${'image' | 'edit'}`;
+export type ServerDatabaseEvent = `database.${CreateDelete | 'rotate-password'}`;
+export type ServerScheduleEvent = `schedule.${CreateUpdateDelete | 'execute'}`;
+export type ServerSubuserEvent = `subuser.${CreateUpdateDelete}`;
+export type ServerAllocationEvent = `allocation.${CreateDelete | 'notes' | 'primary'}`;
+export type ServerTaskEvent = `task.${CreateUpdateDelete}`;
+export type ServerBackupEvent = `backup.${'start' | 'unlock' | 'lock' | 'delete' | 'download' | 'restore' | 'restore-complete'}`;
+export type ServerEvent = `server:${ServerFileEvent | ServerConsoleEvent | ServerSettingsEvent | ServerReinstallEvent | ServerStartupEvent | ServerDatabaseEvent | ServerScheduleEvent | ServerSubuserEvent | ServerAllocationEvent | ServerTaskEvent | ServerBackupEvent}`;
+export interface OldNew<T extends string | null = string> {
+    old: T;
+    new: T;
 }
 export interface NameOnly {
     name: string;
@@ -155,7 +144,7 @@ export interface TaskPayload<T extends TaskAction = TaskAction> extends NameOnly
     action: T;
     payload: T extends 'power' ? Signal : string;
 }
-export type AllocationType = `${IP}:${number}`;
+export type AllocationType = `${IPv4}:${number}`;
 export interface AllocationInterface {
     allocation: AllocationType;
 }
@@ -188,9 +177,8 @@ export type ServerActivityMap = {
         files: string;
     };
     'server:file.create-directory': {
-        name: string;
         directory: string;
-    };
+    } & NameOnly;
     'server:file.pull': {
         directory: string;
         url: string;
@@ -209,18 +197,14 @@ export type ServerActivityMap = {
     'server:database.delete': NameOnly;
     'server:schedule.create': NameOnly;
     'server:schedule.update': {
-        name: string;
         active: boolean;
-    };
+    } & NameOnly;
     'server:schedule.execute': NameOnly;
     'server:schedule.delete': NameOnly;
     'server:subuser.create': EmailPerms;
     'server:subuser.update': PermissionsUpdate;
     'server:subuser.delete': EmailRevoked;
-    'server:allocation.notes': {
-        old: null | string;
-        new: null | string;
-    } & AllocationInterface;
+    'server:allocation.notes': OldNew<string | null> & AllocationInterface;
     'server:allocation.primary': AllocationInterface;
     'server:allocation.create': AllocationInterface;
     'server:allocation.delete': AllocationInterface;
@@ -233,27 +217,34 @@ export type ServerActivityMap = {
     'server:backup.delete': NameFailed;
     'server:backup.download': NameOnly;
     'server:backup.restore': {
-        name: string;
         truncate: boolean;
-    };
+    } & NameOnly;
     'server:backup.restore-complete': NameOnly;
 };
 export type ServerActivityProperties<U extends ServerEvent> = U extends keyof ServerActivityMap ? ServerActivityMap[U] : never;
-export interface ActivityLog<T extends string | Date, U extends ServerEvent = ServerEvent> {
+export interface ActivityLogObject<Event extends ServerEvent = ServerEvent> {
     object: 'activity_log';
     attributes: {
         id: string;
         batch: null;
-        event: U;
+        event: Event;
         is_api: boolean;
-        ip: IP;
+        ip: IPv4;
         description: string;
-        properties: ServerActivityProperties<U>;
+        properties: ServerActivityProperties<Event>;
         has_additional_metadata: boolean;
-        timestamp: T;
+        timestamp: Date;
     };
 }
-export interface ServerActivityList<T extends string | Date, U extends ServerEvent = ServerEvent> extends ListwithPagination {
-    data: ActivityLog<T, U>[];
+export interface ActivityLog<Event extends ServerEvent = ServerEvent> {
+    id: string;
+    batch: null;
+    event: Event extends object ? CamelCasedProperties<Event> : Event;
+    isApi: boolean;
+    ip: `${number}.${number}.${number}.${number}`;
+    description: string;
+    properties: ServerActivityProperties<Event> extends object ? CamelCasedProperties<ServerActivityProperties<Event>> : ServerActivityProperties<Event>;
+    hasAdditionalMetadata: boolean;
+    timestamp: Date;
 }
 //# sourceMappingURL=server.types.d.ts.map

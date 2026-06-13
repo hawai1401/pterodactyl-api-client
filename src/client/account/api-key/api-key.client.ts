@@ -1,50 +1,41 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
 import { createApiKeySchema, deleteApiKeySchema } from '../account.schemas.js';
 import type {
-  ApiKeysRaw,
-  CreateApiKeyArgs,
+  ApiKey,
+  ApiKeyObject,
+  CreateApiKeyPayload,
   CreatedApiKey,
-  DeleteApiKeyArgs,
+  CreatedApiKeyObject,
+  DeleteApiKeyPayload,
 } from './api-key.types.js';
+import { BaseClient } from '../../../class/BaseClient.js';
+import type { ObjectList } from '../../../types.js';
 
-export default class ApiKeyClient {
-  constructor(private httpClient: HttpClient) {}
+export class ApiKeyClient extends BaseClient {
+  async fetch(): Promise<ApiKey[]> {
+    const apiKeyObjectList = await this.httpClient.request<
+      ObjectList<ApiKeyObject>
+    >('GET', '/client/account/api-keys', { parseDates: true });
+    return apiKeyObjectList.data.map((apiKeyObject) => apiKeyObject.attributes);
+  }
 
-  async list() {
-    const res = await this.httpClient.request<ApiKeysRaw>(
-      'GET',
-      '/client/account/api-keys',
-    );
+  async create(payload: CreateApiKeyPayload): Promise<CreatedApiKey> {
+    const createdApiKeyObject = await this.httpClient.request<
+      CreatedApiKeyObject,
+      zInfer<typeof createApiKeySchema>
+    >('POST', '/client/account/api-keys', createApiKeySchema.parse(payload), {
+      parseDates: true,
+    });
     return {
-      ...res,
-      data: res.data.map((apiKey) => ({
-        ...apiKey,
-        attributes: {
-          ...apiKey.attributes,
-          last_used_at: new Date(apiKey.attributes.last_used_at),
-          created_at: new Date(apiKey.attributes.created_at),
-        },
-      })),
+      ...createdApiKeyObject.attributes,
+      key: `${createdApiKeyObject.attributes.identifier}${createdApiKeyObject.meta.secretToken}`,
     };
   }
 
-  async create(options: CreateApiKeyArgs) {
-    const res = await this.httpClient.request<
-      CreatedApiKey,
-      z.infer<typeof createApiKeySchema>
-    >('POST', '/client/account/api-keys', createApiKeySchema.parse(options));
-    return {
-      ...res,
-      api_key: `${res.attributes.identifier}${res.meta.secret_token}`,
-    };
-  }
-
-  delete(options: DeleteApiKeyArgs) {
-    const { identifier } = deleteApiKeySchema.parse(options);
-    return this.httpClient.request<void>(
+  delete(payload: DeleteApiKeyPayload) {
+    return this.httpClient.request(
       'DELETE',
-      `/client/account/api-keys/${identifier}`,
+      `/client/account/api-keys/${deleteApiKeySchema.parse(payload).identifier}`,
     );
   }
 }

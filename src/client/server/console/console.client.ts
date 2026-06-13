@@ -1,9 +1,9 @@
-import type HttpClient from '../../../class/HttpClient.js';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { userServerCommandSchema } from '../server.schemas.js';
-import type { SendConsoleCommandArgs } from './console.types.js';
-import WebsocketClient from './websocket/websocket.console.client.js';
+import type { SendConsoleCommandPayload } from './console.types.js';
+import { WebsocketClient } from './websocket/websocket.client.js';
 
-export default class ConsoleClient {
+export class ConsoleClient {
   public websocket: WebsocketClient;
 
   constructor(
@@ -14,11 +14,11 @@ export default class ConsoleClient {
     this.websocket = new WebsocketClient(httpClient, panelUrl, this.server);
   }
 
-  send(options: SendConsoleCommandArgs) {
-    return this.httpClient.request<void, SendConsoleCommandArgs>(
+  send(payload: SendConsoleCommandPayload) {
+    return this.httpClient.request<void, SendConsoleCommandPayload>(
       'POST',
       `/client/servers/${this.server}/command`,
-      userServerCommandSchema.parse(options),
+      userServerCommandSchema.parse(payload),
     );
   }
 }

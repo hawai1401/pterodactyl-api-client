@@ -1,33 +1,37 @@
-import type z from 'zod';
-import type HttpClient from '../../../class/HttpClient.js';
+import type { infer as zInfer } from 'zod';
+import type { HttpClient } from '../../../class/HttpClient.js';
 import { assignAllocationSchema } from '../server.schemas.js';
-import type { Allocation } from '../server.types.js';
+import type { ObjectList } from '../../../types.js';
 import type {
-  AllocationList,
-  AssignAllocationArgs,
-} from '../allocation.types.js';
+  Allocation,
+  AllocationObject,
+  AssignAllocationPayload,
+} from './allocations.types.js';
 
-export default class AllocationsClient {
+export class AllocationsClient {
   constructor(
     private httpClient: HttpClient,
     readonly server: string,
   ) {}
 
-  list() {
-    return this.httpClient.request<AllocationList>(
-      'GET',
-      `/client/servers/${this.server}/network/allocations`,
+  async fetch(): Promise<Allocation[]> {
+    const allocationObjectList = await this.httpClient.request<
+      ObjectList<AllocationObject>
+    >('GET', `/client/servers/${this.server}/network/allocations`);
+    return allocationObjectList.data.map(
+      (allocationObject) => allocationObject.attributes,
     );
   }
 
-  assign(options: AssignAllocationArgs) {
-    return this.httpClient.request<
-      Allocation,
-      z.infer<typeof assignAllocationSchema>
+  async assign(payload: AssignAllocationPayload): Promise<Allocation> {
+    const allocationObject = await this.httpClient.request<
+      AllocationObject,
+      zInfer<typeof assignAllocationSchema>
     >(
       'POST',
       `/client/servers/${this.server}/network/allocations`,
-      assignAllocationSchema.parse(options),
+      assignAllocationSchema.parse(payload),
     );
+    return allocationObject.attributes;
   }
 }
