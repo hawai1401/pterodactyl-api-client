@@ -2,16 +2,16 @@ import type {
   PaginationFetchOptions,
   BasePayload,
   IPv4,
+  Filters,
+  BaseFetchOptions,
 } from '../../../types.js';
 
 export type Port = `${number}`;
 export type PortRange = `${number}-${number}`;
 
-export interface FetchAllocationsOptions extends PaginationFetchOptions {
-  filter?: {
-    ip?: IPv4 | undefined;
-    port?: string | number | undefined;
-  };
+export interface ListAllocationsOptions
+  extends PaginationFetchOptions, Omit<BaseFetchOptions, 'force'> {
+  filter?: Filters<'ip' | 'port'>;
 }
 
 export interface ApplicationAllocationObject {
@@ -25,13 +25,15 @@ export interface ApplicationAllocationObject {
     assigned: boolean;
   };
 }
-export interface ApplicationAllocation {
+
+export interface BaseApplicationAllocation {
   id: number;
   ip: IPv4;
   alias: string | null;
   port: number;
   notes: string | null;
   assigned: boolean;
+  node: number;
 }
 
 export interface CreateApplicationAllocationPayload extends BasePayload {
