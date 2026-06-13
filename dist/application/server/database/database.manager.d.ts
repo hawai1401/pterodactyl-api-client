@@ -1,15 +1,15 @@
-import type { BaseFetchOptions, NonMethodPartial } from '../../../types.js';
+import type { BaseFetchOptions } from '../../../types.js';
 import type { CreateApplicationDatabase as CreateApplicationDatabasePayload } from './database.types.js';
-import { ApplicationServerDatabase } from './database.class.js';
+import { ServerDatabase } from './database.class.js';
 import type { HttpClient } from '../../../class/HttpClient.js';
 import { BaseCacheManager } from '../../../class/BaseCacheManager.js';
-export declare class ApplicationServerDatabaseManager extends BaseCacheManager<number, ApplicationServerDatabase> {
+export declare class ServerDatabaseManager extends BaseCacheManager<number, ServerDatabase> {
     private httpClient;
     readonly serverId: number;
     constructor(httpClient: HttpClient, serverId: number, cacheTtl?: number);
-    list(options?: Omit<BaseFetchOptions, 'force'>): Promise<ApplicationServerDatabase[]>;
-    fetch(id: number, options?: BaseFetchOptions): Promise<ApplicationServerDatabase>;
-    resolve(id: number): ApplicationServerDatabase | (NonMethodPartial<ApplicationServerDatabase> & Pick<ApplicationServerDatabase, 'id'>);
-    create(payload: CreateApplicationDatabasePayload, options?: Pick<BaseFetchOptions, 'cache'>): Promise<ApplicationServerDatabase>;
+    list(options?: Omit<BaseFetchOptions, 'force'>): Promise<ServerDatabase[]>;
+    fetch(id: number, options?: BaseFetchOptions): Promise<ServerDatabase>;
+    resolve(id: number): ServerDatabase;
+    create(payload: CreateApplicationDatabasePayload, options?: Pick<BaseFetchOptions, 'cache'>): Promise<ServerDatabase>;
 }
 //# sourceMappingURL=database.manager.d.ts.map

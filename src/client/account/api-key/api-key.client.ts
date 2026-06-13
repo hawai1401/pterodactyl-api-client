@@ -33,10 +33,9 @@ export class ApiKeyClient extends BaseClient {
   }
 
   delete(payload: DeleteApiKeyPayload) {
-    const { identifier } = deleteApiKeySchema.parse(payload);
     return this.httpClient.request(
       'DELETE',
-      `/client/account/api-keys/${identifier}`,
+      `/client/account/api-keys/${deleteApiKeySchema.parse(payload).identifier}`,
     );
   }
 }

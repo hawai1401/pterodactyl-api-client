@@ -1,11 +1,11 @@
 import { buildQueryParams } from '../../utils/buildQueryParams.js';
 import { createUserSchema, listUsersFilterSchema, userId, userIdSchema, } from './user.schemas.js';
-import { ApplicationUser } from './user.class.js';
+import { User } from './user.class.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
-import { ApplicationServer } from '../server/server.class.js';
-import { ApplicationServerManager } from '../server/server.manager.js';
-export class ApplicationUserManager extends BaseCacheManager {
+import { Server } from '../server/server.class.js';
+import { ServerManager } from '../server/server.manager.js';
+export class UserManager extends BaseCacheManager {
     httpClient;
     serverManager;
     constructor(httpClient, serverManager, cacheTtl = ONE_MINUTE_IN_MILLISECONDS * 5) {
@@ -14,20 +14,19 @@ export class ApplicationUserManager extends BaseCacheManager {
         this.serverManager = serverManager;
     }
     async list(options) {
-        const filter = listUsersFilterSchema.optional().parse(options?.filter);
         const queries = buildQueryParams({
             ...options,
-            filter,
+            filter: listUsersFilterSchema.optional().parse(options?.filter),
         });
         const userObjectList = await this.httpClient.request('GET', `/application/users?${queries}${options?.includeServers ? '&include=servers' : ''}`, { parseDates: true });
         return {
             data: userObjectList.data.map((userObject) => {
                 if (!options?.includeServers)
-                    return this.setCache(new ApplicationUser(this.httpClient, this, userObject.attributes), options?.cache);
+                    return this.setCache(new User(this.httpClient, this, userObject.attributes), options?.cache);
                 const { relationships, ...attributes } = userObject.attributes;
-                return this.setCache(new ApplicationUser(this.httpClient, this, {
+                return this.setCache(new User(this.httpClient, this, {
                     ...attributes,
-                    servers: relationships.servers.data.map((serverObject) => new ApplicationServer(this.httpClient, this.serverManager, serverObject.attributes)),
+                    servers: relationships.servers.data.map((serverObject) => new Server(this.httpClient, this.serverManager, serverObject.attributes)),
                 }), options.cache);
             }),
             pagination: userObjectList.meta.pagination,
@@ -40,26 +39,23 @@ export class ApplicationUserManager extends BaseCacheManager {
             !options?.force &&
             (options?.includeServers ? !!cacheUser.servers : true))
             return cacheUser;
-        const { id, external_id } = userIdSchema.parse(user);
-        const userObject = await this.httpClient.request('GET', `/application/users/${id ?? `external/${external_id}`}${options?.includeServers ? '?include=servers' : ''}`, { parseDates: true });
+        const userObject = await this.httpClient.request('GET', `/application/users/${((u) => u.id ?? `external/${u.external_id}`)(userIdSchema.parse(user))}${options?.includeServers ? '?include=servers' : ''}`, { parseDates: true });
         if (!options?.includeServers)
-            return this.setCache(new ApplicationUser(this.httpClient, this, userObject.attributes), options?.cache);
+            return this.setCache(new User(this.httpClient, this, userObject.attributes), options?.cache);
         const { relationships, ...attributes } = userObject.attributes;
-        return this.setCache(new ApplicationUser(this.httpClient, this, {
+        return this.setCache(new User(this.httpClient, this, {
             ...attributes,
-            servers: relationships.servers.data.map((serverObject) => new ApplicationServer(this.httpClient, this.serverManager, serverObject.attributes)),
+            servers: relationships.servers.data.map((serverObject) => new Server(this.httpClient, this.serverManager, serverObject.attributes)),
         }), options.cache);
     }
     resolve(user) {
-        return (this.getCache(user) ??
-            new ApplicationUser(this.httpClient, this, {
-                id: userId.parse(user),
-            }));
+        return super.resolve(user, () => new User(this.httpClient, this, {
+            id: userId.parse(user),
+        }));
     }
     async create(payload, options) {
-        const userObject = await this.httpClient.request('POST', '/application/users', createUserSchema.parse(payload), {
+        return this.setCache(new User(this.httpClient, this, (await this.httpClient.request('POST', '/application/users', createUserSchema.parse(payload), {
             parseDates: true,
-        });
-        return this.setCache(new ApplicationUser(this.httpClient, this, userObject.attributes), options?.cache);
+        })).attributes), options?.cache);
     }
 }

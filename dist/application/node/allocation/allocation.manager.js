@@ -12,10 +12,10 @@ export class NodeAllocationManager extends BaseCacheManager {
         this.nodeId = nodeId;
     }
     async list(options) {
-        const filter = listAllocationsFilterSchema
-            .optional()
-            .parse(options?.filter);
-        const queries = buildQueryParams({ ...options, filter });
+        const queries = buildQueryParams({
+            ...options,
+            filter: listAllocationsFilterSchema.optional().parse(options?.filter),
+        });
         const allocationObjectList = await this.httpClient.request('GET', `/application/nodes/${this.nodeId}/allocations?${queries}`);
         return {
             data: allocationObjectList.data.map((allocationObject) => this.setCache(new NodeAllocation(this.httpClient, this, {
@@ -26,15 +26,13 @@ export class NodeAllocationManager extends BaseCacheManager {
         };
     }
     resolve(id) {
-        return (this.getCache(id) ??
-            new NodeAllocation(this.httpClient, this, {
-                id: allocationId.parse(id),
-                node: this.nodeId,
-            }));
+        return super.resolve(id, () => new NodeAllocation(this.httpClient, this, {
+            id: allocationId.parse(id),
+            node: this.nodeId,
+        }));
     }
     async create(payload, options) {
-        const res = await this.httpClient.request('POST', `/application/nodes/${this.nodeId}/allocations`, payload);
-        return res.data.map((allocationObject) => this.setCache(new NodeAllocation(this.httpClient, this, {
+        return (await this.httpClient.request('POST', `/application/nodes/${this.nodeId}/allocations`, payload)).data.map((allocationObject) => this.setCache(new NodeAllocation(this.httpClient, this, {
             ...allocationObject.attributes,
             node: this.nodeId,
         }), options?.cache));

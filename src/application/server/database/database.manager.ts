@@ -1,9 +1,5 @@
 import type { infer as zInfer } from 'zod';
-import type {
-  BaseFetchOptions,
-  NonMethodPartial,
-  ObjectList,
-} from '../../../types.js';
+import type { BaseFetchOptions, ObjectList } from '../../../types.js';
 import type {
   CreateApplicationDatabase as CreateApplicationDatabasePayload,
   ApplicationDatabaseObject,
@@ -12,14 +8,14 @@ import {
   applicationServerDatabaseId,
   createApplicationDatabaseSchema,
 } from '../server.schemas.js';
-import { ApplicationServerDatabase } from './database.class.js';
+import { ServerDatabase } from './database.class.js';
 import type { HttpClient } from '../../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../../utils/vars.js';
 import { BaseCacheManager } from '../../../class/BaseCacheManager.js';
 
-export class ApplicationServerDatabaseManager extends BaseCacheManager<
+export class ServerDatabaseManager extends BaseCacheManager<
   number,
-  ApplicationServerDatabase
+  ServerDatabase
 > {
   constructor(
     private httpClient: HttpClient,
@@ -31,7 +27,7 @@ export class ApplicationServerDatabaseManager extends BaseCacheManager<
 
   async list(
     options?: Omit<BaseFetchOptions, 'force'>,
-  ): Promise<ApplicationServerDatabase[]> {
+  ): Promise<ServerDatabase[]> {
     const databaseObjectList = await this.httpClient.request<
       ObjectList<ApplicationDatabaseObject>
     >('GET', `/application/servers/${this.serverId}/databases`, {
@@ -39,74 +35,62 @@ export class ApplicationServerDatabaseManager extends BaseCacheManager<
     });
     return databaseObjectList.data.map((databaseObject) =>
       this.setCache(
-        new ApplicationServerDatabase(
-          this.httpClient,
-          this,
-          databaseObject.attributes,
-        ),
+        new ServerDatabase(this.httpClient, this, databaseObject.attributes),
         options?.cache,
       ),
     );
   }
 
-  async fetch(
-    id: number,
-    options?: BaseFetchOptions,
-  ): Promise<ApplicationServerDatabase> {
+  async fetch(id: number, options?: BaseFetchOptions): Promise<ServerDatabase> {
     const cacheDatabase = this.getCache(id);
     if (cacheDatabase && !options?.force) return cacheDatabase;
 
-    const parsedId = applicationServerDatabaseId.parse(id);
-    const databaseObject =
-      await this.httpClient.request<ApplicationDatabaseObject>(
-        'GET',
-        `/application/servers/${this.serverId}/databases/${parsedId}`,
-        { parseDates: true },
-      );
-
     return this.setCache(
-      new ApplicationServerDatabase(
+      new ServerDatabase(
         this.httpClient,
         this,
-        databaseObject.attributes,
+        (
+          await this.httpClient.request<ApplicationDatabaseObject>(
+            'GET',
+            `/application/servers/${this.serverId}/databases/${applicationServerDatabaseId.parse(id)}`,
+            { parseDates: true },
+          )
+        ).attributes,
       ),
       options?.cache,
     );
   }
 
-  resolve(
-    id: number,
-  ):
-    | ApplicationServerDatabase
-    | (NonMethodPartial<ApplicationServerDatabase> &
-        Pick<ApplicationServerDatabase, 'id'>) {
-    return (
-      this.getCache(id) ??
-      new ApplicationServerDatabase(this.httpClient, this, {
-        id: applicationServerDatabaseId.parse(id),
-        server: this.serverId,
-      })
+  resolve(id: number): ServerDatabase {
+    return super.resolve(
+      id,
+      () =>
+        new ServerDatabase(this.httpClient, this, {
+          id: applicationServerDatabaseId.parse(id),
+          server: this.serverId,
+        }),
     );
   }
 
   async create(
     payload: CreateApplicationDatabasePayload,
     options?: Pick<BaseFetchOptions, 'cache'>,
-  ): Promise<ApplicationServerDatabase> {
-    const databaseObject = await this.httpClient.request<
-      ApplicationDatabaseObject,
-      zInfer<typeof createApplicationDatabaseSchema>
-    >(
-      'POST',
-      `/application/servers/${this.serverId}/databases`,
-      createApplicationDatabaseSchema.parse(payload),
-      { parseDates: true },
-    );
+  ): Promise<ServerDatabase> {
     return this.setCache(
-      new ApplicationServerDatabase(
+      new ServerDatabase(
         this.httpClient,
         this,
-        databaseObject.attributes,
+        (
+          await this.httpClient.request<
+            ApplicationDatabaseObject,
+            zInfer<typeof createApplicationDatabaseSchema>
+          >(
+            'POST',
+            `/application/servers/${this.serverId}/databases`,
+            createApplicationDatabaseSchema.parse(payload),
+            { parseDates: true },
+          )
+        ).attributes,
       ),
       options?.cache,
     );

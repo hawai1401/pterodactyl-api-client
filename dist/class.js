@@ -7,15 +7,15 @@ export class PterodactylAPIClient {
     role;
     user;
     constructor(options) {
-        const { apiKey, panelUrl, role } = clientSchema.parse(options);
-        this.panelUrl = new URL(panelUrl);
-        this.role = role;
-        this.apiKey = apiKey;
-        this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey });
-        if (role === 'admin')
+        this.panelUrl = new URL(clientSchema.parse(options).panelUrl);
+        this.role = clientSchema.parse(options).role;
+        this.apiKey = clientSchema.parse(options).apiKey;
+        this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey: this.apiKey });
+        if (this.role === 'admin')
             this.admin = new ApplicationAPI({
                 panelUrl: this.panelUrl,
                 apiKey: this.apiKey,
+                cache: clientSchema.parse(options).cache,
             });
     }
 }

@@ -12,6 +12,7 @@ export declare abstract class BaseCacheManager<Key extends string | number, Inst
     [setManagerCacheSymbol](instance: Instance, cache: boolean | undefined): Instance;
     protected getCache(key: Key): Instance | null;
     [getManagerCacheSymbol](key: Key): Instance | null;
+    protected resolve(key: Key, fallback: () => Instance): Instance;
     protected removeCache(key: Key): void;
     [removeManagerCacheSymbol](key: Key): void;
 }

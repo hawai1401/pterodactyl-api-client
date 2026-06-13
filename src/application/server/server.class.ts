@@ -1,6 +1,6 @@
 import type { infer as zInfer, ZodObject } from 'zod';
 import type { HttpClient } from '../../class/HttpClient.js';
-import type { ApplicationServerManager } from './server.manager.js';
+import type { ServerManager } from './server.manager.js';
 import {
   setManagerCacheSymbol,
   removeManagerCacheSymbol,
@@ -10,7 +10,7 @@ import {
   setApplicationServerConfigurationSchema,
   setApplicationServerStartupSchema,
 } from './server.schemas.js';
-import { ApplicationServerDatabaseManager } from './database/database.manager.js';
+import { ServerDatabaseManager } from './database/database.manager.js';
 import type {
   BaseApplicationServer,
   UpdateApplicationServerPayload,
@@ -19,7 +19,7 @@ import type {
 } from './server.types.js';
 import type { BaseFetchOptions } from '../../types.js';
 
-export class ApplicationServer<ServerStatus extends Status = Status> {
+export class Server<ServerStatus extends Status = Status> {
   public id!: number;
   public externalId!: null | string;
   public uuid!: string;
@@ -55,38 +55,47 @@ export class ApplicationServer<ServerStatus extends Status = Status> {
   public updatedAt!: Date;
   public createdAt!: Date;
 
-  public databases!: ApplicationServerDatabaseManager;
+  public databases!: ServerDatabaseManager;
+  private databasesTtl: number | undefined;
 
   constructor(
     private httpClient: HttpClient,
-    private serverManager: ApplicationServerManager,
+    private serverManager: ServerManager,
     data: Partial<BaseApplicationServer> &
       (
         | Pick<BaseApplicationServer, 'id'>
         | Pick<BaseApplicationServer, 'externalId'>
       ),
+    databasesTtl?: number,
   ) {
     Object.assign(this, data);
+    this.databasesTtl = databasesTtl;
     if (this.id) {
-      this.databases = new ApplicationServerDatabaseManager(
+      this.databases = new ServerDatabaseManager(
         this.httpClient,
         this.id,
+        databasesTtl,
       );
     }
   }
 
   async fetch(options?: BaseFetchOptions): Promise<this> {
-    const serverObject = await this.httpClient.request<ApplicationServerObject>(
-      'GET',
-      `/application/servers/${this.id ?? `external/${this.externalId}`}`,
-      { parseDates: true },
+    Object.assign(
+      this,
+      (
+        await this.httpClient.request<ApplicationServerObject>(
+          'GET',
+          `/application/servers/${this.id ?? `external/${this.externalId}`}`,
+          { parseDates: true },
+        )
+      ).attributes,
     );
 
-    Object.assign(this, serverObject.attributes);
     if (this.id && !this.databases) {
-      this.databases = new ApplicationServerDatabaseManager(
+      this.databases = new ServerDatabaseManager(
         this.httpClient,
         this.id,
+        this.databasesTtl,
       );
     }
 
@@ -138,13 +147,12 @@ export class ApplicationServer<ServerStatus extends Status = Status> {
     if (requests.length === 0)
       throw new Error('Aucunes modifications spécifiées !');
 
-    const [serverObject] = await Promise.all(requests);
-
-    Object.assign(this, serverObject!.attributes);
+    Object.assign(this, (await Promise.all(requests))[0]!.attributes);
     if (this.id && !this.databases) {
-      this.databases = new ApplicationServerDatabaseManager(
+      this.databases = new ServerDatabaseManager(
         this.httpClient,
         this.id,
+        this.databasesTtl,
       );
     }
 

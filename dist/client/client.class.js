@@ -13,10 +13,9 @@ export class ClientAPI {
         this.account = new AccountClient(this.httpClient);
     }
     fetchServers(options) {
-        const filter = userServerFilterSchema.optional().parse(options?.filter);
         const queries = buildQueryParams({
             ...options,
-            filter,
+            filter: userServerFilterSchema.optional().parse(options?.filter),
         });
         return this.httpClient.request('GET', `/client?${queries}`);
     }

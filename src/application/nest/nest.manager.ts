@@ -1,6 +1,5 @@
 import type {
   BaseFetchOptions,
-  NonMethodPartial,
   ObjectListWithPagination,
   Paginated,
 } from '../../types.js';
@@ -11,15 +10,16 @@ import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
 
-export class NestManager extends BaseCacheManager<
-  NestId,
-  Nest
-> {
+export class NestManager extends BaseCacheManager<NestId, Nest> {
+  private eggsTtl: number | undefined;
+
   constructor(
     private httpClient: HttpClient,
     cacheTtl: number = ONE_MINUTE_IN_MILLISECONDS * 5,
+    eggsTtl?: number,
   ) {
     super(cacheTtl, 'id');
+    this.eggsTtl = eggsTtl;
   }
 
   async list(
@@ -32,7 +32,7 @@ export class NestManager extends BaseCacheManager<
     return {
       data: nestObjectList.data.map((nestObject) =>
         this.setCache(
-          new Nest(this.httpClient, this, nestObject.attributes),
+          new Nest(this.httpClient, this, nestObject.attributes, this.eggsTtl),
           options?.cache,
         ),
       ),
@@ -40,36 +40,39 @@ export class NestManager extends BaseCacheManager<
     };
   }
 
-  async fetch(
-    id: NestId,
-    options?: BaseFetchOptions,
-  ): Promise<Nest> {
+  async fetch(id: NestId, options?: BaseFetchOptions): Promise<Nest> {
     const cacheNest = this.getCache(id);
     if (cacheNest && !options?.force) return cacheNest;
 
-    const parsedId = nestId.parse(id);
-    const nestObject = await this.httpClient.request<NestObject>(
-      'GET',
-      `/application/nests/${parsedId}`,
-      { parseDates: true },
-    );
-
     return this.setCache(
-      new Nest(this.httpClient, this, nestObject.attributes),
+      new Nest(
+        this.httpClient,
+        this,
+        (
+          await this.httpClient.request<NestObject>(
+            'GET',
+            `/application/nests/${nestId.parse(id)}`,
+            { parseDates: true },
+          )
+        ).attributes,
+        this.eggsTtl,
+      ),
       options?.cache,
     );
   }
 
-  resolve(
-    id: NestId,
-  ):
-    | Nest
-    | (NonMethodPartial<Nest> & Pick<Nest, 'id'>) {
-    return (
-      this.getCache(id) ??
-      new Nest(this.httpClient, this, {
-        id: nestId.parse(id),
-      })
+  resolve(id: NestId): Nest {
+    return super.resolve(
+      id,
+      () =>
+        new Nest(
+          this.httpClient,
+          this,
+          {
+            id: nestId.parse(id),
+          },
+          this.eggsTtl,
+        ),
     );
   }
 }

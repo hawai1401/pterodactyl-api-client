@@ -1,6 +1,5 @@
 import type {
   BaseFetchOptions,
-  NonMethodPartial,
   ObjectList,
   ObjectListWithPagination,
   Paginated,
@@ -32,11 +31,10 @@ export class NodeAllocationManager extends BaseCacheManager<
   async list(
     options?: ListAllocationsOptions,
   ): Promise<Paginated<NodeAllocation>> {
-    const filter = listAllocationsFilterSchema
-      .optional()
-      .parse(options?.filter);
-
-    const queries = buildQueryParams({ ...options, filter });
+    const queries = buildQueryParams({
+      ...options,
+      filter: listAllocationsFilterSchema.optional().parse(options?.filter),
+    });
 
     const allocationObjectList = await this.httpClient.request<
       ObjectListWithPagination<ApplicationAllocationObject>
@@ -56,18 +54,14 @@ export class NodeAllocationManager extends BaseCacheManager<
     };
   }
 
-  resolve(
-    id: number,
-  ):
-    | NodeAllocation
-    | (NonMethodPartial<NodeAllocation> &
-        Pick<NodeAllocation, 'id'>) {
-    return (
-      this.getCache(id) ??
-      new NodeAllocation(this.httpClient, this, {
-        id: allocationId.parse(id),
-        node: this.nodeId,
-      })
+  resolve(id: number): NodeAllocation {
+    return super.resolve(
+      id,
+      () =>
+        new NodeAllocation(this.httpClient, this, {
+          id: allocationId.parse(id),
+          node: this.nodeId,
+        }),
     );
   }
 
@@ -75,11 +69,12 @@ export class NodeAllocationManager extends BaseCacheManager<
     payload: CreateApplicationAllocationPayload,
     options?: Pick<BaseFetchOptions, 'cache'>,
   ): Promise<NodeAllocation[]> {
-    const res = await this.httpClient.request<
-      ObjectList<ApplicationAllocationObject>,
-      CreateApplicationAllocationPayload
-    >('POST', `/application/nodes/${this.nodeId}/allocations`, payload);
-    return res.data.map((allocationObject) =>
+    return (
+      await this.httpClient.request<
+        ObjectList<ApplicationAllocationObject>,
+        CreateApplicationAllocationPayload
+      >('POST', `/application/nodes/${this.nodeId}/allocations`, payload)
+    ).data.map((allocationObject) =>
       this.setCache(
         new NodeAllocation(this.httpClient, this, {
           ...allocationObject.attributes,

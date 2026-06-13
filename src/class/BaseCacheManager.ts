@@ -54,6 +54,10 @@ export abstract class BaseCacheManager<
     return this.getCache(key);
   }
 
+  protected resolve(key: Key, fallback: () => Instance): Instance {
+    return this.getCache(key) ?? fallback();
+  }
+
   protected removeCache(key: Key): void {
     this.cache.delete(key);
   }

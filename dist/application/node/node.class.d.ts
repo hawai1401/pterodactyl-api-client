@@ -31,7 +31,7 @@ export declare class Node {
         disk: number;
     };
     allocations: NodeAllocationManager;
-    constructor(httpClient: HttpClient, nodeManager: NodeManager, data: Partial<BaseNode> & Pick<BaseNode, 'id'>);
+    constructor(httpClient: HttpClient, nodeManager: NodeManager, data: Partial<BaseNode> & Pick<BaseNode, 'id'>, allocationsTtl?: number);
     fetch(options?: BaseFetchOptions): Promise<this>;
     update(payload: CreateNodePayload, options?: Omit<BaseFetchOptions, 'force'>): Promise<this>;
     configuration(): Promise<NodeConfiguration>;

@@ -1,7 +1,7 @@
 import { setManagerCacheSymbol, removeManagerCacheSymbol, } from '../../symbols.js';
 import { setApplicationServerDetailsSchema, setApplicationServerConfigurationSchema, setApplicationServerStartupSchema, } from './server.schemas.js';
-import { ApplicationServerDatabaseManager } from './database/database.manager.js';
-export class ApplicationServer {
+import { ServerDatabaseManager } from './database/database.manager.js';
+export class Server {
     httpClient;
     serverManager;
     id;
@@ -22,19 +22,20 @@ export class ApplicationServer {
     updatedAt;
     createdAt;
     databases;
-    constructor(httpClient, serverManager, data) {
+    databasesTtl;
+    constructor(httpClient, serverManager, data, databasesTtl) {
         this.httpClient = httpClient;
         this.serverManager = serverManager;
         Object.assign(this, data);
+        this.databasesTtl = databasesTtl;
         if (this.id) {
-            this.databases = new ApplicationServerDatabaseManager(this.httpClient, this.id);
+            this.databases = new ServerDatabaseManager(this.httpClient, this.id, databasesTtl);
         }
     }
     async fetch(options) {
-        const serverObject = await this.httpClient.request('GET', `/application/servers/${this.id ?? `external/${this.externalId}`}`, { parseDates: true });
-        Object.assign(this, serverObject.attributes);
+        Object.assign(this, (await this.httpClient.request('GET', `/application/servers/${this.id ?? `external/${this.externalId}`}`, { parseDates: true })).attributes);
         if (this.id && !this.databases) {
-            this.databases = new ApplicationServerDatabaseManager(this.httpClient, this.id);
+            this.databases = new ServerDatabaseManager(this.httpClient, this.id, this.databasesTtl);
         }
         this.serverManager[setManagerCacheSymbol](this, options?.cache);
         return this;
@@ -66,10 +67,9 @@ export class ApplicationServer {
         }));
         if (requests.length === 0)
             throw new Error('Aucunes modifications spécifiées !');
-        const [serverObject] = await Promise.all(requests);
-        Object.assign(this, serverObject.attributes);
+        Object.assign(this, (await Promise.all(requests))[0].attributes);
         if (this.id && !this.databases) {
-            this.databases = new ApplicationServerDatabaseManager(this.httpClient, this.id);
+            this.databases = new ServerDatabaseManager(this.httpClient, this.id, this.databasesTtl);
         }
         this.serverManager[setManagerCacheSymbol](this, options?.cache);
         return this;

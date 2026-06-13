@@ -1,5 +1,5 @@
 import { removeManagerCacheSymbol, setManagerCacheSymbol, } from '../../../symbols.js';
-export class ApplicationServerDatabase {
+export class ServerDatabase {
     httpClient;
     databaseManager;
     id;
@@ -17,8 +17,7 @@ export class ApplicationServerDatabase {
         Object.assign(this, data);
     }
     async fetch(options) {
-        const databaseObject = await this.httpClient.request('GET', `/application/servers/${this.server}/databases/${this.id}`, { parseDates: true });
-        Object.assign(this, databaseObject.attributes);
+        Object.assign(this, (await this.httpClient.request('GET', `/application/servers/${this.server}/databases/${this.id}`, { parseDates: true })).attributes);
         this.databaseManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }

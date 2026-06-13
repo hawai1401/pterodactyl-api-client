@@ -5,7 +5,7 @@ import type {
   PaginationFetchOptions,
   Sorts,
 } from '../../types.js';
-import type { ApplicationServer } from '../server/server.class.js';
+import type { Server } from '../server/server.class.js';
 import type { ApplicationServerObject } from '../server/server.types.js';
 
 export type UserId = number;
@@ -72,10 +72,8 @@ export interface BaseUser {
   updatedAt: Date;
 }
 export interface UserWithServers extends BaseUser {
-  servers: ApplicationServer[];
+  servers: Server[];
 }
-export type User<IncludeServers extends boolean = false> =
-  IncludeServers extends true ? UserWithServers : BaseUser;
 
 export interface CreateUserPayload extends BasePayload {
   email: string;

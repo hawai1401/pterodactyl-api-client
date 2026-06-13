@@ -33,6 +33,9 @@ export class BaseCacheManager {
     [getManagerCacheSymbol](key) {
         return this.getCache(key);
     }
+    resolve(key, fallback) {
+        return this.getCache(key) ?? fallback();
+    }
     removeCache(key) {
         this.cache.delete(key);
     }

@@ -58,5 +58,15 @@ export type MethodKeys<T> = {
 }[keyof T];
 export type DataKeys<T> = Exclude<keyof T, MethodKeys<T>>;
 export type NonMethodPartial<T> = Pick<T, MethodKeys<T>> & Partial<Pick<T, DataKeys<T>>>;
+export interface CacheTtlOptions {
+    users?: number | undefined;
+    servers?: number | undefined;
+    locations?: number | undefined;
+    nodes?: number | undefined;
+    nests?: number | undefined;
+    eggs?: number | undefined;
+    allocations?: number | undefined;
+    databases?: number | undefined;
+}
 export {};
 //# sourceMappingURL=types.d.ts.map

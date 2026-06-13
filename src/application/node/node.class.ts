@@ -49,22 +49,27 @@ export class Node {
     private httpClient: HttpClient,
     private nodeManager: NodeManager,
     data: Partial<BaseNode> & Pick<BaseNode, 'id'>,
+    allocationsTtl?: number,
   ) {
     Object.assign(this, data);
     this.allocations = new NodeAllocationManager(
       this.httpClient,
       this.id,
+      allocationsTtl,
     );
   }
 
   async fetch(options?: BaseFetchOptions): Promise<this> {
-    const nodeObject = await this.httpClient.request<NodeObject>(
-      'GET',
-      `/application/nodes/${this.id}`,
-      { parseDates: true },
+    Object.assign(
+      this,
+      (
+        await this.httpClient.request<NodeObject>(
+          'GET',
+          `/application/nodes/${this.id}`,
+          { parseDates: true },
+        )
+      ).attributes,
     );
-
-    Object.assign(this, nodeObject.attributes);
 
     this.nodeManager[setManagerCacheSymbol](this, options?.cache);
 
@@ -75,17 +80,20 @@ export class Node {
     payload: CreateNodePayload,
     options?: Omit<BaseFetchOptions, 'force'>,
   ): Promise<this> {
-    const nodeObject = await this.httpClient.request<
-      NodeObject,
-      zInfer<typeof createNodeSchema>
-    >(
-      'PATCH',
-      `/application/nodes/${this.id}`,
-      createNodeSchema.parse(payload),
-      { parseDates: true },
+    Object.assign(
+      this,
+      (
+        await this.httpClient.request<
+          NodeObject,
+          zInfer<typeof createNodeSchema>
+        >(
+          'PATCH',
+          `/application/nodes/${this.id}`,
+          createNodeSchema.parse(payload),
+          { parseDates: true },
+        )
+      ).attributes,
     );
-
-    Object.assign(this, nodeObject.attributes);
 
     this.nodeManager[setManagerCacheSymbol](this, options?.cache);
 
@@ -93,11 +101,10 @@ export class Node {
   }
 
   async configuration(): Promise<NodeConfiguration> {
-    const configData = await this.httpClient.request<NodeConfigurationData>(
+    return this.httpClient.request<NodeConfigurationData>(
       'GET',
       `/application/nodes/${this.id}/configuration`,
     );
-    return configData;
   }
 
   async delete(): Promise<void> {

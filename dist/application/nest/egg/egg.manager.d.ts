@@ -1,14 +1,14 @@
-import type { BaseFetchOptions, NonMethodPartial } from '../../../types.js';
+import type { BaseFetchOptions } from '../../../types.js';
 import type { EggId } from './egg.types.js';
-import { ApplicationEgg } from './egg.class.js';
+import { Egg } from './egg.class.js';
 import type { HttpClient } from '../../../class/HttpClient.js';
 import { BaseCacheManager } from '../../../class/BaseCacheManager.js';
-export declare class ApplicationEggManager extends BaseCacheManager<EggId, ApplicationEgg> {
+export declare class EggManager extends BaseCacheManager<EggId, Egg> {
     private httpClient;
     readonly nestId: number;
     constructor(httpClient: HttpClient, nestId: number, cacheTtl?: number);
-    list(options?: Omit<BaseFetchOptions, 'force'>): Promise<ApplicationEgg[]>;
-    fetch(id: EggId, options?: BaseFetchOptions): Promise<ApplicationEgg>;
-    resolve(id: EggId): ApplicationEgg | (NonMethodPartial<ApplicationEgg> & Pick<ApplicationEgg, 'id'>);
+    list(options?: Omit<BaseFetchOptions, 'force'>): Promise<Egg[]>;
+    fetch(id: EggId, options?: BaseFetchOptions): Promise<Egg>;
+    resolve(id: EggId): Egg;
 }
 //# sourceMappingURL=egg.manager.d.ts.map

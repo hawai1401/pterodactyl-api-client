@@ -1,8 +1,8 @@
 import type { HttpClient } from '../../../class/HttpClient.js';
-import type { ApplicationEggManager } from './egg.manager.js';
+import type { EggManager } from './egg.manager.js';
 import type { BaseEgg } from './egg.types.js';
 import type { BaseFetchOptions } from '../../../types.js';
-export declare class ApplicationEgg {
+export declare class Egg {
     private httpClient;
     private eggManager;
     id: number;
@@ -31,7 +31,7 @@ export declare class ApplicationEgg {
     };
     createdAt: Date;
     updatedAt: Date;
-    constructor(httpClient: HttpClient, eggManager: ApplicationEggManager, data: Partial<BaseEgg> & Pick<BaseEgg, 'id'>);
+    constructor(httpClient: HttpClient, eggManager: EggManager, data: Partial<BaseEgg> & Pick<BaseEgg, 'id'>);
     fetch(options?: BaseFetchOptions): Promise<this>;
 }
 //# sourceMappingURL=egg.class.d.ts.map

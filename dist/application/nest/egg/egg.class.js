@@ -1,5 +1,5 @@
 import { setManagerCacheSymbol } from '../../../symbols.js';
-export class ApplicationEgg {
+export class Egg {
     httpClient;
     eggManager;
     id;
@@ -21,8 +21,7 @@ export class ApplicationEgg {
         Object.assign(this, data);
     }
     async fetch(options) {
-        const eggObject = await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.id}`, { parseDates: true });
-        Object.assign(this, eggObject.attributes);
+        Object.assign(this, (await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.id}`, { parseDates: true })).attributes);
         this.eggManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }

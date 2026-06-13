@@ -1,6 +1,6 @@
 import { removeManagerCacheSymbol, setManagerCacheSymbol, } from '../../symbols.js';
 import { createUserSchema } from './user.schemas.js';
-export class ApplicationUser {
+export class User {
     httpClient;
     userManager;
     id;
@@ -36,8 +36,7 @@ export class ApplicationUser {
         return this;
     }
     async update(payload, options) {
-        const userObject = await this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(payload), { parseDates: true });
-        Object.assign(this, userObject.attributes);
+        Object.assign(this, (await this.httpClient.request('PATCH', `/application/users/${this.id}`, createUserSchema.parse(payload), { parseDates: true })).attributes);
         this.userManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }

@@ -1,4 +1,4 @@
-import type { BaseFetchOptions, NonMethodPartial, Paginated } from '../../../types.js';
+import type { BaseFetchOptions, Paginated } from '../../../types.js';
 import type { CreateApplicationAllocationPayload, ListAllocationsOptions } from './allocation.types.js';
 import { NodeAllocation } from './allocation.class.js';
 import type { HttpClient } from '../../../class/HttpClient.js';
@@ -8,7 +8,7 @@ export declare class NodeAllocationManager extends BaseCacheManager<number, Node
     readonly nodeId: number;
     constructor(httpClient: HttpClient, nodeId: number, cacheTtl?: number);
     list(options?: ListAllocationsOptions): Promise<Paginated<NodeAllocation>>;
-    resolve(id: number): NodeAllocation | (NonMethodPartial<NodeAllocation> & Pick<NodeAllocation, 'id'>);
+    resolve(id: number): NodeAllocation;
     create(payload: CreateApplicationAllocationPayload, options?: Pick<BaseFetchOptions, 'cache'>): Promise<NodeAllocation[]>;
 }
 //# sourceMappingURL=allocation.manager.d.ts.map

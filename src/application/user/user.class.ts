@@ -1,7 +1,7 @@
 import type { infer as zInfer } from 'zod';
 import type { HttpClient } from '../../class/HttpClient.js';
 import type { CamelCasedProperties } from '../../utils/camelCase.js';
-import type { ApplicationServer } from '../server/server.class.js';
+import type { Server } from '../server/server.class.js';
 import type {
   BaseUser,
   CreateUserPayload,
@@ -9,14 +9,14 @@ import type {
   UpdateUserOptions,
   UserObject,
 } from './user.types.js';
-import type { ApplicationUserManager } from './user.manager.js';
+import type { UserManager } from './user.manager.js';
 import {
   removeManagerCacheSymbol,
   setManagerCacheSymbol,
 } from '../../symbols.js';
 import { createUserSchema } from './user.schemas.js';
 
-export class ApplicationUser<HasServers extends boolean = boolean> {
+export class User<HasServers extends boolean = boolean> {
   public id!: number;
   public externalId!: string | null;
   public uuid!: string;
@@ -30,16 +30,16 @@ export class ApplicationUser<HasServers extends boolean = boolean> {
   public createdAt!: Date;
   public updatedAt!: Date;
 
-  public servers?: HasServers extends true ? ApplicationServer[] : never;
+  public servers?: HasServers extends true ? Server[] : never;
 
   constructor(
     private httpClient: HttpClient,
-    private userManager: ApplicationUserManager,
+    private userManager: UserManager,
     data: Partial<BaseUser> &
       Pick<BaseUser, 'id'> &
       (HasServers extends true
         ? {
-            servers: ApplicationServer[];
+            servers: Server[];
           }
         : Record<never, never>),
   ) {
@@ -48,7 +48,7 @@ export class ApplicationUser<HasServers extends boolean = boolean> {
 
   async fetch<IncludeServers extends boolean>(
     options?: FetchUserOptions<IncludeServers>,
-  ): Promise<ApplicationUser<IncludeServers>> {
+  ): Promise<User<IncludeServers>> {
     const userObject = await this.httpClient.request<
       UserObject<IncludeServers extends true ? IncludeServers : false>
     >(
@@ -73,24 +73,27 @@ export class ApplicationUser<HasServers extends boolean = boolean> {
 
     this.userManager[setManagerCacheSymbol](this, options?.cache);
 
-    return this as unknown as ApplicationUser<IncludeServers>;
+    return this as unknown as User<IncludeServers>;
   }
 
   async update(
     payload: CreateUserPayload,
     options?: UpdateUserOptions,
   ): Promise<this> {
-    const userObject = await this.httpClient.request<
-      UserObject,
-      zInfer<typeof createUserSchema>
-    >(
-      'PATCH',
-      `/application/users/${this.id}`,
-      createUserSchema.parse(payload),
-      { parseDates: true },
+    Object.assign(
+      this,
+      (
+        await this.httpClient.request<
+          UserObject,
+          zInfer<typeof createUserSchema>
+        >(
+          'PATCH',
+          `/application/users/${this.id}`,
+          createUserSchema.parse(payload),
+          { parseDates: true },
+        )
+      ).attributes,
     );
-
-    Object.assign(this, userObject.attributes);
 
     this.userManager[setManagerCacheSymbol](this, options?.cache);
 

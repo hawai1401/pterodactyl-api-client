@@ -13,8 +13,20 @@ export const paginationSchema = object({
   per_page: coerce.number<number>().min(1).max(100).optional(),
 });
 
+export const cacheOptionsSchema = object({
+  users: int().positive().optional(),
+  servers: int().positive().optional(),
+  locations: int().positive().optional(),
+  nodes: int().positive().optional(),
+  nests: int().positive().optional(),
+  eggs: int().positive().optional(),
+  allocations: int().positive().optional(),
+  databases: int().positive().optional(),
+}).optional();
+
 export const clientSchema = object({
   apiKey: string().startsWith('ptlc_').or(string().startsWith('ptla_')),
   panelUrl: url(),
   role: literal(['user', 'admin']),
+  cache: cacheOptionsSchema,
 });

@@ -1,7 +1,6 @@
 import type { infer as zInfer } from 'zod';
 import type {
   BaseFetchOptions,
-  NonMethodPartial,
   ObjectListWithPagination,
   Paginated,
 } from '../../types.js';
@@ -21,22 +20,22 @@ import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
 
-export class NodeManager extends BaseCacheManager<
-  number,
-  Node
-> {
+export class NodeManager extends BaseCacheManager<number, Node> {
+  private allocationsTtl: number | undefined;
+
   constructor(
     private httpClient: HttpClient,
     cacheTtl: number = ONE_MINUTE_IN_MILLISECONDS * 5,
+    allocationsTtl?: number,
   ) {
     super(cacheTtl, 'id');
+    this.allocationsTtl = allocationsTtl;
   }
 
   async list(options?: ListNodesOptions): Promise<Paginated<Node>> {
-    const filter = listNodesFilterSchema.optional().parse(options?.filter);
     const queries = buildQueryParams({
       ...options,
-      filter,
+      filter: listNodesFilterSchema.optional().parse(options?.filter),
     });
 
     const nodeObjectList = await this.httpClient.request<
@@ -46,7 +45,12 @@ export class NodeManager extends BaseCacheManager<
     return {
       data: nodeObjectList.data.map((nodeObject) =>
         this.setCache(
-          new Node(this.httpClient, this, nodeObject.attributes),
+          new Node(
+            this.httpClient,
+            this,
+            nodeObject.attributes,
+            this.allocationsTtl,
+          ),
           options?.cache,
         ),
       ),
@@ -54,36 +58,39 @@ export class NodeManager extends BaseCacheManager<
     };
   }
 
-  async fetch(
-    id: number,
-    options?: BaseFetchOptions,
-  ): Promise<Node> {
+  async fetch(id: number, options?: BaseFetchOptions): Promise<Node> {
     const cacheNode = this.getCache(id);
     if (cacheNode && !options?.force) return cacheNode;
 
-    const parsedId = nodeId.parse(id);
-    const nodeObject = await this.httpClient.request<NodeObject>(
-      'GET',
-      `/application/nodes/${parsedId}`,
-      { parseDates: true },
-    );
-
     return this.setCache(
-      new Node(this.httpClient, this, nodeObject.attributes),
+      new Node(
+        this.httpClient,
+        this,
+        (
+          await this.httpClient.request<NodeObject>(
+            'GET',
+            `/application/nodes/${nodeId.parse(id)}`,
+            { parseDates: true },
+          )
+        ).attributes,
+        this.allocationsTtl,
+      ),
       options?.cache,
     );
   }
 
-  resolve(
-    id: number,
-  ):
-    | Node
-    | (NonMethodPartial<Node> & Pick<Node, 'id'>) {
-    return (
-      this.getCache(id) ??
-      new Node(this.httpClient, this, {
-        id: nodeId.parse(id),
-      })
+  resolve(id: number): Node {
+    return super.resolve(
+      id,
+      () =>
+        new Node(
+          this.httpClient,
+          this,
+          {
+            id: nodeId.parse(id),
+          },
+          this.allocationsTtl,
+        ),
     );
   }
 
@@ -91,14 +98,20 @@ export class NodeManager extends BaseCacheManager<
     payload: CreateNodePayload,
     options?: Pick<BaseFetchOptions, 'cache'>,
   ): Promise<Node> {
-    const nodeObject = await this.httpClient.request<
-      NodeObject,
-      zInfer<typeof createNodeSchema>
-    >('POST', '/application/nodes', createNodeSchema.parse(payload), {
-      parseDates: true,
-    });
     return this.setCache(
-      new Node(this.httpClient, this, nodeObject.attributes),
+      new Node(
+        this.httpClient,
+        this,
+        (
+          await this.httpClient.request<
+            NodeObject,
+            zInfer<typeof createNodeSchema>
+          >('POST', '/application/nodes', createNodeSchema.parse(payload), {
+            parseDates: true,
+          })
+        ).attributes,
+        this.allocationsTtl,
+      ),
       options?.cache,
     );
   }

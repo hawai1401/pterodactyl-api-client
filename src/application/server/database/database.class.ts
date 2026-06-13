@@ -1,5 +1,5 @@
 import type { HttpClient } from '../../../class/HttpClient.js';
-import type { ApplicationServerDatabaseManager } from './database.manager.js';
+import type { ServerDatabaseManager } from './database.manager.js';
 import {
   removeManagerCacheSymbol,
   setManagerCacheSymbol,
@@ -10,7 +10,7 @@ import type {
 } from './database.types.js';
 import type { BaseFetchOptions } from '../../../types.js';
 
-export class ApplicationServerDatabase {
+export class ServerDatabase {
   public id!: number;
   public server!: number;
   public host!: number;
@@ -23,7 +23,7 @@ export class ApplicationServerDatabase {
 
   constructor(
     private httpClient: HttpClient,
-    private databaseManager: ApplicationServerDatabaseManager,
+    private databaseManager: ServerDatabaseManager,
     data: Partial<BaseApplicationDatabase> &
       Pick<BaseApplicationDatabase, 'id' | 'server'>,
   ) {
@@ -31,14 +31,16 @@ export class ApplicationServerDatabase {
   }
 
   async fetch(options?: BaseFetchOptions): Promise<this> {
-    const databaseObject =
-      await this.httpClient.request<ApplicationDatabaseObject>(
-        'GET',
-        `/application/servers/${this.server}/databases/${this.id}`,
-        { parseDates: true },
-      );
-
-    Object.assign(this, databaseObject.attributes);
+    Object.assign(
+      this,
+      (
+        await this.httpClient.request<ApplicationDatabaseObject>(
+          'GET',
+          `/application/servers/${this.server}/databases/${this.id}`,
+          { parseDates: true },
+        )
+      ).attributes,
+    );
 
     this.databaseManager[setManagerCacheSymbol](this, options?.cache);
 

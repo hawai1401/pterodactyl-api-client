@@ -26,27 +26,24 @@ export class Node {
     updatedAt;
     allocatedResources;
     allocations;
-    constructor(httpClient, nodeManager, data) {
+    constructor(httpClient, nodeManager, data, allocationsTtl) {
         this.httpClient = httpClient;
         this.nodeManager = nodeManager;
         Object.assign(this, data);
-        this.allocations = new NodeAllocationManager(this.httpClient, this.id);
+        this.allocations = new NodeAllocationManager(this.httpClient, this.id, allocationsTtl);
     }
     async fetch(options) {
-        const nodeObject = await this.httpClient.request('GET', `/application/nodes/${this.id}`, { parseDates: true });
-        Object.assign(this, nodeObject.attributes);
+        Object.assign(this, (await this.httpClient.request('GET', `/application/nodes/${this.id}`, { parseDates: true })).attributes);
         this.nodeManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }
     async update(payload, options) {
-        const nodeObject = await this.httpClient.request('PATCH', `/application/nodes/${this.id}`, createNodeSchema.parse(payload), { parseDates: true });
-        Object.assign(this, nodeObject.attributes);
+        Object.assign(this, (await this.httpClient.request('PATCH', `/application/nodes/${this.id}`, createNodeSchema.parse(payload), { parseDates: true })).attributes);
         this.nodeManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }
     async configuration() {
-        const configData = await this.httpClient.request('GET', `/application/nodes/${this.id}/configuration`);
-        return configData;
+        return this.httpClient.request('GET', `/application/nodes/${this.id}/configuration`);
     }
     async delete() {
         this.nodeManager[removeManagerCacheSymbol](this.id);

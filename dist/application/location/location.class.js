@@ -1,6 +1,6 @@
 import { removeManagerCacheSymbol, setManagerCacheSymbol, } from '../../symbols.js';
 import { updateLocationSchema } from './location.schemas.js';
-export class ApplicationLocation {
+export class Location {
     httpClient;
     locationManager;
     id;
@@ -14,14 +14,12 @@ export class ApplicationLocation {
         Object.assign(this, data);
     }
     async fetch(options) {
-        const locationObject = await this.httpClient.request('GET', `/application/locations/${this.id}`, { parseDates: true });
-        Object.assign(this, locationObject.attributes);
+        Object.assign(this, (await this.httpClient.request('GET', `/application/locations/${this.id}`, { parseDates: true })).attributes);
         this.locationManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }
     async update(payload, options) {
-        const locationObject = await this.httpClient.request('PATCH', `/application/locations/${this.id}`, updateLocationSchema.parse(payload), { parseDates: true });
-        Object.assign(this, locationObject.attributes);
+        Object.assign(this, (await this.httpClient.request('PATCH', `/application/locations/${this.id}`, updateLocationSchema.parse(payload), { parseDates: true })).attributes);
         this.locationManager[setManagerCacheSymbol](this, options?.cache);
         return this;
     }

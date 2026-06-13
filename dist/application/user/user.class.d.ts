@@ -1,8 +1,8 @@
 import type { HttpClient } from '../../class/HttpClient.js';
-import type { ApplicationServer } from '../server/server.class.js';
+import type { Server } from '../server/server.class.js';
 import type { BaseUser, CreateUserPayload, FetchUserOptions, UpdateUserOptions } from './user.types.js';
-import type { ApplicationUserManager } from './user.manager.js';
-export declare class ApplicationUser<HasServers extends boolean = boolean> {
+import type { UserManager } from './user.manager.js';
+export declare class User<HasServers extends boolean = boolean> {
     private httpClient;
     private userManager;
     id: number;
@@ -17,11 +17,11 @@ export declare class ApplicationUser<HasServers extends boolean = boolean> {
     '2fa': boolean;
     createdAt: Date;
     updatedAt: Date;
-    servers?: HasServers extends true ? ApplicationServer[] : never;
-    constructor(httpClient: HttpClient, userManager: ApplicationUserManager, data: Partial<BaseUser> & Pick<BaseUser, 'id'> & (HasServers extends true ? {
-        servers: ApplicationServer[];
+    servers?: HasServers extends true ? Server[] : never;
+    constructor(httpClient: HttpClient, userManager: UserManager, data: Partial<BaseUser> & Pick<BaseUser, 'id'> & (HasServers extends true ? {
+        servers: Server[];
     } : Record<never, never>));
-    fetch<IncludeServers extends boolean>(options?: FetchUserOptions<IncludeServers>): Promise<ApplicationUser<IncludeServers>>;
+    fetch<IncludeServers extends boolean>(options?: FetchUserOptions<IncludeServers>): Promise<User<IncludeServers>>;
     update(payload: CreateUserPayload, options?: UpdateUserOptions): Promise<this>;
     delete(): Promise<void>;
 }
