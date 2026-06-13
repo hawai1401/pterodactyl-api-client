@@ -1,4 +1,4 @@
 pnpm run format
 pnpm run lint
 pnpm run build
-git add dist
+git add dist README.md

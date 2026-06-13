@@ -1,9 +1,9 @@
 import type { HttpClient } from '../../class/HttpClient.js';
-import type { ServerManager } from './server.manager.js';
+import type { ApplicationServerManager } from './server.manager.js';
 import { ServerDatabaseManager } from './database/database.manager.js';
 import type { BaseApplicationServer, UpdateApplicationServerPayload, Status } from './server.types.js';
 import type { BaseFetchOptions } from '../../types.js';
-export declare class Server<ServerStatus extends Status = Status> {
+export declare class ApplicationServer<ServerStatus extends Status = Status> {
     private httpClient;
     private serverManager;
     id: number;
@@ -42,7 +42,7 @@ export declare class Server<ServerStatus extends Status = Status> {
     createdAt: Date;
     databases: ServerDatabaseManager;
     private databasesTtl;
-    constructor(httpClient: HttpClient, serverManager: ServerManager, data: Partial<BaseApplicationServer> & (Pick<BaseApplicationServer, 'id'> | Pick<BaseApplicationServer, 'externalId'>), databasesTtl?: number);
+    constructor(httpClient: HttpClient, serverManager: ApplicationServerManager, data: Partial<BaseApplicationServer> & (Pick<BaseApplicationServer, 'id'> | Pick<BaseApplicationServer, 'externalId'>), databasesTtl?: number);
     fetch(options?: BaseFetchOptions): Promise<this>;
     update(payload: UpdateApplicationServerPayload, options?: Omit<BaseFetchOptions, 'force'>): Promise<this>;
     suspend(): Promise<void>;

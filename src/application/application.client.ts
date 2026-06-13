@@ -2,7 +2,7 @@ import { HttpClient } from '../class/HttpClient.js';
 import { LocationManager } from './location/location.manager.js';
 import { NestManager } from './nest/nest.manager.js';
 import { NodeManager } from './node/node.manager.js';
-import { ServerManager } from './server/server.manager.js';
+import { ApplicationServerManager } from './server/server.manager.js';
 import { UserManager } from './user/user.manager.js';
 import type { CacheTtlOptions } from '../types.js';
 
@@ -10,7 +10,7 @@ export class ApplicationAPI {
   private httpClient: HttpClient;
   readonly panelUrl: URL;
   public users: UserManager;
-  public servers: ServerManager;
+  public servers: ApplicationServerManager;
   public locations: LocationManager;
   public nodes: NodeManager;
   public nests: NestManager;
@@ -26,7 +26,7 @@ export class ApplicationAPI {
   }) {
     this.panelUrl = panelUrl;
     this.httpClient = new HttpClient(panelUrl, apiKey);
-    this.servers = new ServerManager(
+    this.servers = new ApplicationServerManager(
       this.httpClient,
       cache?.servers,
       cache?.databases,

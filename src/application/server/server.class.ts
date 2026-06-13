@@ -1,6 +1,6 @@
 import type { infer as zInfer, ZodObject } from 'zod';
 import type { HttpClient } from '../../class/HttpClient.js';
-import type { ServerManager } from './server.manager.js';
+import type { ApplicationServerManager } from './server.manager.js';
 import {
   setManagerCacheSymbol,
   removeManagerCacheSymbol,
@@ -19,7 +19,7 @@ import type {
 } from './server.types.js';
 import type { BaseFetchOptions } from '../../types.js';
 
-export class Server<ServerStatus extends Status = Status> {
+export class ApplicationServer<ServerStatus extends Status = Status> {
   public id!: number;
   public externalId!: null | string;
   public uuid!: string;
@@ -60,7 +60,7 @@ export class Server<ServerStatus extends Status = Status> {
 
   constructor(
     private httpClient: HttpClient,
-    private serverManager: ServerManager,
+    private serverManager: ApplicationServerManager,
     data: Partial<BaseApplicationServer> &
       (
         | Pick<BaseApplicationServer, 'id'>

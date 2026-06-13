@@ -1,5 +1,5 @@
 import type { BaseFetchOptions, BasePayload, Filters, PaginationFetchOptions, Sorts } from '../../types.js';
-import type { Server } from '../server/server.class.js';
+import type { ApplicationServer } from '../server/server.class.js';
 import type { ApplicationServerObject } from '../server/server.types.js';
 export type UserId = number;
 export type UserExternalId = string;
@@ -56,7 +56,7 @@ export interface BaseUser {
     updatedAt: Date;
 }
 export interface UserWithServers extends BaseUser {
-    servers: Server[];
+    servers: ApplicationServer[];
 }
 export interface CreateUserPayload extends BasePayload {
     email: string;

@@ -18,12 +18,15 @@ import {
   applicationServerId,
   applicationServerExternalId,
 } from './server.schemas.js';
-import { Server } from './server.class.js';
+import { ApplicationServer } from './server.class.js';
 import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
 
-export class ServerManager extends BaseCacheManager<number | string, Server> {
+export class ApplicationServerManager extends BaseCacheManager<
+  number | string,
+  ApplicationServer
+> {
   private databasesTtl: number | undefined;
 
   constructor(
@@ -35,7 +38,9 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
     this.databasesTtl = databasesTtl;
   }
 
-  async list(options?: ListServersOptions): Promise<Paginated<Server>> {
+  async list(
+    options?: ListServersOptions,
+  ): Promise<Paginated<ApplicationServer>> {
     const queries = buildQueryParams({
       ...options,
       filter: listServersFilterSchema.optional().parse(options?.filter),
@@ -48,7 +53,7 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
     return {
       data: serverObjectList.data.map((serverObject) =>
         this.setCache(
-          new Server(
+          new ApplicationServer(
             this.httpClient,
             this,
             serverObject.attributes,
@@ -64,14 +69,14 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
   async fetch(
     server: ApplicationServerIds,
     options?: BaseFetchOptions,
-  ): Promise<Server> {
+  ): Promise<ApplicationServer> {
     const cacheServer =
       (server.id && this.getCache(server.id)) ??
       (server.external_id && this.getCache(server.external_id));
     if (cacheServer && !options?.force) return cacheServer;
 
     return this.setCache(
-      new Server(
+      new ApplicationServer(
         this.httpClient,
         this,
         (
@@ -90,10 +95,10 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
     );
   }
 
-  resolve(server: number | string): Server {
+  resolve(server: number | string): ApplicationServer {
     return super.resolve(server, () => {
       if (typeof server === 'number') {
-        return new Server(
+        return new ApplicationServer(
           this.httpClient,
           this,
           {
@@ -102,7 +107,7 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
           this.databasesTtl,
         );
       } else {
-        return new Server(
+        return new ApplicationServer(
           this.httpClient,
           this,
           {
@@ -118,9 +123,9 @@ export class ServerManager extends BaseCacheManager<number | string, Server> {
   async create(
     payload: CreateServerPayload,
     options?: Pick<BaseFetchOptions, 'cache'>,
-  ): Promise<Server> {
+  ): Promise<ApplicationServer> {
     return this.setCache(
-      new Server(
+      new ApplicationServer(
         this.httpClient,
         this,
         (

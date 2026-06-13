@@ -3,8 +3,8 @@ import { createUserSchema, listUsersFilterSchema, userId, userIdSchema, } from '
 import { User } from './user.class.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
-import { Server } from '../server/server.class.js';
-import { ServerManager } from '../server/server.manager.js';
+import { ApplicationServer } from '../server/server.class.js';
+import { ApplicationServerManager } from '../server/server.manager.js';
 export class UserManager extends BaseCacheManager {
     httpClient;
     serverManager;
@@ -26,7 +26,7 @@ export class UserManager extends BaseCacheManager {
                 const { relationships, ...attributes } = userObject.attributes;
                 return this.setCache(new User(this.httpClient, this, {
                     ...attributes,
-                    servers: relationships.servers.data.map((serverObject) => new Server(this.httpClient, this.serverManager, serverObject.attributes)),
+                    servers: relationships.servers.data.map((serverObject) => new ApplicationServer(this.httpClient, this.serverManager, serverObject.attributes)),
                 }), options.cache);
             }),
             pagination: userObjectList.meta.pagination,
@@ -45,7 +45,7 @@ export class UserManager extends BaseCacheManager {
         const { relationships, ...attributes } = userObject.attributes;
         return this.setCache(new User(this.httpClient, this, {
             ...attributes,
-            servers: relationships.servers.data.map((serverObject) => new Server(this.httpClient, this.serverManager, serverObject.attributes)),
+            servers: relationships.servers.data.map((serverObject) => new ApplicationServer(this.httpClient, this.serverManager, serverObject.attributes)),
         }), options.cache);
     }
     resolve(user) {

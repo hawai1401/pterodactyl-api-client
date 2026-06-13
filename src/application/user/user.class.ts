@@ -1,7 +1,7 @@
 import type { infer as zInfer } from 'zod';
 import type { HttpClient } from '../../class/HttpClient.js';
 import type { CamelCasedProperties } from '../../utils/camelCase.js';
-import type { Server } from '../server/server.class.js';
+import type { ApplicationServer } from '../server/server.class.js';
 import type {
   BaseUser,
   CreateUserPayload,
@@ -30,7 +30,7 @@ export class User<HasServers extends boolean = boolean> {
   public createdAt!: Date;
   public updatedAt!: Date;
 
-  public servers?: HasServers extends true ? Server[] : never;
+  public servers?: HasServers extends true ? ApplicationServer[] : never;
 
   constructor(
     private httpClient: HttpClient,
@@ -39,7 +39,7 @@ export class User<HasServers extends boolean = boolean> {
       Pick<BaseUser, 'id'> &
       (HasServers extends true
         ? {
-            servers: Server[];
+            servers: ApplicationServer[];
           }
         : Record<never, never>),
   ) {

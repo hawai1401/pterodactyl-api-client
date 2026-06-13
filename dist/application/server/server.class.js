@@ -1,7 +1,7 @@
 import { setManagerCacheSymbol, removeManagerCacheSymbol, } from '../../symbols.js';
 import { setApplicationServerDetailsSchema, setApplicationServerConfigurationSchema, setApplicationServerStartupSchema, } from './server.schemas.js';
 import { ServerDatabaseManager } from './database/database.manager.js';
-export class Server {
+export class ApplicationServer {
     httpClient;
     serverManager;
     id;

@@ -25,8 +25,8 @@ import { User } from './user.class.js';
 import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
-import { Server } from '../server/server.class.js';
-import { ServerManager } from '../server/server.manager.js';
+import { ApplicationServer } from '../server/server.class.js';
+import { ApplicationServerManager } from '../server/server.manager.js';
 
 export class UserManager extends BaseCacheManager<
   UserId | UserExternalId,
@@ -34,7 +34,7 @@ export class UserManager extends BaseCacheManager<
 > {
   constructor(
     private httpClient: HttpClient,
-    private serverManager: ServerManager,
+    private serverManager: ApplicationServerManager,
     cacheTtl: number = ONE_MINUTE_IN_MILLISECONDS * 5,
   ) {
     super(cacheTtl, 'id', 'externalId');
@@ -77,7 +77,7 @@ export class UserManager extends BaseCacheManager<
             ...attributes,
             servers: relationships.servers.data.map(
               (serverObject) =>
-                new Server(
+                new ApplicationServer(
                   this.httpClient,
                   this.serverManager,
                   serverObject.attributes,
@@ -130,7 +130,7 @@ export class UserManager extends BaseCacheManager<
         ...attributes,
         servers: relationships.servers.data.map(
           (serverObject) =>
-            new Server(
+            new ApplicationServer(
               this.httpClient,
               this.serverManager,
               serverObject.attributes,

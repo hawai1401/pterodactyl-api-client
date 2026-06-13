@@ -14,6 +14,7 @@ export * from './startup/index.js';
 export * from './subuser/index.js';
 export * from './subusers/index.js';
 
-export * from './server.client.js';
+export * from './server.class.js';
+export * from './server.manager.js';
 export * from './server.schemas.js';
 export * from './server.types.js';

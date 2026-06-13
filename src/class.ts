@@ -20,7 +20,12 @@ export class PterodactylAPIClient<T extends AccountRole> {
     this.role = clientSchema.parse(options).role as T;
     this.apiKey = clientSchema.parse(options).apiKey;
 
-    this.user = new ClientAPI({ panelUrl: this.panelUrl, apiKey: this.apiKey });
+    this.user = new ClientAPI({
+      panelUrl: this.panelUrl,
+      apiKey: this.apiKey,
+      cacheTtl: clientSchema.parse(options).cache?.servers,
+    });
+
     if (this.role === 'admin')
       this.admin = new ApplicationAPI({
         panelUrl: this.panelUrl,

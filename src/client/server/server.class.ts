@@ -1,5 +1,10 @@
 import { HttpClient } from '../../class/HttpClient.js';
-import type { ObjectListWithPagination, Paginated } from '../../types.js';
+import type { CamelCasedProperties } from '../../utils/camelCase.js';
+import type {
+  ObjectListWithPagination,
+  Paginated,
+  BaseFetchOptions,
+} from '../../types.js';
 import { buildQueryParams } from '../../utils/buildQueryParams.js';
 import { AllocationClient } from './allocation/allocation.client.js';
 import { AllocationsClient } from './allocations/allocations.client.js';
@@ -16,7 +21,6 @@ import { SchedulesClient } from './schedules/schedules.client.js';
 import {
   setUserServerDetailsSchema,
   userServerActivityEvent,
-  userServerId,
 } from './server.schemas.js';
 import type {
   SetUserServerDetailsPayload,
@@ -25,12 +29,52 @@ import type {
   FetchUserServerActivityLogsOptions,
   ActivityLogObject,
   ActivityLog,
+  UserServer,
 } from './server.types.js';
 import { StartupClient } from './startup/startup.client.js';
 import { SubuserClient } from './subuser/subuser.client.js';
 import { SubusersClient } from './subusers/subusers.client.js';
+import type { ClientServerManager } from './server.manager.js';
+import { setManagerCacheSymbol } from '../../symbols.js';
 
-export class UserServerClient {
+export class ClientServer {
+  public serverOwner!: boolean;
+  public identifier!: string;
+  public serverIdentifier!: string;
+  public internalId!: number;
+  public uuid!: string;
+  public name!: string;
+  public node!: string;
+  public isNodeUnderMaintenance!: boolean;
+  public sftpDetails!: {
+    ip: string;
+    port: number;
+  };
+  public description!: string;
+  public limits!: {
+    memory: number;
+    swap: number;
+    disk: number;
+    io: number;
+    cpu: number;
+    threads: null | string;
+    oomDisabled: boolean;
+  };
+  public invocation!: string;
+  public dockerImage!: string;
+  public eggFeatures!: string[];
+  public featureLimits!: {
+    databases: number;
+    allocations: number;
+    backups: number;
+  };
+  public isTransferring!: boolean;
+  public status!: 'installing' | 'suspended' | null;
+  public isInstalling!: boolean;
+  public isSuspended!: boolean;
+
+  public id!: string;
+
   public allocations: AllocationsClient;
   public backups: BackupsClient;
   public console: ConsoleClient;
@@ -42,14 +86,15 @@ export class UserServerClient {
   public startup: StartupClient;
   public subusers: SubusersClient;
 
-  readonly id: string;
-
   constructor(
     private httpClient: HttpClient,
     readonly panelUrl: URL,
-    id: string,
+    private clientServerManager: ClientServerManager,
+    data: Partial<CamelCasedProperties<UserServer['attributes']>> &
+      Pick<CamelCasedProperties<UserServer['attributes']>, 'identifier'>,
   ) {
-    this.id = userServerId.parse(id);
+    Object.assign(this, data);
+    this.id = this.identifier;
 
     this.allocations = new AllocationsClient(httpClient, this.id);
     this.backups = new BackupsClient(httpClient, this.id);
@@ -106,15 +151,18 @@ export class UserServerClient {
     return new SubuserClient(this.httpClient, this.id, subuser);
   }
 
-  fetch() {
-    return this.httpClient.request<UserServerWithDetails>(
+  async fetch(options?: BaseFetchOptions): Promise<this> {
+    const serverObject = await this.httpClient.request<UserServerWithDetails>(
       'GET',
       `/client/servers/${this.id}`,
       { parseDates: true },
     );
+    Object.assign(this, serverObject.attributes);
+    this.clientServerManager[setManagerCacheSymbol](this, options?.cache);
+    return this;
   }
 
-  setDetails(payload: SetUserServerDetailsPayload) {
+  updateDetails(payload: SetUserServerDetailsPayload) {
     return this.httpClient.request<void, SetUserServerDetailsPayload>(
       'POST',
       `/client/servers/${this.id}/settings/rename`,
