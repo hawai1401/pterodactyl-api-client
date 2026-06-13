@@ -1,5 +1,4 @@
 export * from './location/index.js';
-export * from './locations/index.js';
 export * from './nest/index.js';
 export * from './nests/index.js';
 export * from './node/index.js';

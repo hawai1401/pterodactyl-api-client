@@ -1,5 +1,4 @@
-import { LocationClient } from './location/location.client.js';
-import { LocationsClient } from './locations/locations.client.js';
+import { ApplicationLocationManager } from './location/location.manager.js';
 import { NestClient } from './nest/nest.client.js';
 import { NestsClient } from './nests/nests.client.js';
 import { NodeClient } from './node/node.client.js';
@@ -13,14 +12,13 @@ export declare class ApplicationAPI {
     readonly panelUrl: URL;
     users: ApplicationUserManager;
     servers: ServersClient;
-    locations: LocationsClient;
+    locations: ApplicationLocationManager;
     nodes: NodesClient;
     nests: NestsClient;
     constructor({ apiKey, panelUrl }: {
         apiKey: string;
         panelUrl: URL;
     });
-    location(id: number): LocationClient;
     nest(id: number): NestClient;
     node(id: number): NodeClient;
     server<Ids extends ApplicationServerId>(id: Ids): ServerClient<Ids>;

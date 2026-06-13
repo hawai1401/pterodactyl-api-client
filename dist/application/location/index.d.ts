@@ -1,4 +1,5 @@
-export * from './location.client.js';
-export * from './location.types.js';
+export * from './location.class.js';
+export * from './location.manager.js';
 export * from './location.schemas.js';
+export * from './location.types.js';
 //# sourceMappingURL=index.d.ts.map
