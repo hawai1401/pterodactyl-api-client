@@ -1,3 +1,5 @@
+export type NestId = number;
+
 export interface NestObject {
   object: 'nest';
   attributes: {
@@ -10,7 +12,8 @@ export interface NestObject {
     updated_at: Date;
   };
 }
-export interface Nest {
+
+export interface BaseNest {
   id: number;
   uuid: string;
   author: string;

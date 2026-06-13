@@ -1,3 +1,5 @@
+export type EggId = number;
+
 export interface EggObject {
   object: 'egg';
   attributes: {
@@ -29,7 +31,8 @@ export interface EggObject {
     updated_at: Date;
   };
 }
-export interface Egg {
+
+export interface BaseEgg {
   id: number;
   uuid: string;
   name: string;

@@ -1,7 +1,6 @@
 import { HttpClient } from '../class/HttpClient.js';
 import { ApplicationLocationManager } from './location/location.manager.js';
-import { NestClient } from './nest/nest.client.js';
-import { NestsClient } from './nests/nests.client.js';
+import { NestManager } from './nest/nest.manager.js';
 import { NodeClient } from './node/node.client.js';
 import { NodesClient } from './nodes/nodes.client.js';
 import { ServerClient } from './server/server.client.js';
@@ -22,10 +21,7 @@ export class ApplicationAPI {
         this.servers = new ServersClient(this.httpClient);
         this.locations = new ApplicationLocationManager(this.httpClient);
         this.nodes = new NodesClient(this.httpClient);
-        this.nests = new NestsClient(this.httpClient);
-    }
-    nest(id) {
-        return new NestClient(this.httpClient, id);
+        this.nests = new NestManager(this.httpClient);
     }
     node(id) {
         return new NodeClient(this.httpClient, id);
