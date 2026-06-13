@@ -5,10 +5,8 @@ import type {
   PaginationFetchOptions,
   Sorts,
 } from '../../types.js';
-import type {
-  ApplicationServer,
-  ApplicationServerObject,
-} from '../servers/servers.types.js';
+import type { ApplicationServer } from '../server/server.class.js';
+import type { ApplicationServerObject } from '../server/server.types.js';
 
 export type UserId = number;
 export type UserExternalId = string;

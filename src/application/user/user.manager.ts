@@ -26,6 +26,8 @@ import { ApplicationUser } from './user.class.js';
 import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
+import { ApplicationServer } from '../server/server.class.js';
+import { ApplicationServerManager } from '../server/server.manager.js';
 
 export class ApplicationUserManager extends BaseCacheManager<
   UserId | UserExternalId,
@@ -33,6 +35,7 @@ export class ApplicationUserManager extends BaseCacheManager<
 > {
   constructor(
     private httpClient: HttpClient,
+    private serverManager: ApplicationServerManager,
     cacheTtl: number = ONE_MINUTE_IN_MILLISECONDS * 5,
   ) {
     super(cacheTtl, 'id', 'externalId');
@@ -77,7 +80,12 @@ export class ApplicationUserManager extends BaseCacheManager<
           new ApplicationUser(this.httpClient, this, {
             ...attributes,
             servers: relationships.servers.data.map(
-              (serverObject) => serverObject.attributes,
+              (serverObject) =>
+                new ApplicationServer(
+                  this.httpClient,
+                  this.serverManager,
+                  serverObject.attributes,
+                ),
             ),
           }),
           options.cache,
@@ -126,7 +134,12 @@ export class ApplicationUserManager extends BaseCacheManager<
       new ApplicationUser(this.httpClient, this, {
         ...attributes,
         servers: relationships.servers.data.map(
-          (serverObject) => serverObject.attributes,
+          (serverObject) =>
+            new ApplicationServer(
+              this.httpClient,
+              this.serverManager,
+              serverObject.attributes,
+            ),
         ),
       }),
       options.cache,

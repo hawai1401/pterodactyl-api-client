@@ -1,7 +1,7 @@
 import type { infer as zInfer } from 'zod';
 import type { HttpClient } from '../../class/HttpClient.js';
 import type { CamelCasedProperties } from '../../utils/camelCase.js';
-import type { ApplicationServer } from '../servers/servers.types.js';
+import type { ApplicationServer } from '../server/server.class.js';
 import type {
   BaseUser,
   CreateUserPayload,

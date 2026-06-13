@@ -1,5 +1,5 @@
 import type { HttpClient } from '../../class/HttpClient.js';
-import type { ApplicationServer } from '../servers/servers.types.js';
+import type { ApplicationServer } from '../server/server.class.js';
 import type { BaseUser, CreateUserPayload, FetchUserOptions, UpdateUserOptions } from './user.types.js';
 import type { ApplicationUserManager } from './user.manager.js';
 export declare class ApplicationUser<HasServers extends boolean = boolean> {

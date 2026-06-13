@@ -15,7 +15,8 @@ export interface ApplicationDatabaseObject {
     updated_at: Date;
   };
 }
-export interface ApplicationDatabase {
+
+export interface BaseApplicationDatabase {
   id: number;
   server: number;
   host: number;
