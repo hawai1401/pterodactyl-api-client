@@ -109,7 +109,8 @@ export type ServerSubuserEvent = `subuser.${CreateUpdateDelete}`;
 export type ServerAllocationEvent = `allocation.${CreateDelete | 'notes' | 'primary'}`;
 export type ServerTaskEvent = `task.${CreateUpdateDelete}`;
 export type ServerBackupEvent = `backup.${'start' | 'unlock' | 'lock' | 'delete' | 'download' | 'restore' | 'restore-complete'}`;
-export type ServerEvent = `server:${ServerFileEvent | ServerConsoleEvent | ServerSettingsEvent | ServerReinstallEvent | ServerStartupEvent | ServerDatabaseEvent | ServerScheduleEvent | ServerSubuserEvent | ServerAllocationEvent | ServerTaskEvent | ServerBackupEvent}`;
+export type ServerPowerEvent = `power.${Signal}`;
+export type ServerEvent = `server:${ServerFileEvent | ServerConsoleEvent | ServerSettingsEvent | ServerReinstallEvent | ServerStartupEvent | ServerDatabaseEvent | ServerScheduleEvent | ServerSubuserEvent | ServerAllocationEvent | ServerTaskEvent | ServerBackupEvent | ServerPowerEvent}`;
 export interface OldNew<T extends string | null = string> {
     old: T;
     new: T;

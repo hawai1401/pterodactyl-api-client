@@ -175,6 +175,8 @@ export type ServerTaskEvent = `task.${CreateUpdateDelete}`;
 export type ServerBackupEvent =
   `backup.${'start' | 'unlock' | 'lock' | 'delete' | 'download' | 'restore' | 'restore-complete'}`;
 
+export type ServerPowerEvent = `power.${Signal}`;
+
 export type ServerEvent = `server:${
   | ServerFileEvent
   | ServerConsoleEvent
@@ -186,7 +188,8 @@ export type ServerEvent = `server:${
   | ServerSubuserEvent
   | ServerAllocationEvent
   | ServerTaskEvent
-  | ServerBackupEvent}`;
+  | ServerBackupEvent
+  | ServerPowerEvent}`;
 
 export interface OldNew<T extends string | null = string> {
   old: T;
