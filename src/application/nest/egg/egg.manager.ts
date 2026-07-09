@@ -18,12 +18,19 @@ export class EggManager extends BaseCacheManager<EggId, Egg> {
   async list(options?: Omit<BaseFetchOptions, 'force'>): Promise<Egg[]> {
     const res = await this.httpClient.request<ObjectList<EggObject>>(
       'GET',
-      `/application/nests/${this.nestId}/eggs`,
+      `/application/nests/${this.nestId}/eggs?include=variables`,
       { parseDates: true },
     );
     return res.data.map((eggObject) =>
       this.setCache(
-        new Egg(this.httpClient, this, eggObject.attributes),
+        new Egg(this.httpClient, this, {
+          ...eggObject.attributes,
+          relationships: {
+            variables: eggObject.attributes.relationships.variables.map(
+              (eggVariable) => eggVariable.attributes,
+            ),
+          },
+        }),
         options?.cache,
       ),
     );
@@ -33,18 +40,20 @@ export class EggManager extends BaseCacheManager<EggId, Egg> {
     const cacheEgg = this.getCache(id);
     if (cacheEgg && !options?.force) return cacheEgg;
 
+    const eggObject = await this.httpClient.request<EggObject>(
+      'GET',
+      `/application/nests/${this.nestId}/eggs/${nestEggId.parse(id)}?include=variables`,
+      { parseDates: true },
+    );
     return this.setCache(
-      new Egg(
-        this.httpClient,
-        this,
-        (
-          await this.httpClient.request<EggObject>(
-            'GET',
-            `/application/nests/${this.nestId}/eggs/${nestEggId.parse(id)}`,
-            { parseDates: true },
-          )
-        ).attributes,
-      ),
+      new Egg(this.httpClient, this, {
+        ...eggObject.attributes,
+        relationships: {
+          variables: eggObject.attributes.relationships.variables.map(
+            (eggVariable) => eggVariable.attributes,
+          ),
+        },
+      }),
       options?.cache,
     );
   }

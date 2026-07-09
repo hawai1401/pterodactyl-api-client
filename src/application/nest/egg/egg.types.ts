@@ -1,4 +1,37 @@
+import type { EnvironmentVariable } from '../../../types.js';
+
 export type EggId = number;
+
+export interface ApplicationEggVariableObject {
+  object: 'egg_variable';
+  attributes: {
+    id: number;
+    egg_id: number;
+    name: string;
+    description: string;
+    env_variable: EnvironmentVariable;
+    default_value: string;
+    user_viewable: boolean;
+    user_editable: boolean;
+    rules: string;
+    created_at: Date;
+    updated_at: Date;
+  };
+}
+
+export interface ApplicationEggVariable {
+  id: number;
+  eggId: number;
+  name: string;
+  description: string;
+  envVariable: EnvironmentVariable;
+  defaultValue: string;
+  userViewable: boolean;
+  userEditable: boolean;
+  rules: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export interface EggObject {
   object: 'egg';
@@ -29,6 +62,7 @@ export interface EggObject {
     };
     created_at: Date;
     updated_at: Date;
+    relationships: { variables: ApplicationEggVariableObject[] };
   };
 }
 
@@ -59,4 +93,5 @@ export interface BaseEgg {
   };
   createdAt: Date;
   updatedAt: Date;
+  relationships: { variables: ApplicationEggVariable[] };
 }

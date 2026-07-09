@@ -3,6 +3,7 @@ import type { EggManager } from './egg.manager.js';
 import { setManagerCacheSymbol } from '../../../symbols.js';
 import type { BaseEgg, EggObject } from './egg.types.js';
 import type { BaseFetchOptions } from '../../../types.js';
+import type { EggVariable } from '../../../client/index.js';
 
 export class Egg {
   public id!: number;
@@ -31,13 +32,17 @@ export class Egg {
   };
   public createdAt!: Date;
   public updatedAt!: Date;
+  public variables!: EggVariable[];
 
   constructor(
     private httpClient: HttpClient,
     private eggManager: EggManager,
     data: Partial<BaseEgg> & Pick<BaseEgg, 'id'>,
   ) {
-    Object.assign(this, data);
+    const { relationships, ...attributes } = data;
+
+    Object.assign(this, attributes);
+    Object.assign(this, { variables: relationships?.variables });
   }
 
   async fetch(options?: BaseFetchOptions): Promise<this> {

@@ -15,10 +15,13 @@ export class Egg {
     script;
     createdAt;
     updatedAt;
+    variables;
     constructor(httpClient, eggManager, data) {
         this.httpClient = httpClient;
         this.eggManager = eggManager;
-        Object.assign(this, data);
+        const { relationships, ...attributes } = data;
+        Object.assign(this, attributes);
+        Object.assign(this, { variables: relationships?.variables });
     }
     async fetch(options) {
         Object.assign(this, (await this.httpClient.request('GET', `/application/nests/${this.nest}/eggs/${this.id}`, { parseDates: true })).attributes);
