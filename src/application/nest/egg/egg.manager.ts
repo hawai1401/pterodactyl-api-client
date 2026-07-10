@@ -26,7 +26,7 @@ export class EggManager extends BaseCacheManager<EggId, Egg> {
         new Egg(this.httpClient, this, {
           ...eggObject.attributes,
           relationships: {
-            variables: eggObject.attributes.relationships.variables.map(
+            variables: eggObject.attributes.relationships.variables.data.map(
               (eggVariable) => eggVariable.attributes,
             ),
           },
@@ -49,7 +49,7 @@ export class EggManager extends BaseCacheManager<EggId, Egg> {
       new Egg(this.httpClient, this, {
         ...eggObject.attributes,
         relationships: {
-          variables: eggObject.attributes.relationships.variables.map(
+          variables: eggObject.attributes.relationships.variables.data.map(
             (eggVariable) => eggVariable.attributes,
           ),
         },

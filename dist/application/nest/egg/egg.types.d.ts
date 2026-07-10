@@ -1,4 +1,4 @@
-import type { EnvironmentVariable } from '../../../types.js';
+import type { EnvironmentVariable, ObjectList } from '../../../types.js';
 export type EggId = number;
 export interface ApplicationEggVariableObject {
     object: 'egg_variable';
@@ -59,7 +59,7 @@ export interface EggObject {
         created_at: Date;
         updated_at: Date;
         relationships: {
-            variables: ApplicationEggVariableObject[];
+            variables: ObjectList<ApplicationEggVariableObject>;
         };
     };
 }

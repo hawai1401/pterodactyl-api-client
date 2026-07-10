@@ -15,7 +15,7 @@ export class EggManager extends BaseCacheManager {
         return res.data.map((eggObject) => this.setCache(new Egg(this.httpClient, this, {
             ...eggObject.attributes,
             relationships: {
-                variables: eggObject.attributes.relationships.variables.map((eggVariable) => eggVariable.attributes),
+                variables: eggObject.attributes.relationships.variables.data.map((eggVariable) => eggVariable.attributes),
             },
         }), options?.cache));
     }
@@ -27,7 +27,7 @@ export class EggManager extends BaseCacheManager {
         return this.setCache(new Egg(this.httpClient, this, {
             ...eggObject.attributes,
             relationships: {
-                variables: eggObject.attributes.relationships.variables.map((eggVariable) => eggVariable.attributes),
+                variables: eggObject.attributes.relationships.variables.data.map((eggVariable) => eggVariable.attributes),
             },
         }), options?.cache);
     }
