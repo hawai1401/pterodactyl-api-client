@@ -38,6 +38,6 @@ export class ApplicationAPI {
       cache?.nodes,
       cache?.allocations,
     );
-    this.nests = new NestManager(this.httpClient, cache?.nests, cache?.eggs);
+    this.nests = new NestManager(this.httpClient, cache?.nests);
   }
 }

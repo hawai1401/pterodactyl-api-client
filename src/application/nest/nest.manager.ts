@@ -9,17 +9,14 @@ import { Nest } from './nest.class.js';
 import type { HttpClient } from '../../class/HttpClient.js';
 import { ONE_MINUTE_IN_MILLISECONDS } from '../../utils/vars.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
+import { Egg } from './egg/egg.class.js';
 
 export class NestManager extends BaseCacheManager<NestId, Nest> {
-  private eggsTtl: number | undefined;
-
   constructor(
     private httpClient: HttpClient,
     cacheTtl: number = ONE_MINUTE_IN_MILLISECONDS * 5,
-    eggsTtl?: number,
   ) {
     super(cacheTtl, 'id');
-    this.eggsTtl = eggsTtl;
   }
 
   async list(
@@ -27,15 +24,29 @@ export class NestManager extends BaseCacheManager<NestId, Nest> {
   ): Promise<Paginated<Nest>> {
     const nestObjectList = await this.httpClient.request<
       ObjectListWithPagination<NestObject>
-    >('GET', '/application/nests', { parseDates: true });
+    >('GET', '/application/nests?include=eggs,eggs.variables', {
+      parseDates: true,
+    });
 
     return {
-      data: nestObjectList.data.map((nestObject) =>
-        this.setCache(
-          new Nest(this.httpClient, this, nestObject.attributes, this.eggsTtl),
+      data: nestObjectList.data.map((nestObject) => {
+        const { relationships, ...attributes } = nestObject.attributes;
+        return this.setCache(
+          new Nest(this.httpClient, this, {
+            ...attributes,
+            eggs: relationships.eggs.data.map((eggObject) => {
+              const { relationships, ...attributes } = eggObject.attributes;
+              return new Egg(this.httpClient, {
+                ...attributes,
+                variables: relationships.variables.data.map(
+                  (variableObject) => variableObject.attributes,
+                ),
+              });
+            }),
+          }),
           options?.cache,
-        ),
-      ),
+        );
+      }),
       pagination: nestObjectList.meta.pagination,
     };
   }
@@ -55,7 +66,6 @@ export class NestManager extends BaseCacheManager<NestId, Nest> {
             { parseDates: true },
           )
         ).attributes,
-        this.eggsTtl,
       ),
       options?.cache,
     );
@@ -65,14 +75,9 @@ export class NestManager extends BaseCacheManager<NestId, Nest> {
     return super.resolve(
       id,
       () =>
-        new Nest(
-          this.httpClient,
-          this,
-          {
-            id: nestId.parse(id),
-          },
-          this.eggsTtl,
-        ),
+        new Nest(this.httpClient, this, {
+          id: nestId.parse(id),
+        }),
     );
   }
 }

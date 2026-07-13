@@ -19,6 +19,6 @@ export class ApplicationAPI {
         this.users = new UserManager(this.httpClient, this.servers, cache?.users);
         this.locations = new LocationManager(this.httpClient, cache?.locations);
         this.nodes = new NodeManager(this.httpClient, cache?.nodes, cache?.allocations);
-        this.nests = new NestManager(this.httpClient, cache?.nests, cache?.eggs);
+        this.nests = new NestManager(this.httpClient, cache?.nests);
     }
 }

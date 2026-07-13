@@ -1,5 +1,4 @@
 import { setManagerCacheSymbol } from '../../symbols.js';
-import { EggManager } from './egg/egg.manager.js';
 export class Nest {
     httpClient;
     nestManager;
@@ -11,11 +10,10 @@ export class Nest {
     createdAt;
     updatedAt;
     eggs;
-    constructor(httpClient, nestManager, data, eggsTtl) {
+    constructor(httpClient, nestManager, data) {
         this.httpClient = httpClient;
         this.nestManager = nestManager;
         Object.assign(this, data);
-        this.eggs = new EggManager(this.httpClient, this.id, eggsTtl);
     }
     async fetch(options) {
         Object.assign(this, (await this.httpClient.request('GET', `/application/nests/${this.id}`, { parseDates: true })).attributes);

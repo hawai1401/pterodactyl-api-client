@@ -88,10 +88,8 @@ export interface BaseEgg {
         container: string;
         extends: null;
     };
+    variables: ApplicationEggVariable[];
     createdAt: Date;
     updatedAt: Date;
-    relationships: {
-        variables: ApplicationEggVariable[];
-    };
 }
 //# sourceMappingURL=egg.types.d.ts.map

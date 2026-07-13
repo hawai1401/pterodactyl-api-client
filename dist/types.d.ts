@@ -64,7 +64,6 @@ export interface CacheTtlOptions {
     locations?: number | undefined;
     nodes?: number | undefined;
     nests?: number | undefined;
-    eggs?: number | undefined;
     allocations?: number | undefined;
     databases?: number | undefined;
 }

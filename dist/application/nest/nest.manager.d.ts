@@ -5,8 +5,7 @@ import type { HttpClient } from '../../class/HttpClient.js';
 import { BaseCacheManager } from '../../class/BaseCacheManager.js';
 export declare class NestManager extends BaseCacheManager<NestId, Nest> {
     private httpClient;
-    private eggsTtl;
-    constructor(httpClient: HttpClient, cacheTtl?: number, eggsTtl?: number);
+    constructor(httpClient: HttpClient, cacheTtl?: number);
     list(options?: Omit<BaseFetchOptions, 'force'>): Promise<Paginated<Nest>>;
     fetch(id: NestId, options?: BaseFetchOptions): Promise<Nest>;
     resolve(id: NestId): Nest;

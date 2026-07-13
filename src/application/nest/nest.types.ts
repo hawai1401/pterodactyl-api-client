@@ -1,3 +1,7 @@
+import type { ObjectList } from '../../types.js';
+import type { Egg } from './egg/egg.class.js';
+import type { EggObject } from './egg/egg.types.js';
+
 export type NestId = number;
 
 export interface NestObject {
@@ -10,6 +14,7 @@ export interface NestObject {
     description: string;
     created_at: Date;
     updated_at: Date;
+    relationships: { eggs: ObjectList<EggObject> };
   };
 }
 
@@ -19,6 +24,7 @@ export interface BaseNest {
   author: string;
   name: string;
   description: string;
+  eggs: Egg[];
   createdAt: Date;
   updatedAt: Date;
 }
