@@ -56,7 +56,7 @@ export class NestManager extends BaseCacheManager<NestId, Nest> {
     if (cacheNest && !options?.force) return cacheNest;
     const nestObject = await this.httpClient.request<NestObject>(
       'GET',
-      `/application/nests/${nestId.parse(id)}`,
+      `/application/nests/${nestId.parse(id)}?include=eggs,eggs.variables`,
       { parseDates: true },
     );
     const { relationships, ...attributes } = nestObject.attributes;
