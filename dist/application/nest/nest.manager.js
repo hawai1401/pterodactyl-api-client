@@ -34,7 +34,18 @@ export class NestManager extends BaseCacheManager {
         const cacheNest = this.getCache(id);
         if (cacheNest && !options?.force)
             return cacheNest;
-        return this.setCache(new Nest(this.httpClient, this, (await this.httpClient.request('GET', `/application/nests/${nestId.parse(id)}`, { parseDates: true })).attributes), options?.cache);
+        const nestObject = await this.httpClient.request('GET', `/application/nests/${nestId.parse(id)}`, { parseDates: true });
+        const { relationships, ...attributes } = nestObject.attributes;
+        return this.setCache(new Nest(this.httpClient, this, {
+            ...attributes,
+            eggs: relationships.eggs.data.map((eggObject) => {
+                const { relationships, ...attributes } = eggObject.attributes;
+                return new Egg(this.httpClient, {
+                    ...attributes,
+                    variables: relationships.variables.data.map((variableObject) => variableObject.attributes),
+                });
+            }),
+        }), options?.cache);
     }
     resolve(id) {
         return super.resolve(id, () => new Nest(this.httpClient, this, {
